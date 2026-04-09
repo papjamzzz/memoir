@@ -127,41 +127,107 @@
       100% { transform: translateY(-60vh) translateX(var(--drift)) scale(2.5); opacity: 0; }
     }
 
-    /* ── WORDMARK ── */
-    .wordmark {
+    /* ── DISAPPEARING HEADER ── */
+    .nav-bar {
       position: fixed;
-      top: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      text-align: center;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      transform: translateY(-100%);
+      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s;
+      opacity: 0;
+      background: linear-gradient(to bottom, rgba(6,5,4,0.97) 0%, rgba(6,5,4,0.88) 70%, transparent 100%);
+      padding: 18px 36px 28px;
+      display: flex;
+      align-items: center;
+      gap: 0;
     }
-    .wordmark-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      color: var(--dim);
+    .nav-bar.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    /* Thin always-visible trigger line at top */
+    .nav-trigger {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      z-index: 31;
+      cursor: pointer;
+      background: linear-gradient(to bottom, rgba(200,151,58,0.18), transparent);
     }
 
-    /* ── GUIDED PROMPT ── */
+    .nav-wordmark {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: rgba(200,151,58,0.6);
+      margin-right: 36px;
+      white-space: nowrap;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-tab {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text); border-color: var(--border); }
+    .nav-tab.active { color: var(--amber); border-color: rgba(200,151,58,0.3); background: rgba(200,151,58,0.06); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .nav-entry-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      margin-right: 8px;
+    }
+
+    /* Guided prompt — inside nav bar, below tabs */
     .prompt-strip {
       position: fixed;
-      top: 64px;
+      top: 62px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 10;
+      z-index: 29;
       text-align: center;
-      max-width: 420px;
+      max-width: 480px;
       padding: 0 24px;
       display: none;
+      transition: opacity 0.3s;
     }
     .prompt-strip.visible { display: block; }
     .prompt-strip-text {
       font-size: 14px;
       font-style: italic;
-      color: rgba(232,224,208,0.5);
+      color: rgba(232,224,208,0.45);
       line-height: 1.6;
     }
     .prompt-strip-next {
@@ -174,7 +240,7 @@
       background: transparent;
       border: none;
       cursor: pointer;
-      margin-top: 8px;
+      margin-top: 6px;
       padding: 4px 0;
       transition: color 0.2s;
     }
@@ -518,6 +584,25 @@
   </style>
 </head>
 <body>
+
+<!-- Always-visible trigger line -->
+<div class="nav-trigger" id="nav-trigger"></div>
+
+<!-- Disappearing nav bar -->
+<div class="nav-bar" id="nav-bar">
+  <div class="nav-wordmark">Memoir</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-free"    onclick="setTab('free')">Free</button>
+    <button class="nav-tab"        id="tab-guided"  onclick="setTab('guided')">Guided</button>
+    <button class="nav-tab"        id="tab-transcript" onclick="setTab('transcript')">Transcript</button>
+    <button class="nav-tab"        id="tab-memoir"  onclick="setTab('memoir')">The Memoir</button>
+  </div>
+  <div class="nav-right">
+    <span class="nav-entry-count" id="entry-count"></span>
+    <button class="nav-tab" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+    <button class="nav-tab" onclick="exportMemoir()">Export</button>
+  </div>
+</div>
 
 <!-- Spotlight cone -->
 <div class="spotlight"></div>
@@ -893,21 +978,6 @@
   </div>
 </div>
 
-<!-- Bottom controls -->
-<div class="controls" id="controls">
-  <div class="ctrl-group">
-    <button class="ctrl-btn" onclick="toggleMode()">
-      <span id="mode-label">Free</span>
-    </button>
-    <button class="ctrl-btn" onclick="openDrawer('transcript')">Transcript</button>
-  </div>
-  <div class="ctrl-group">
-    <span class="entry-count" id="entry-count"></span>
-    <button class="ctrl-btn-primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
-    <button class="ctrl-btn" onclick="exportMemoir()">Export</button>
-    <button class="ctrl-btn" onclick="openDrawer('memoir')">The Memoir</button>
-  </div>
-</div>
 
 <!-- Overlay -->
 <div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
@@ -971,16 +1041,41 @@
   let promptIndex = 0;
   let guidedMode = false;
 
-  function toggleMode() {
-    guidedMode = !guidedMode;
-    document.getElementById('mode-label').textContent = guidedMode ? 'Guided' : 'Free';
-    document.querySelector('[onclick="toggleMode()"]').classList.toggle('active', guidedMode);
-    const strip = document.getElementById('prompt-strip');
-    if (guidedMode) {
-      strip.classList.add('visible');
+  // ── Nav auto-hide ─────────────────────────────────────────────────────────
+  let hideTimer = null;
+
+  function showNav() {
+    document.getElementById('nav-bar').classList.add('visible');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hideNav, 3200);
+  }
+
+  function hideNav() {
+    if (!activeDrawer) document.getElementById('nav-bar').classList.remove('visible');
+  }
+
+  document.addEventListener('mousemove', showNav);
+  document.getElementById('nav-trigger').addEventListener('mouseenter', showNav);
+  // Show briefly on load
+  setTimeout(showNav, 400);
+
+  // ── Tab switching ─────────────────────────────────────────────────────────
+  function setTab(name) {
+    ['free','guided','transcript','memoir'].forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (el) el.classList.toggle('active', t === name);
+    });
+    if (name === 'free') {
+      guidedMode = false;
+      document.getElementById('prompt-strip').classList.remove('visible');
+    } else if (name === 'guided') {
+      guidedMode = true;
+      document.getElementById('prompt-strip').classList.add('visible');
       showPrompt(promptIndex);
-    } else {
-      strip.classList.remove('visible');
+    } else if (name === 'transcript') {
+      openDrawer('transcript');
+    } else if (name === 'memoir') {
+      openDrawer('memoir');
     }
   }
 
@@ -993,7 +1088,7 @@
     showPrompt(promptIndex);
   }
 
-  // ── Drawers ──────────────────────────────────────────────────────────────
+  // ── Drawers ───────────────────────────────────────────────────────────────
   let activeDrawer = null;
 
   function openDrawer(name) {
@@ -1002,15 +1097,16 @@
     if (!drawer) return;
     drawer.classList.add('open');
     document.getElementById('overlay').classList.add('visible');
-    document.getElementById('controls').style.display = 'none';
     activeDrawer = name;
+    showNav();
+    clearTimeout(hideTimer); // keep nav visible while drawer is open
   }
 
   function closeAllDrawers() {
     document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
     document.getElementById('overlay').classList.remove('visible');
-    document.getElementById('controls').style.display = 'flex';
     activeDrawer = null;
+    hideTimer = setTimeout(hideNav, 2000);
   }
 
   // ── Built-in mic ─────────────────────────────────────────────────────────
