@@ -665,92 +665,70 @@
         </clipPath>
       </defs>
 
-      <!-- ═══ CHUNKY BOOM STAND ═══ -->
-      <!-- Heavy tripod base shadow -->
-      <ellipse cx="210" cy="514" rx="72" ry="7" fill="#020101" opacity="0.9"/>
-      <!-- Tripod base — three thick legs -->
-      <path d="M210 500 L148 512" stroke="#0e0c08" stroke-width="14" stroke-linecap="round"/>
-      <path d="M210 500 L148 512" stroke="#1c1a14" stroke-width="9"  stroke-linecap="round"/>
-      <path d="M210 500 L272 512" stroke="#0e0c08" stroke-width="14" stroke-linecap="round"/>
-      <path d="M210 500 L272 512" stroke="#1a1812" stroke-width="9"  stroke-linecap="round"/>
-      <path d="M210 500 L210 516" stroke="#0a0806" stroke-width="14" stroke-linecap="round"/>
-      <path d="M210 500 L210 516" stroke="#181614" stroke-width="9"  stroke-linecap="round"/>
-      <!-- Leg feet — rubber bumpers -->
-      <ellipse cx="148" cy="513" rx="9" ry="5" fill="#0a0806"/>
-      <ellipse cx="272" cy="513" rx="9" ry="5" fill="#0a0806"/>
-      <ellipse cx="210" cy="517" rx="9" ry="5" fill="#0a0806"/>
-      <!-- Centre hub -->
-      <circle cx="210" cy="500" r="14" fill="#141210" stroke="#282420" stroke-width="1.5"/>
-      <circle cx="210" cy="500" r="10" fill="url(#chrome-collar)"/>
-      <circle cx="210" cy="500" r="5"  fill="#0e0c08"/>
+      <!-- ═══ ROUND-BASE BOOM STAND ═══ -->
+      <!-- Shadow under base -->
+      <ellipse cx="210" cy="516" rx="56" ry="6" fill="#020101" opacity="0.85"/>
+      <!-- Round cast-iron base — low heavy disc -->
+      <ellipse cx="210" cy="510" rx="52" ry="9"  fill="#0a0806"/>
+      <ellipse cx="210" cy="508" rx="50" ry="7"  fill="#0e0c0a"/>
+      <ellipse cx="210" cy="506" rx="46" ry="5"  fill="url(#chrome-collar)"/>
+      <ellipse cx="210" cy="504" rx="32" ry="3"  fill="#0c0a08"/>
+      <ellipse cx="210" cy="503" rx="16" ry="2"  fill="#080604"/>
+      <path d="M165 505 Q210 500 255 505" stroke="rgba(255,245,210,0.09)" stroke-width="1.5" fill="none"/>
 
-      <!-- Main vertical pole — thick, industrial -->
-      <rect x="203" y="300" width="14" height="202" rx="7" fill="#0a0806"/>
-      <rect x="204" y="300" width="14" height="202" rx="7" fill="url(#chrome-neck)"/>
-      <rect x="205" y="300" width="4"  height="202" rx="2" fill="rgba(255,245,220,0.09)"/>
+      <!-- Outer pole — fixed section -->
+      <rect x="205" y="380" width="12" height="128" rx="6" fill="#080604"/>
+      <rect x="205" y="380" width="12" height="128" rx="6" fill="url(#chrome-neck)"/>
+      <rect x="206" y="380" width="3"  height="128" rx="1.5" fill="rgba(255,245,220,0.07)"/>
 
-      <!-- Height adjust collar — chunky clamp ring -->
-      <rect x="199" y="460" width="22" height="22" rx="4" fill="#0c0a08"/>
-      <rect x="200" y="461" width="22" height="20" rx="4" fill="url(#chrome-collar)"/>
-      <line x1="201" y1="467" x2="221" y2="467" stroke="#060504" stroke-width="1.5"/>
-      <line x1="201" y1="472" x2="221" y2="472" stroke="#060504" stroke-width="1.5"/>
-      <line x1="201" y1="477" x2="221" y2="477" stroke="#060504" stroke-width="1.5"/>
-      <!-- Tightening knob -->
-      <circle cx="222" cy="471" r="5" fill="#181410" stroke="#302c24" stroke-width="1"/>
-      <circle cx="222" cy="471" r="3" fill="url(#chrome-collar)"/>
+      <!-- Inner pole — telescoping section -->
+      <rect x="206" y="310" width="10" height="72" rx="5" fill="#0a0806"/>
+      <rect x="206" y="310" width="10" height="72" rx="5" fill="url(#chrome-neck)" opacity="0.75"/>
+      <rect x="207" y="310" width="3"  height="72" rx="1.5" fill="rgba(255,245,220,0.05)"/>
 
-      <!-- Boom arm — thick industrial tube sweeping left -->
-      <path d="M210 320 Q188 308 168 315 Q145 324 128 348"
-            stroke="#060504" stroke-width="16" fill="none" stroke-linecap="round"/>
-      <path d="M210 320 Q188 308 168 315 Q145 324 128 348"
-            stroke="url(#chrome-neck)" stroke-width="11" fill="none" stroke-linecap="round"/>
-      <path d="M210 320 Q188 308 168 315 Q145 324 128 348"
-            stroke="rgba(255,245,215,0.08)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Height lock collar -->
+      <rect x="201" y="374" width="20" height="14" rx="3" fill="#0c0a08"/>
+      <rect x="202" y="375" width="20" height="12" rx="3" fill="url(#chrome-collar)"/>
+      <line x1="203" y1="378" x2="221" y2="378" stroke="#050403" stroke-width="1.2"/>
+      <line x1="203" y1="381" x2="221" y2="381" stroke="#050403" stroke-width="1.2"/>
+      <line x1="203" y1="384" x2="221" y2="384" stroke="#050403" stroke-width="1.2"/>
+      <rect x="221" y="377" width="9" height="7" rx="3.5" fill="#141210"/>
+      <rect x="222" y="378" width="7" height="5" rx="2.5" fill="url(#chrome-collar)"/>
 
-      <!-- Boom collar clamp where arm meets pole -->
-      <rect x="200" y="312" width="22" height="20" rx="4" fill="#0c0a08"/>
-      <rect x="201" y="313" width="22" height="18" rx="4" fill="url(#chrome-collar)"/>
-      <line x1="202" y1="319" x2="222" y2="319" stroke="#060504" stroke-width="1.5"/>
-      <line x1="202" y1="324" x2="222" y2="324" stroke="#060504" stroke-width="1.5"/>
-      <line x1="202" y1="329" x2="222" y2="329" stroke="#060504" stroke-width="1.5"/>
-      <circle cx="224" cy="321" r="5" fill="#181410" stroke="#302c24" stroke-width="1"/>
-      <circle cx="224" cy="321" r="3" fill="url(#chrome-collar)"/>
+      <!-- Boom arm — straight horizontal tube, clean and functional -->
+      <line x1="211" y1="320" x2="120" y2="320" stroke="#050403" stroke-width="13" stroke-linecap="square"/>
+      <line x1="211" y1="320" x2="120" y2="320" stroke="url(#chrome-neck)" stroke-width="9" stroke-linecap="square"/>
+      <line x1="211" y1="320" x2="120" y2="320" stroke="rgba(255,245,215,0.07)" stroke-width="2" stroke-linecap="square"/>
 
-      <!-- Counterweight — chunky cylinder -->
-      <path d="M210 320 Q224 318 232 322" stroke="#060504" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <path d="M210 320 Q224 318 232 322" stroke="url(#chrome-neck)" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <rect x="230" y="314" width="30" height="16" rx="8" fill="#0e0c08"/>
-      <rect x="231" y="315" width="30" height="14" rx="7" fill="url(#chrome-collar)"/>
-      <line x1="234" y1="319" x2="258" y2="319" stroke="#060504" stroke-width="1" opacity="0.7"/>
-      <line x1="234" y1="323" x2="258" y2="323" stroke="#060504" stroke-width="1" opacity="0.7"/>
+      <!-- Counterweight arm — opposite side -->
+      <line x1="211" y1="320" x2="256" y2="320" stroke="#050403" stroke-width="13" stroke-linecap="square"/>
+      <line x1="211" y1="320" x2="256" y2="320" stroke="url(#chrome-neck)" stroke-width="9" stroke-linecap="square"/>
+      <!-- Counterweight -->
+      <rect x="254" y="311" width="22" height="18" rx="4" fill="#0a0806"/>
+      <rect x="255" y="312" width="22" height="16" rx="3" fill="url(#chrome-collar)"/>
+      <line x1="258" y1="317" x2="274" y2="317" stroke="#050403" stroke-width="1"/>
+      <line x1="258" y1="320" x2="274" y2="320" stroke="#050403" stroke-width="1"/>
+      <line x1="258" y1="323" x2="274" y2="323" stroke="#050403" stroke-width="1"/>
 
-      <!-- Yoke — heavy cast bracket holding shock mount -->
-      <path d="M128 348 Q114 336 100 348" stroke="#0a0806" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M128 348 Q114 336 100 348" stroke="#282420" stroke-width="6"  fill="none" stroke-linecap="round"/>
-      <path d="M128 348 Q114 360 100 348" stroke="#0a0806" stroke-width="10" fill="none" stroke-linecap="round"/>
-      <path d="M128 348 Q114 360 100 348" stroke="#282420" stroke-width="6"  fill="none" stroke-linecap="round"/>
+      <!-- Boom clamp ring at pole -->
+      <rect x="202" y="311" width="18" height="18" rx="3" fill="#080604"/>
+      <rect x="203" y="312" width="18" height="16" rx="3" fill="url(#chrome-collar)"/>
+      <line x1="204" y1="316" x2="220" y2="316" stroke="#050403" stroke-width="1.2"/>
+      <line x1="204" y1="320" x2="220" y2="320" stroke="#050403" stroke-width="1.2"/>
+      <line x1="204" y1="324" x2="220" y2="324" stroke="#050403" stroke-width="1.2"/>
+      <circle cx="220" cy="320" r="4.5" fill="#141210" stroke="#242018" stroke-width="0.8"/>
+      <circle cx="220" cy="320" r="2.5" fill="url(#chrome-collar)"/>
 
-      <!-- ═══ TWEED MIC CABLE ═══ -->
-      <!-- Braided tweed cable exits bottom collar, curves away to right edge -->
-      <!-- Cable shadow -->
-      <path d="M104 332 Q108 340 112 352 Q118 368 124 378 Q136 398 150 412 Q168 428 185 438 Q205 448 230 452"
-            stroke="rgba(0,0,0,0.5)" stroke-width="7" fill="none" stroke-linecap="round"
-            transform="translate(2,2)"/>
-      <!-- Outer tweed braid — dark charcoal/olive weave base -->
-      <path d="M104 332 Q108 340 112 352 Q118 368 124 378 Q136 398 150 412 Q168 428 185 438 Q205 448 230 452"
-            stroke="#2a2418" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <!-- Tweed braid texture — dashed highlight simulating woven threads -->
-      <path d="M104 332 Q108 340 112 352 Q118 368 124 378 Q136 398 150 412 Q168 428 185 438 Q205 448 230 452"
-            stroke="rgba(100,80,50,0.55)" stroke-width="3" fill="none" stroke-linecap="round"
-            stroke-dasharray="3,4"/>
-      <path d="M104 332 Q108 340 112 352 Q118 368 124 378 Q136 398 150 412 Q168 428 185 438 Q205 448 230 452"
-            stroke="rgba(160,130,80,0.20)" stroke-width="1.5" fill="none" stroke-linecap="round"
-            stroke-dasharray="2,6" stroke-dashoffset="3"/>
-      <!-- Cable strain relief boot at mic end -->
-      <rect x="98" y="326" width="12" height="16" rx="5" fill="#141210" stroke="#1e1c16" stroke-width="0.8"/>
-      <line x1="100" y1="330" x2="108" y2="330" stroke="#0a0806" stroke-width="1" opacity="0.7"/>
-      <line x1="100" y1="333" x2="108" y2="333" stroke="#0a0806" stroke-width="1" opacity="0.7"/>
-      <line x1="100" y1="336" x2="108" y2="336" stroke="#0a0806" stroke-width="1" opacity="0.7"/>
+      <!-- Yoke bracket — two straight arms to shock mount -->
+      <line x1="120" y1="320" x2="114" y2="338" stroke="#080604" stroke-width="8" stroke-linecap="round"/>
+      <line x1="120" y1="320" x2="114" y2="338" stroke="#242018" stroke-width="5" stroke-linecap="round"/>
+      <line x1="120" y1="320" x2="114" y2="358" stroke="#080604" stroke-width="8" stroke-linecap="round"/>
+      <line x1="120" y1="320" x2="114" y2="358" stroke="#242018" stroke-width="5" stroke-linecap="round"/>
+      <line x1="114" y1="338" x2="100" y2="348" stroke="#080604" stroke-width="8" stroke-linecap="round"/>
+      <line x1="114" y1="338" x2="100" y2="348" stroke="#242018" stroke-width="5" stroke-linecap="round"/>
+      <line x1="114" y1="358" x2="100" y2="348" stroke="#080604" stroke-width="8" stroke-linecap="round"/>
+      <line x1="114" y1="358" x2="100" y2="348" stroke="#242018" stroke-width="5" stroke-linecap="round"/>
+
 
       <!-- ═══ SHOCK MOUNT ═══ -->
       <!-- Outer ring -->
@@ -820,29 +798,11 @@
       <rect x="52" y="44" width="96" height="226" rx="48" fill="url(#capsule-light)"/>
 
       <!-- ═══ CAPSULE — the diaphragm, visible through mesh ═══ -->
-      <!-- Capsule window recess — dark oval inset behind mesh -->
-      <ellipse cx="100" cy="157" rx="32" ry="46" fill="#030202" opacity="0.7"/>
-      <!-- Capsule outer suspension ring -->
-      <ellipse cx="100" cy="157" rx="30" ry="44" fill="none" stroke="rgba(200,151,58,0.22)" stroke-width="2"/>
-      <ellipse cx="100" cy="157" rx="28" ry="42" fill="none" stroke="rgba(160,120,40,0.12)" stroke-width="1"/>
-      <!-- Diaphragm membrane — the gold foil element, very visible -->
-      <ellipse cx="100" cy="157" rx="22" ry="34" fill="rgba(190,140,45,0.13)" id="capsule-glow"/>
-      <ellipse cx="100" cy="157" rx="22" ry="34" fill="none" stroke="rgba(210,160,55,0.35)" stroke-width="1.5"/>
-      <!-- Membrane surface texture — radial spokes of the diaphragm -->
-      <line x1="100" y1="123" x2="100" y2="191" stroke="rgba(210,160,50,0.12)" stroke-width="1"/>
-      <line x1="78"  y1="131" x2="122" y2="183" stroke="rgba(210,160,50,0.10)" stroke-width="1"/>
-      <line x1="78"  y1="183" x2="122" y2="131" stroke="rgba(210,160,50,0.10)" stroke-width="1"/>
-      <line x1="74"  y1="157" x2="126" y2="157" stroke="rgba(210,160,50,0.12)" stroke-width="1"/>
-      <line x1="82"  y1="116" x2="118" y2="198" stroke="rgba(210,160,50,0.07)" stroke-width="0.8"/>
-      <line x1="82"  y1="198" x2="118" y2="116" stroke="rgba(210,160,50,0.07)" stroke-width="0.8"/>
-      <!-- Capsule gold warm centre glow -->
-      <ellipse cx="100" cy="157" rx="12" ry="18" fill="rgba(220,170,55,0.18)" id="capsule-dot"/>
-      <ellipse cx="100" cy="157" rx="6"  ry="9"  fill="rgba(235,185,65,0.35)"/>
-      <ellipse cx="100" cy="157" rx="3"  ry="4.5" fill="rgba(245,200,80,0.60)"/>
-      <circle  cx="100" cy="157" r="1.2" fill="rgba(255,220,100,0.95)"/>
-      <!-- Capsule mounting screws — two tiny details top and bottom -->
-      <circle cx="100" cy="116" r="2.5" fill="#181410" stroke="rgba(200,151,58,0.3)" stroke-width="0.8"/>
-      <circle cx="100" cy="198" r="2.5" fill="#181410" stroke="rgba(200,151,58,0.3)" stroke-width="0.8"/>
+      <!-- Capsule — barely visible through mesh, like a real mic -->
+      <!-- Just a ghost of warmth behind the grille -->
+      <ellipse cx="100" cy="157" rx="22" ry="34" fill="rgba(180,130,40,0.04)" id="capsule-glow"/>
+      <circle  cx="100" cy="157" r="4"   fill="rgba(200,150,45,0.06)" id="capsule-dot"/>
+      <circle  cx="100" cy="157" r="1.5" fill="rgba(220,170,55,0.12)"/>
 
       <!-- ═══ TOP CROWN ═══ -->
       <!-- Base collar of crown -->
