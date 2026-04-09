@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memoir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0c0b09;
+      --surface:  #141210;
+      --card:     #1a1815;
+      --border:   #2a2520;
+      --text:     #e8e0d0;
+      --dim:      #7a6f60;
+      --amber:    #d4a855;
+      --warm:     #c9956a;
+      --code:     #7ec8a0;
+      --muted:    #3a3028;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Lora', Georgia, serif;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+    }
+
+    /* ── HEADER ── */
+    header {
+      grid-column: 1 / -1;
+      padding: 28px 40px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+    .subtitle {
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--dim);
+      font-style: italic;
+    }
+
+    /* ── LEFT PANEL — Voice Studio ── */
+    .panel-voice {
+      padding: 36px 40px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      overflow-y: auto;
+      height: calc(100vh - 77px);
+    }
+
+    .panel-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* Orb */
+    .orb-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 0;
+    }
+    .orb-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .orb-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(212,168,85,0.12);
+      animation: breathe 4s ease-in-out infinite;
+    }
+    .orb-ring:nth-child(1) { width: 140px; height: 140px; }
+    .orb-ring:nth-child(2) { width: 175px; height: 175px; animation-delay: 0.8s; opacity: 0.6; }
+    .orb-ring:nth-child(3) { width: 210px; height: 210px; animation-delay: 1.6s; opacity: 0.3; }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.03); opacity: 0.7; }
+    }
+    .orb-ring.listening {
+      border-color: rgba(212,168,85,0.5);
+      animation: pulse-listen 0.9s ease-in-out infinite;
+    }
+    @keyframes pulse-listen {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .mic-btn {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,168,85,0.25);
+      background: radial-gradient(circle at 38% 38%, #221e16, #0e0c0a);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(212,168,85,0.05);
+    }
+    .mic-btn:hover {
+      border-color: rgba(212,168,85,0.5);
+      box-shadow: 0 0 40px rgba(212,168,85,0.12);
+    }
+    .mic-btn.listening {
+      border-color: rgba(212,168,85,0.7);
+      box-shadow: 0 0 50px rgba(212,168,85,0.2);
+      background: radial-gradient(circle at 38% 38%, #2e2410, #12100a);
+    }
+    .mic-btn.processing {
+      opacity: 0.6;
+      cursor: default;
+    }
+    .mic-icon { width: 34px; height: 34px; }
+    .mic-icon path, .mic-icon rect { fill: var(--amber); }
+
+    .orb-status {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+      text-align: center;
+      min-height: 18px;
+      transition: color 0.3s;
+    }
+    .orb-status.listening { color: var(--amber); }
+    .orb-status.processing { color: var(--dim); }
+
+    /* Live transcript */
+    .transcript-live {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      min-height: 80px;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      font-style: italic;
+    }
+    .transcript-live.empty {
+      color: var(--dim);
+      font-style: normal;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+    }
+
+    /* Voice log */
+    .voice-log {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .log-entry {
+      border-left: 2px solid var(--muted);
+      padding: 10px 16px;
+      background: var(--surface);
+      border-radius: 0 8px 8px 0;
+    }
+    .log-entry:hover { border-left-color: var(--amber); }
+    .log-time {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: var(--dim);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+    }
+    .log-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(232,224,208,0.85);
+    }
+
+    /* ── RIGHT PANEL — Code Chapters ── */
+    .panel-code {
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      overflow-y: auto;
+      height: calc(100vh - 77px);
+    }
+
+    .chapter {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .chapter-header {
+      background: var(--card);
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--warm);
+    }
+    .chapter-code {
+      background: var(--surface);
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .chapter-code .comment  { color: var(--dim); }
+    .chapter-code .docstr   { color: var(--amber); opacity: 0.85; }
+    .chapter-code .keyword  { color: var(--code); }
+    .chapter-code .string   { color: var(--warm); }
+
+    .empty-chapters {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--dim);
+      text-align: center;
+      padding: 60px 20px;
+      line-height: 1.8;
+    }
+    .empty-chapters span { color: var(--amber); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+    @media (max-width: 900px) {
+      body { grid-template-columns: 1fr; }
+      .panel-voice, .panel-code { height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="title">memoir</div>
+  <div class="subtitle">speak your story · we write it in code</div>
+</header>
+
+<!-- LEFT: Voice Studio -->
+<div class="panel-voice">
+  <div class="panel-label">Voice Studio</div>
+
+  <div class="orb-area">
+    <div class="orb-wrap">
+      <div class="orb-ring" id="ring1"></div>
+      <div class="orb-ring" id="ring2"></div>
+      <div class="orb-ring" id="ring3"></div>
+      <button class="mic-btn" id="mic-btn" onclick="handleMic()">
+        <svg class="mic-icon" viewBox="0 0 24 24">
+          <rect x="9" y="2" width="6" height="11" rx="3"/>
+          <path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"/>
+          <style>rect,path{stroke:none;}</style>
+        </svg>
+      </button>
+    </div>
+    <div class="orb-status" id="orb-status">Tap to speak a memory</div>
+  </div>
+
+  <div class="transcript-live empty" id="transcript-live">
+    Your words will appear here as you speak...
+  </div>
+
+  <div>
+    <div class="panel-label" style="margin-bottom:16px;">Raw Material — Voice Log</div>
+    <div class="voice-log" id="voice-log">
+      <div style="font-family:Inter,sans-serif;font-size:13px;color:var(--dim);">Nothing yet. Start speaking.</div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT: Code Chapters -->
+<div class="panel-code">
+  <div class="panel-label">The Book — Code Chapters</div>
+  <div id="chapters-wrap">
+    <div class="empty-chapters">
+      No chapters yet.<br><br>
+      Speak a memory on the left.<br>
+      In your next session, <span>Claude will weave it into code</span><br>
+      and it will appear here.
+    </div>
+  </div>
+</div>
+
+<script>
+  // Known Whisper hallucinations to block
+  const HALLUCINATIONS = ['globalonenessproject', 'transcribed by', 'subtitles by', 'www.', 'http'];
+
+  async function getBuiltInMicId() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const mics = devices.filter(d => d.kind === 'audioinput');
+      // Prefer MacBook built-in mic; avoid BlackHole/virtual/USB devices
+      const builtin = mics.find(d =>
+        d.label.toLowerCase().includes('built-in') ||
+        d.label.toLowerCase().includes('macbook')
+      );
+      return builtin ? { exact: builtin.deviceId } : undefined;
+    } catch { return undefined; }
+  }
+
+  function isHallucination(text) {
+    const lower = text.toLowerCase();
+    return HALLUCINATIONS.some(h => lower.includes(h));
+  }
+
+  let isListening = false;
+  let isProcessing = false;
+  let mediaRecorder = null;
+  let audioChunks = [];
+
+  // ── Mic ──────────────────────────────────────────────────────────────────
+  function handleMic() {
+    if (isProcessing) return;
+    if (isListening) stopListening();
+    else startListening();
+  }
+
+  async function startListening() {
+    try {
+      // Prefer built-in mic; avoids BlackHole/ioStation being grabbed by default
+      const constraints = {
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 16000,
+          deviceId: await getBuiltInMicId()
+        }
+      };
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = processAudio;
+      mediaRecorder.start();
+      isListening = true;
+      setUI('listening');
+    } catch(e) {
+      setStatus('Microphone access needed');
+    }
+  }
+
+  function stopListening() {
+    if (mediaRecorder && isListening) {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach(t => t.stop());
+      isListening = false;
+      setUI('processing');
+    }
+  }
+
+  async function processAudio() {
+    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+    const form = new FormData();
+    form.append('audio', blob, 'memory.webm');
+    try {
+      const res = await fetch('/api/transcribe', { method: 'POST', body: form });
+      const { text } = await res.json();
+      if (text && text.trim() && !isHallucination(text)) {
+        showTranscript(text);
+        await loadVoiceLog();
+      } else {
+        showTranscript('');
+      }
+    } catch(e) {
+      setStatus('Something went wrong. Try again.');
+    }
+    setUI('idle');
+  }
+
+  // ── UI ───────────────────────────────────────────────────────────────────
+  function setUI(state) {
+    const btn   = document.getElementById('mic-btn');
+    const rings = ['ring1','ring2','ring3'].map(id => document.getElementById(id));
+    isProcessing = false;
+
+    btn.className = 'mic-btn';
+    rings.forEach(r => r.className = 'orb-ring');
+
+    if (state === 'listening') {
+      btn.classList.add('listening');
+      rings.forEach(r => r.classList.add('listening'));
+      setStatus('Listening — tap to stop');
+      document.getElementById('orb-status').classList.add('listening');
+    } else if (state === 'processing') {
+      btn.classList.add('processing');
+      isProcessing = true;
+      setStatus('Transcribing...');
+    } else {
+      setStatus('Tap to speak a memory');
+    }
+  }
+
+  function setStatus(msg) {
+    const el = document.getElementById('orb-status');
+    el.textContent = msg;
+    el.className = 'orb-status' + (msg.includes('Listen') ? ' listening' : '');
+  }
+
+  function showTranscript(text) {
+    const el = document.getElementById('transcript-live');
+    if (text) {
+      el.textContent = text;
+      el.classList.remove('empty');
+    } else {
+      el.textContent = 'Could not catch that. Try again.';
+      el.classList.add('empty');
+    }
+  }
+
+  // ── Load data ─────────────────────────────────────────────────────────────
+  async function loadVoiceLog() {
+    const res = await fetch('/api/voice-log');
+    const entries = await res.json();
+    const el = document.getElementById('voice-log');
+    if (!entries.length) return;
+    el.innerHTML = entries.map(e => {
+      const d = new Date(e.timestamp);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      return `<div class="log-entry">
+        <div class="log-time">${dateStr} · ${timeStr}</div>
+        <div class="log-text">${e.text}</div>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadChapters() {
+    const res = await fetch('/api/chapters');
+    const chapters = await res.json();
+    if (!chapters.length) return;
+    const wrap = document.getElementById('chapters-wrap');
+    wrap.innerHTML = chapters.map(c => `
+      <div class="chapter">
+        <div class="chapter-header">${c.name}.py</div>
+        <div class="chapter-code">${escHtml(c.content)}</div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadVoiceLog();
+  loadChapters();
+</script>
+
+</body>
+</html>
