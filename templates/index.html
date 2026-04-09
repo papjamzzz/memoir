@@ -4,20 +4,19 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Memoir</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:       #0c0b09;
-      --surface:  #141210;
-      --card:     #1a1815;
-      --border:   #2a2520;
-      --text:     #e8e0d0;
-      --dim:      #7a6f60;
-      --amber:    #d4a855;
-      --warm:     #c9956a;
-      --code:     #7ec8a0;
-      --muted:    #3a3028;
-      --red:      #c0392b;
+      --bg:      #0a0906;
+      --surface: #111009;
+      --card:    #181510;
+      --border:  #252018;
+      --text:    #e8e0d0;
+      --dim:     #6a5f50;
+      --amber:   #d4a855;
+      --warm:    #c9956a;
+      --muted:   #2e2820;
+      --red:     #c0392b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,81 +25,292 @@
       background: var(--bg);
       color: var(--text);
       font-family: 'Lora', Georgia, serif;
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 1fr;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
 
-    /* ── HEADER ── */
-    header {
-      grid-column: 1 / -1;
-      padding: 20px 40px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    /* ── ACOUSTIC FOAM TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 28px,
+          rgba(255,255,255,0.012) 28px,
+          rgba(255,255,255,0.012) 29px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 28px,
+          rgba(255,255,255,0.008) 28px,
+          rgba(255,255,255,0.008) 29px
+        );
+      pointer-events: none;
+      z-index: 0;
     }
-    .header-left {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      flex: 1;
+
+    /* ── VIGNETTE ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .title {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--amber);
-      letter-spacing: 0.02em;
+
+    /* ── WORDMARK ── */
+    .wordmark {
+      position: fixed;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      text-align: center;
     }
-    .subtitle {
-      font-size: 13px;
-      font-family: 'Inter', sans-serif;
-      color: var(--dim);
-      font-style: italic;
-    }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .btn-export {
+    .wordmark-title {
       font-family: 'Inter', sans-serif;
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-weight: 700;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--dim);
-      border: 1px solid var(--border);
+    }
+
+    /* ── GUIDED PROMPT ── */
+    .prompt-strip {
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      text-align: center;
+      max-width: 420px;
+      padding: 0 24px;
+      display: none;
+    }
+    .prompt-strip.visible { display: block; }
+    .prompt-strip-text {
+      font-size: 14px;
+      font-style: italic;
+      color: rgba(232,224,208,0.5);
+      line-height: 1.6;
+    }
+    .prompt-strip-next {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
       background: transparent;
-      padding: 7px 16px;
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+      padding: 4px 0;
+      transition: color 0.2s;
+    }
+    .prompt-strip-next:hover { color: var(--amber); }
+
+    /* ── MAIN STAGE ── */
+    .stage {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* ── VINTAGE MIC SVG ── */
+    .mic-wrap {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Ambient glow behind the mic when recording */
+    .mic-glow {
+      position: absolute;
+      width: 260px;
+      height: 340px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(212,168,85,0) 0%, rgba(212,168,85,0) 100%);
+      transition: background 0.6s ease;
+      pointer-events: none;
+    }
+    .mic-glow.listening {
+      background: radial-gradient(ellipse at center, rgba(212,168,85,0.08) 0%, rgba(212,168,85,0) 70%);
+    }
+
+    .vintage-mic {
+      width: 160px;
+      height: 260px;
+      position: relative;
+      z-index: 2;
+      transition: filter 0.4s ease;
+    }
+    .vintage-mic.listening {
+      filter: drop-shadow(0 0 28px rgba(212,168,85,0.45)) drop-shadow(0 0 60px rgba(212,168,85,0.15));
+    }
+    .vintage-mic.processing {
+      filter: drop-shadow(0 0 10px rgba(212,168,85,0.15));
+      opacity: 0.7;
+    }
+
+    /* ── REC + STATUS ── */
+    .rec-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      min-height: 20px;
+    }
+    .rec-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      opacity: 0;
+      transition: opacity 0.2s;
+      box-shadow: 0 0 8px rgba(192,57,43,0.6);
+    }
+    .rec-dot.visible {
+      opacity: 1;
+      animation: blink 1s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .mic-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--dim);
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .mic-status.listening { color: var(--amber); }
+
+    /* ── VU METER ── */
+    .vu-meter {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 32px;
+      margin-top: 16px;
+    }
+    .vu-bar {
+      width: 6px;
+      background: var(--amber);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.15;
+      min-height: 3px;
+      transition: height 0.07s ease, opacity 0.3s;
+    }
+    .vu-bar.active { opacity: 0.8; }
+
+    /* ── BOTTOM CONTROLS ── */
+    .controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 20px 40px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to top, rgba(10,9,6,0.95) 0%, rgba(10,9,6,0) 100%);
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .ctrl-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 16px;
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .btn-export:hover {
-      border-color: var(--amber);
-      color: var(--amber);
-    }
-    .export-note {
+    .ctrl-btn:hover { border-color: var(--amber); color: var(--amber); }
+    .ctrl-btn.active { border-color: rgba(212,168,85,0.4); color: var(--amber); background: rgba(212,168,85,0.06); }
+
+    .ctrl-btn-primary {
       font-family: 'Inter', sans-serif;
       font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      background: rgba(212,168,85,0.08);
+      border: 1px solid rgba(212,168,85,0.25);
+      padding: 8px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ctrl-btn-primary:hover { background: rgba(212,168,85,0.15); border-color: rgba(212,168,85,0.5); }
+    .ctrl-btn-primary:disabled { opacity: 0.35; cursor: default; }
+
+    .entry-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
       color: var(--dim);
-      opacity: 0.6;
+      letter-spacing: 0.1em;
     }
 
-    /* ── LEFT PANEL ── */
-    .panel-voice {
-      padding: 28px 36px;
-      border-right: 1px solid var(--border);
+    /* ── DRAWERS ── */
+    .drawer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-radius: 20px 20px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 70vh;
       display: flex;
       flex-direction: column;
-      gap: 24px;
-      overflow-y: auto;
-      height: calc(100vh - 67px);
     }
+    .drawer.open { transform: translateY(0); }
 
-    .panel-label {
+    .drawer-handle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px 14px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .drawer-title {
       font-family: 'Inter', sans-serif;
       font-size: 10px;
       font-weight: 700;
@@ -108,183 +318,52 @@
       text-transform: uppercase;
       color: var(--dim);
     }
-
-    /* ── SESSION MODE TOGGLE ── */
-    .session-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      width: fit-content;
-    }
-    .toggle-btn {
+    .drawer-close {
       font-family: 'Inter', sans-serif;
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 8px 18px;
-      background: transparent;
+      color: var(--dim);
+      background: none;
       border: none;
-      color: var(--dim);
       cursor: pointer;
-      transition: all 0.2s;
-    }
-    .toggle-btn.active {
-      background: var(--muted);
-      color: var(--amber);
-    }
-
-    /* ── GUIDED PROMPT CARD ── */
-    .prompt-card {
-      background: var(--card);
-      border: 1px solid rgba(212,168,85,0.2);
-      border-radius: 12px;
-      padding: 18px 22px;
-      display: none;
-      flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 0 24px rgba(212,168,85,0.04);
-    }
-    .prompt-card.visible { display: flex; }
-    .prompt-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--amber);
-      opacity: 0.7;
-    }
-    .prompt-text {
-      font-size: 15px;
-      font-style: italic;
-      line-height: 1.6;
-      color: var(--text);
-    }
-    .btn-next-prompt {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--dim);
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-      align-self: flex-start;
-      transition: all 0.2s;
-    }
-    .btn-next-prompt:hover { border-color: var(--amber); color: var(--amber); }
-
-    /* ── VINTAGE MIC ── */
-    .orb-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 16px 0 8px;
-    }
-
-    .mic-stage {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    /* SVG vintage mic */
-    .vintage-mic-svg {
-      width: 90px;
-      height: 130px;
-      transition: filter 0.3s;
-    }
-    .vintage-mic-svg.listening {
-      filter: drop-shadow(0 0 18px rgba(212,168,85,0.5));
-    }
-
-    /* REC indicator */
-    .rec-indicator {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--red);
-      letter-spacing: 0.12em;
-      opacity: 0;
-      transition: opacity 0.3s;
-      margin-top: 4px;
-    }
-    .rec-indicator.visible { opacity: 1; }
-
-    /* VU Meter */
-    .vu-meter {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      height: 28px;
-      padding: 0 4px;
-    }
-    .vu-bar {
-      width: 5px;
-      background: var(--amber);
-      border-radius: 2px 2px 0 0;
-      opacity: 0.3;
-      transition: height 0.08s ease;
-      min-height: 3px;
-    }
-    .vu-bar.active { opacity: 0.85; }
-
-    .orb-status {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: var(--dim);
+      padding: 4px 8px;
       letter-spacing: 0.08em;
-      text-align: center;
-      min-height: 18px;
-      transition: color 0.3s;
+      transition: color 0.2s;
     }
-    .orb-status.listening {
-      color: var(--amber);
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .orb-status.processing { color: var(--dim); }
+    .drawer-close:hover { color: var(--amber); }
 
-    /* Live transcript */
-    .transcript-live {
+    .drawer-body {
+      overflow-y: auto;
+      padding: 20px 28px 32px;
+      flex: 1;
+    }
+
+    /* Transcript in drawer */
+    .transcript-text {
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.8;
+      color: var(--text);
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 16px 20px;
-      min-height: 72px;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text);
-      font-style: italic;
+      padding: 20px 24px;
+      margin-bottom: 24px;
     }
-    .transcript-live.empty {
-      color: var(--dim);
+    .transcript-text.empty {
       font-style: normal;
       font-family: 'Inter', sans-serif;
       font-size: 13px;
+      color: var(--dim);
     }
 
-    /* Voice log */
-    .voice-log {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    /* Voice log in drawer */
+    .voice-log { display: flex; flex-direction: column; gap: 12px; }
     .log-entry {
       border-left: 2px solid var(--muted);
       padding: 10px 16px;
-      background: var(--surface);
+      background: var(--card);
       border-radius: 0 8px 8px 0;
+      transition: border-color 0.2s;
     }
     .log-entry:hover { border-left-color: var(--amber); }
     .log-time {
@@ -294,83 +373,48 @@
       margin-bottom: 6px;
       letter-spacing: 0.06em;
     }
-    .log-text {
-      font-size: 14px;
-      line-height: 1.65;
-      color: rgba(232,224,208,0.85);
-    }
+    .log-text { font-size: 14px; line-height: 1.65; color: rgba(232,224,208,0.85); }
 
-    /* ── RIGHT PANEL ── */
-    .panel-code {
-      padding: 28px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      overflow-y: auto;
-      height: calc(100vh - 67px);
-    }
-
-    .panel-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .btn-generate {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      background: rgba(212,168,85,0.1);
-      border: 1px solid rgba(212,168,85,0.3);
-      color: var(--amber);
-      padding: 8px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-generate:hover {
-      background: rgba(212,168,85,0.18);
-      border-color: rgba(212,168,85,0.5);
-    }
-    .btn-generate:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-
-    /* Memoir chapter display */
+    /* Memoir chapters in drawer */
     .memoir-chapter {
-      background: var(--surface);
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
+      margin-bottom: 20px;
     }
     .chapter-header {
-      background: var(--card);
+      background: var(--surface);
       padding: 12px 20px;
       border-bottom: 1px solid var(--border);
       font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--warm);
     }
     .chapter-body {
       padding: 28px 32px;
-      font-family: 'Lora', Georgia, serif;
       font-size: 15px;
       line-height: 1.85;
       color: var(--text);
       white-space: pre-wrap;
     }
+    .empty-chapters {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--dim);
+      text-align: center;
+      padding: 40px 20px;
+      line-height: 1.8;
+    }
+    .empty-chapters span { color: var(--amber); }
 
-    /* Loading spinner */
     .spinner {
       display: inline-block;
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       border: 2px solid rgba(212,168,85,0.2);
       border-top-color: var(--amber);
       border-radius: 50%;
@@ -380,144 +424,196 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .empty-chapters {
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      color: var(--dim);
-      text-align: center;
-      padding: 60px 20px;
-      line-height: 1.8;
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 19;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s;
     }
-    .empty-chapters span { color: var(--amber); }
+    .overlay.visible { opacity: 1; pointer-events: all; }
 
-    /* scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
-
-    @media (max-width: 900px) {
-      body { grid-template-columns: 1fr; }
-      .panel-voice, .panel-code { height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-    }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <div class="title">memoir</div>
-    <div class="subtitle">your story, in your voice</div>
-  </div>
-  <div class="header-actions">
-    <div>
-      <button class="btn-export" onclick="exportMemoir()">Export Memoir</button>
-      <div class="export-note" style="margin-top:4px;text-align:right;">lulu.com accepts text files for paperback printing.</div>
-    </div>
-  </div>
-</header>
+<!-- Wordmark -->
+<div class="wordmark">
+  <div class="wordmark-title">Memoir</div>
+</div>
 
-<!-- LEFT: Voice Studio -->
-<div class="panel-voice">
-  <div class="panel-label">Voice Studio</div>
+<!-- Guided prompt strip -->
+<div class="prompt-strip" id="prompt-strip">
+  <div class="prompt-strip-text" id="prompt-text">Tell me about where you grew up.</div>
+  <button class="prompt-strip-next" onclick="nextPrompt()">next prompt →</button>
+</div>
 
-  <!-- Phase 2: Session Mode Toggle -->
-  <div>
-    <div class="session-toggle">
-      <button class="toggle-btn active" id="btn-free" onclick="setMode('free')">Free Record</button>
-      <button class="toggle-btn" id="btn-guided" onclick="setMode('guided')">Guided</button>
-    </div>
-  </div>
+<!-- Main stage — click anywhere to record -->
+<div class="stage" onclick="handleMic()">
+  <div class="mic-wrap">
+    <div class="mic-glow" id="mic-glow"></div>
 
-  <!-- Guided Prompt Card -->
-  <div class="prompt-card" id="prompt-card">
-    <div class="prompt-label">Memoir Prompt</div>
-    <div class="prompt-text" id="prompt-text">Tell me about where you grew up.</div>
-    <button class="btn-next-prompt" onclick="nextPrompt()">Next prompt →</button>
-  </div>
+    <!-- Detailed vintage condenser mic SVG -->
+    <svg class="vintage-mic" id="vintage-mic" viewBox="0 0 160 260" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-  <!-- Phase 4: Vintage Mic -->
-  <div class="orb-area">
-    <div class="mic-stage" onclick="handleMic()" title="Tap to speak">
-      <svg class="vintage-mic-svg" id="vintage-mic" viewBox="0 0 90 130" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Stand base -->
-        <rect x="30" y="118" width="30" height="5" rx="2.5" fill="#3a3028"/>
-        <!-- Stand pole -->
-        <rect x="43" y="96" width="4" height="24" rx="2" fill="#3a3028"/>
-        <!-- Stand arm -->
-        <path d="M30 110 Q45 98 60 110" stroke="#3a3028" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <!-- Mic body outer shell -->
-        <rect x="22" y="12" width="46" height="80" rx="23" fill="#1e1a14" stroke="#4a4030" stroke-width="1.5"/>
-        <!-- Mic grille lines -->
-        <rect x="26" y="20" width="38" height="64" rx="19" fill="none" stroke="#2e2820" stroke-width="1"/>
-        <!-- Horizontal grille bars -->
-        <line x1="26" y1="32" x2="64" y2="32" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
-        <line x1="24" y1="42" x2="66" y2="42" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
-        <line x1="23" y1="52" x2="67" y2="52" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
-        <line x1="24" y1="62" x2="66" y2="62" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
-        <line x1="26" y1="72" x2="64" y2="72" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
-        <!-- Vertical grille bars -->
-        <line x1="35" y1="18" x2="35" y2="86" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
-        <line x1="45" y1="16" x2="45" y2="88" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
-        <line x1="55" y1="18" x2="55" y2="86" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
-        <!-- Amber glow capsule center -->
-        <ellipse cx="45" cy="52" rx="12" ry="18" fill="rgba(212,168,85,0.06)" id="mic-glow"/>
-        <!-- Logo dot -->
-        <circle cx="45" cy="52" r="3" fill="#d4a855" opacity="0.4" id="mic-dot"/>
-        <!-- Top cap -->
-        <rect x="30" y="10" width="30" height="6" rx="3" fill="#2a2520"/>
-        <!-- Bottom collar -->
-        <rect x="28" y="88" width="34" height="8" rx="4" fill="#2a2520"/>
-      </svg>
-      <div class="rec-indicator" id="rec-indicator">● REC</div>
+      <!-- Boom arm / yoke -->
+      <line x1="80" y1="196" x2="110" y2="210" stroke="#2a2418" stroke-width="3" stroke-linecap="round"/>
+      <line x1="80" y1="196" x2="50" y2="210" stroke="#2a2418" stroke-width="3" stroke-linecap="round"/>
+      <!-- Stand column -->
+      <rect x="77" y="210" width="6" height="36" rx="3" fill="#222018"/>
+      <!-- Base plate -->
+      <rect x="54" y="244" width="52" height="10" rx="5" fill="#1e1c14"/>
+      <rect x="46" y="250" width="68" height="6" rx="3" fill="#181610"/>
+
+      <!-- Shock mount ring outer -->
+      <circle cx="80" cy="196" r="16" stroke="#2a2418" stroke-width="2" fill="none"/>
+      <!-- Shock mount ring inner -->
+      <circle cx="80" cy="196" r="10" stroke="#3a3028" stroke-width="1.5" fill="#181410"/>
+      <!-- Shock mount spider threads -->
+      <line x1="80" y1="186" x2="80" y2="180" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+      <line x1="88" y1="188" x2="92" y2="184" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+      <line x1="72" y1="188" x2="68" y2="184" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+      <line x1="80" y1="206" x2="80" y2="212" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+      <line x1="88" y1="204" x2="92" y2="208" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+      <line x1="72" y1="204" x2="68" y2="208" stroke="#2e2820" stroke-width="1" opacity="0.8"/>
+
+      <!-- Body connector neck -->
+      <rect x="70" y="175" width="20" height="24" rx="6" fill="#1e1a12" stroke="#2e2820" stroke-width="1"/>
+
+      <!-- Main mic body — cylindrical capsule housing -->
+      <rect x="42" y="28" width="76" height="150" rx="38" fill="#1a1710" stroke="#332d1e" stroke-width="1.5"/>
+
+      <!-- Inner mesh face -->
+      <rect x="48" y="38" width="64" height="130" rx="32" fill="#141210" stroke="#2a2418" stroke-width="1"/>
+
+      <!-- Grille mesh — horizontal bars -->
+      <line x1="50" y1="55"  x2="110" y2="55"  stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="48" y1="68"  x2="112" y2="68"  stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="47" y1="81"  x2="113" y2="81"  stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="46" y1="94"  x2="114" y2="94"  stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="46" y1="107" x2="114" y2="107" stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="46" y1="120" x2="114" y2="120" stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="47" y1="133" x2="113" y2="133" stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="48" y1="146" x2="112" y2="146" stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+      <line x1="50" y1="155" x2="110" y2="155" stroke="#2e2820" stroke-width="0.8" opacity="0.9"/>
+
+      <!-- Grille mesh — vertical bars -->
+      <line x1="60"  y1="36" x2="60"  y2="168" stroke="#2a2418" stroke-width="0.7" opacity="0.6"/>
+      <line x1="72"  y1="33" x2="72"  y2="171" stroke="#2a2418" stroke-width="0.7" opacity="0.6"/>
+      <line x1="80"  y1="32" x2="80"  y2="172" stroke="#2a2418" stroke-width="0.7" opacity="0.6"/>
+      <line x1="88"  y1="33" x2="88"  y2="171" stroke="#2a2418" stroke-width="0.7" opacity="0.6"/>
+      <line x1="100" y1="36" x2="100" y2="168" stroke="#2a2418" stroke-width="0.7" opacity="0.6"/>
+
+      <!-- Capsule glow — the element that breathes when recording -->
+      <ellipse cx="80" cy="103" rx="20" ry="30" fill="rgba(212,168,85,0.05)" id="capsule-glow"/>
+
+      <!-- Capsule center indicator dot -->
+      <circle cx="80" cy="103" r="4" fill="#d4a855" opacity="0.25" id="capsule-dot"/>
+      <circle cx="80" cy="103" r="2" fill="#d4a855" opacity="0.5"/>
+
+      <!-- Brand badge area -->
+      <rect x="64" y="160" width="32" height="10" rx="5" fill="#1e1a12"/>
+      <text x="80" y="168" text-anchor="middle" font-family="Inter,sans-serif" font-size="5" font-weight="700" letter-spacing="2" fill="#3a3028">MEMOIR</text>
+
+      <!-- Top cap / crown -->
+      <rect x="54" y="22" width="52" height="10" rx="5" fill="#1e1a12" stroke="#2e2820" stroke-width="1"/>
+      <rect x="62" y="18" width="36" height="8" rx="4" fill="#181410"/>
+      <rect x="70" y="14" width="20" height="8" rx="4" fill="#141210"/>
+
+      <!-- Top crown detail -->
+      <rect x="76" y="10" width="8" height="6" rx="3" fill="#0e0c08"/>
+
+      <!-- Vent slots top -->
+      <rect x="66" y="20" width="6" height="2" rx="1" fill="#2a2418" opacity="0.8"/>
+      <rect x="88" y="20" width="6" height="2" rx="1" fill="#2a2418" opacity="0.8"/>
+
+      <!-- Body collar bottom -->
+      <rect x="48" y="162" width="64" height="14" rx="7" fill="#1a1710" stroke="#2a2418" stroke-width="1"/>
+      <!-- Collar detail lines -->
+      <line x1="52" y1="167" x2="108" y2="167" stroke="#2e2820" stroke-width="0.6" opacity="0.7"/>
+      <line x1="54" y1="171" x2="106" y2="171" stroke="#2e2820" stroke-width="0.6" opacity="0.7"/>
+    </svg>
+
+    <!-- REC indicator -->
+    <div class="rec-row">
+      <div class="rec-dot" id="rec-dot"></div>
+      <div class="mic-status" id="mic-status">tap to speak</div>
     </div>
 
     <!-- VU Meter -->
     <div class="vu-meter" id="vu-meter">
-      <div class="vu-bar" style="height:4px;"></div>
-      <div class="vu-bar" style="height:6px;"></div>
-      <div class="vu-bar" style="height:5px;"></div>
-      <div class="vu-bar" style="height:8px;"></div>
-      <div class="vu-bar" style="height:5px;"></div>
-      <div class="vu-bar" style="height:6px;"></div>
-      <div class="vu-bar" style="height:4px;"></div>
-      <div class="vu-bar" style="height:7px;"></div>
+      <div class="vu-bar" style="height:3px"></div>
+      <div class="vu-bar" style="height:5px"></div>
+      <div class="vu-bar" style="height:4px"></div>
+      <div class="vu-bar" style="height:7px"></div>
+      <div class="vu-bar" style="height:4px"></div>
+      <div class="vu-bar" style="height:6px"></div>
+      <div class="vu-bar" style="height:3px"></div>
+      <div class="vu-bar" style="height:5px"></div>
+      <div class="vu-bar" style="height:4px"></div>
+      <div class="vu-bar" style="height:7px"></div>
     </div>
-
-    <div class="orb-status" id="orb-status">Tap to speak a memory</div>
   </div>
+</div>
 
-  <div class="transcript-live empty" id="transcript-live">
-    Your words will appear here as you speak...
+<!-- Bottom controls -->
+<div class="controls" id="controls">
+  <div class="ctrl-group">
+    <button class="ctrl-btn" onclick="toggleMode()">
+      <span id="mode-label">Free</span>
+    </button>
+    <button class="ctrl-btn" onclick="openDrawer('transcript')">Transcript</button>
   </div>
+  <div class="ctrl-group">
+    <span class="entry-count" id="entry-count"></span>
+    <button class="ctrl-btn-primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+    <button class="ctrl-btn" onclick="exportMemoir()">Export</button>
+    <button class="ctrl-btn" onclick="openDrawer('memoir')">The Memoir</button>
+  </div>
+</div>
 
-  <div>
-    <div class="panel-label" style="margin-bottom:16px;">Raw Material — Voice Log</div>
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
+
+<!-- Transcript Drawer -->
+<div class="drawer" id="drawer-transcript">
+  <div class="drawer-handle">
+    <div class="drawer-title">Transcript & Voice Log</div>
+    <button class="drawer-close" onclick="closeAllDrawers()">close ×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="transcript-text empty" id="transcript-live">Your words will appear here after you speak...</div>
+    <div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;">Voice Log</div>
     <div class="voice-log" id="voice-log">
       <div style="font-family:Inter,sans-serif;font-size:13px;color:var(--dim);">Nothing yet. Start speaking.</div>
     </div>
   </div>
 </div>
 
-<!-- RIGHT: The Memoir -->
-<div class="panel-code">
-  <div class="panel-top">
-    <div class="panel-label">The Memoir</div>
-    <button class="btn-generate" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+<!-- Memoir Drawer -->
+<div class="drawer" id="drawer-memoir">
+  <div class="drawer-handle">
+    <div class="drawer-title">The Memoir</div>
+    <button class="drawer-close" onclick="closeAllDrawers()">close ×</button>
   </div>
-  <div id="chapters-wrap">
+  <div class="drawer-body" id="chapters-wrap">
     <div class="empty-chapters">
       No chapters yet.<br><br>
-      Speak some memories on the left,<br>
-      then <span>Generate Chapter</span> to weave them into<br>your memoir.
+      Speak some memories, then<br>
+      <span>Generate Chapter</span> to weave them into your memoir.
     </div>
   </div>
 </div>
 
 <script>
-  // Known Whisper hallucinations to block
   const HALLUCINATIONS = ['globalonenessproject', 'transcribed by', 'subtitles by', 'www.', 'http'];
 
-  // ── Phase 2: Memoir Prompts ─────────────────────────────────────────────────
   const PROMPTS = [
     "Tell me about where you grew up.",
     "What's a smell that takes you back somewhere?",
@@ -540,19 +636,20 @@
     "Tell me about a risk you took that surprised you.",
     "Who in your family do you most see yourself in?"
   ];
-  let promptIndex = 0;
-  let sessionMode = 'free';
 
-  function setMode(mode) {
-    sessionMode = mode;
-    document.getElementById('btn-free').classList.toggle('active', mode === 'free');
-    document.getElementById('btn-guided').classList.toggle('active', mode === 'guided');
-    const card = document.getElementById('prompt-card');
-    if (mode === 'guided') {
-      card.classList.add('visible');
+  let promptIndex = 0;
+  let guidedMode = false;
+
+  function toggleMode() {
+    guidedMode = !guidedMode;
+    document.getElementById('mode-label').textContent = guidedMode ? 'Guided' : 'Free';
+    document.querySelector('[onclick="toggleMode()"]').classList.toggle('active', guidedMode);
+    const strip = document.getElementById('prompt-strip');
+    if (guidedMode) {
+      strip.classList.add('visible');
       showPrompt(promptIndex);
     } else {
-      card.classList.remove('visible');
+      strip.classList.remove('visible');
     }
   }
 
@@ -565,7 +662,27 @@
     showPrompt(promptIndex);
   }
 
-  // ── Mic helpers ─────────────────────────────────────────────────────────────
+  // ── Drawers ──────────────────────────────────────────────────────────────
+  let activeDrawer = null;
+
+  function openDrawer(name) {
+    closeAllDrawers();
+    const drawer = document.getElementById('drawer-' + name);
+    if (!drawer) return;
+    drawer.classList.add('open');
+    document.getElementById('overlay').classList.add('visible');
+    document.getElementById('controls').style.display = 'none';
+    activeDrawer = name;
+  }
+
+  function closeAllDrawers() {
+    document.querySelectorAll('.drawer').forEach(d => d.classList.remove('open'));
+    document.getElementById('overlay').classList.remove('visible');
+    document.getElementById('controls').style.display = 'flex';
+    activeDrawer = null;
+  }
+
+  // ── Built-in mic ─────────────────────────────────────────────────────────
   async function getBuiltInMicId() {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -583,7 +700,7 @@
     return HALLUCINATIONS.some(h => lower.includes(h));
   }
 
-  // ── Phase 1: Silence Gate ───────────────────────────────────────────────────
+  // ── Silence gate ─────────────────────────────────────────────────────────
   async function isSilent(blob) {
     try {
       const arrayBuffer = await blob.arrayBuffer();
@@ -591,72 +708,75 @@
       const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
       const channelData = audioBuffer.getChannelData(0);
       let sum = 0;
-      for (let i = 0; i < channelData.length; i++) {
-        sum += Math.abs(channelData[i]);
-      }
-      const avg = (sum / channelData.length) * 255; // scale to 0-255
+      for (let i = 0; i < channelData.length; i++) sum += Math.abs(channelData[i]);
+      const avg = (sum / channelData.length) * 255;
       await audioCtx.close();
       return avg < 5;
-    } catch {
-      return false; // if we can't decode, let Whisper try
-    }
+    } catch { return false; }
   }
 
-  // ── Phase 4: Ambient hum ────────────────────────────────────────────────────
-  let humOscillator = null;
-  let humGain = null;
-  let humCtx = null;
-
+  // ── Ambient hum ──────────────────────────────────────────────────────────
+  let humOsc = null, humCtx = null;
   function startHum() {
     try {
       humCtx = new (window.AudioContext || window.webkitAudioContext)();
-      humOscillator = humCtx.createOscillator();
-      humGain = humCtx.createGain();
-      humOscillator.frequency.value = 100;
-      humGain.gain.value = 0.02;
-      humOscillator.connect(humGain);
-      humGain.connect(humCtx.destination);
-      humOscillator.start();
+      humOsc = humCtx.createOscillator();
+      const g = humCtx.createGain();
+      humOsc.frequency.value = 100;
+      g.gain.value = 0.018;
+      humOsc.connect(g);
+      g.connect(humCtx.destination);
+      humOsc.start();
     } catch {}
   }
-
   function stopHum() {
-    try {
-      if (humOscillator) { humOscillator.stop(); humOscillator = null; }
-      if (humCtx) { humCtx.close(); humCtx = null; }
-    } catch {}
+    try { if (humOsc) { humOsc.stop(); humOsc = null; } if (humCtx) { humCtx.close(); humCtx = null; } } catch {}
   }
 
-  // ── VU Meter ─────────────────────────────────────────────────────────────────
+  // ── VU Meter ─────────────────────────────────────────────────────────────
   let vuInterval = null;
-
   function startVU() {
     const bars = document.querySelectorAll('.vu-bar');
     bars.forEach(b => b.classList.add('active'));
     vuInterval = setInterval(() => {
-      bars.forEach(b => {
-        const h = Math.floor(Math.random() * 24) + 3;
-        b.style.height = h + 'px';
-      });
-    }, 100);
+      bars.forEach(b => { b.style.height = (Math.floor(Math.random() * 26) + 3) + 'px'; });
+    }, 90);
   }
-
   function stopVU() {
     if (vuInterval) { clearInterval(vuInterval); vuInterval = null; }
-    const bars = document.querySelectorAll('.vu-bar');
-    bars.forEach(b => {
-      b.classList.remove('active');
-      b.style.height = '3px';
-    });
+    document.querySelectorAll('.vu-bar').forEach(b => { b.classList.remove('active'); b.style.height = '3px'; });
   }
 
-  // ── State ────────────────────────────────────────────────────────────────────
+  // ── Capsule glow animation ────────────────────────────────────────────────
+  let glowInterval = null;
+  function startGlow() {
+    const glow = document.getElementById('capsule-glow');
+    const dot  = document.getElementById('capsule-dot');
+    const mglow = document.getElementById('mic-glow');
+    mglow.classList.add('listening');
+    let t = 0;
+    glowInterval = setInterval(() => {
+      t += 0.08;
+      const v = 0.04 + Math.sin(t) * 0.03;
+      glow.setAttribute('fill', `rgba(212,168,85,${v})`);
+      dot.setAttribute('opacity', 0.3 + Math.sin(t) * 0.2);
+    }, 50);
+  }
+  function stopGlow() {
+    if (glowInterval) { clearInterval(glowInterval); glowInterval = null; }
+    document.getElementById('capsule-glow').setAttribute('fill', 'rgba(212,168,85,0.05)');
+    document.getElementById('capsule-dot').setAttribute('opacity', '0.25');
+    document.getElementById('mic-glow').classList.remove('listening');
+  }
+
+  // ── Recording state ───────────────────────────────────────────────────────
   let isListening = false;
   let isProcessing = false;
   let mediaRecorder = null;
   let audioChunks = [];
 
   function handleMic() {
+    if (activeDrawer) return; // don't record while drawer is open
     if (isProcessing) return;
     if (isListening) stopListening();
     else startListening();
@@ -664,15 +784,14 @@
 
   async function startListening() {
     try {
-      const constraints = {
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
           sampleRate: 16000,
           deviceId: await getBuiltInMicId()
         }
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      });
       audioChunks = [];
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
@@ -682,8 +801,9 @@
       setUI('listening');
       startHum();
       startVU();
-    } catch(e) {
-      setStatus('Microphone access needed');
+      startGlow();
+    } catch {
+      setStatus('mic access needed');
     }
   }
 
@@ -695,131 +815,93 @@
       setUI('processing');
       stopHum();
       stopVU();
+      stopGlow();
     }
   }
 
   async function processAudio() {
     const blob = new Blob(audioChunks, { type: 'audio/webm' });
-
-    // Phase 1: Silence gate
     const silent = await isSilent(blob);
     if (silent) {
-      showTranscript('');
-      document.getElementById('transcript-live').textContent = 'Nothing detected — try again.';
-      document.getElementById('transcript-live').classList.add('empty');
       setUI('idle');
       return;
     }
-
     const form = new FormData();
     form.append('audio', blob, 'memory.webm');
     try {
       const res = await fetch('/api/transcribe', { method: 'POST', body: form });
       const { text } = await res.json();
       if (text && text.trim() && !isHallucination(text)) {
-        showTranscript(text);
+        document.getElementById('transcript-live').textContent = text;
+        document.getElementById('transcript-live').classList.remove('empty');
         await loadVoiceLog();
-      } else {
-        showTranscript('');
+        await updateEntryCount();
       }
-    } catch(e) {
-      setStatus('Something went wrong. Try again.');
-    }
+    } catch { setStatus('error — try again'); }
     setUI('idle');
   }
 
-  // ── UI ────────────────────────────────────────────────────────────────────
+  // ── UI state ──────────────────────────────────────────────────────────────
   function setUI(state) {
-    const mic  = document.getElementById('vintage-mic');
-    const rec  = document.getElementById('rec-indicator');
-    const dot  = document.getElementById('mic-dot');
+    const mic = document.getElementById('vintage-mic');
+    const rec = document.getElementById('rec-dot');
     isProcessing = false;
+
+    mic.className = 'vintage-mic';
+    rec.className = 'rec-dot';
 
     if (state === 'listening') {
       mic.classList.add('listening');
       rec.classList.add('visible');
-      setStatus('Listening — tap to stop');
-      document.getElementById('orb-status').classList.add('listening');
+      setStatus('recording');
+      document.getElementById('mic-status').classList.add('listening');
     } else if (state === 'processing') {
-      mic.classList.remove('listening');
-      rec.classList.remove('visible');
+      mic.classList.add('processing');
       isProcessing = true;
-      setStatus('Transcribing...');
+      setStatus('transcribing...');
     } else {
-      mic.classList.remove('listening');
-      rec.classList.remove('visible');
-      setStatus('Tap to speak a memory');
+      setStatus('tap to speak');
     }
   }
 
   function setStatus(msg) {
-    const el = document.getElementById('orb-status');
+    const el = document.getElementById('mic-status');
     el.textContent = msg;
-    el.className = 'orb-status' + (msg.includes('Listen') ? ' listening' : '');
+    el.className = 'mic-status' + (msg === 'recording' ? ' listening' : '');
   }
 
-  function showTranscript(text) {
-    const el = document.getElementById('transcript-live');
-    if (text) {
-      el.textContent = text;
-      el.classList.remove('empty');
-    } else {
-      el.textContent = 'Could not catch that. Try again.';
-      el.classList.add('empty');
-    }
-  }
-
-  // ── Phase 3: Generate Chapter ─────────────────────────────────────────────
+  // ── Chapter generator ─────────────────────────────────────────────────────
   async function generateChapter() {
     const btn = document.getElementById('btn-generate');
-    const wrap = document.getElementById('chapters-wrap');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Weaving...';
-
+    btn.innerHTML = '<span class="spinner"></span>weaving...';
     try {
       const res = await fetch('/api/generate-chapter', { method: 'POST' });
       const data = await res.json();
-      if (data.error) {
-        alert(data.error);
-        btn.disabled = false;
-        btn.textContent = 'Generate Chapter';
-        return;
-      }
-      // Reload all chapters to show the new one plus any existing
-      await loadChapters();
-    } catch(e) {
-      alert('Generation failed. Check your API key and try again.');
-    }
-
+      if (data.error) { alert(data.error); }
+      else { await loadChapters(); openDrawer('memoir'); }
+    } catch { alert('Generation failed. Check API key.'); }
     btn.disabled = false;
     btn.textContent = 'Generate Chapter';
   }
 
-  // ── Phase 5: Export ───────────────────────────────────────────────────────
+  // ── Export ────────────────────────────────────────────────────────────────
   async function exportMemoir() {
     try {
       const res = await fetch('/api/export');
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.error || 'Export failed');
-        return;
-      }
+      if (!res.ok) { const d = await res.json(); alert(d.error || 'No chapters yet.'); return; }
       const blob = await res.blob();
       const cd = res.headers.get('Content-Disposition') || '';
       const match = cd.match(/filename=(.+)/);
       const filename = match ? match[1] : 'memoir.txt';
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
+      a.href = url; a.download = filename; a.click();
       URL.revokeObjectURL(url);
-    } catch(e) {
-      alert('Export failed. Try again.');
-    }
+    } catch { alert('Export failed.'); }
   }
 
-  // ── Load data ─────────────────────────────────────────────────────────────
+  // ── Data loaders ──────────────────────────────────────────────────────────
   async function loadVoiceLog() {
     const res = await fetch('/api/voice-log');
     const entries = await res.json();
@@ -831,7 +913,7 @@
       const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
       return `<div class="log-entry">
         <div class="log-time">${dateStr} · ${timeStr}</div>
-        <div class="log-text">${e.text}</div>
+        <div class="log-text">${escHtml(e.text)}</div>
       </div>`;
     }).join('');
   }
@@ -843,20 +925,27 @@
     if (!chapterList.length) return;
     wrap.innerHTML = chapterList.map(c => `
       <div class="memoir-chapter">
-        <div class="chapter-header">${c.name.replace(/_/g, ' ')}</div>
+        <div class="chapter-header">${escHtml(c.name.replace(/_/g, ' '))}</div>
         <div class="chapter-body">${escHtml(c.content)}</div>
       </div>
     `).join('');
   }
 
+  async function updateEntryCount() {
+    const res = await fetch('/api/voice-log');
+    const entries = await res.json();
+    const el = document.getElementById('entry-count');
+    el.textContent = entries.length > 0 ? `${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}` : '';
+  }
+
   function escHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
   loadVoiceLog();
   loadChapters();
+  updateEntryCount();
 </script>
-
 </body>
 </html>

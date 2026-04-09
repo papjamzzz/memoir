@@ -1,8 +1,8 @@
 setup:
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 run:
-	python app.py
+	python3 app.py
 
 push:
 	git add -A && git commit -m "$(m)" && git push
