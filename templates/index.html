@@ -17,6 +17,7 @@
       --warm:     #c9956a;
       --code:     #7ec8a0;
       --muted:    #3a3028;
+      --red:      #c0392b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,11 +35,17 @@
     /* ── HEADER ── */
     header {
       grid-column: 1 / -1;
-      padding: 28px 40px 24px;
+      padding: 20px 40px 18px;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-left {
       display: flex;
       align-items: baseline;
       gap: 16px;
+      flex: 1;
     }
     .title {
       font-size: 22px;
@@ -52,16 +59,45 @@
       color: var(--dim);
       font-style: italic;
     }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-export {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      border: 1px solid var(--border);
+      background: transparent;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-export:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+    .export-note {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: var(--dim);
+      opacity: 0.6;
+    }
 
-    /* ── LEFT PANEL — Voice Studio ── */
+    /* ── LEFT PANEL ── */
     .panel-voice {
-      padding: 36px 40px;
+      padding: 28px 36px;
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 24px;
       overflow-y: auto;
-      height: calc(100vh - 77px);
+      height: calc(100vh - 67px);
     }
 
     .panel-label {
@@ -73,72 +109,136 @@
       color: var(--dim);
     }
 
-    /* Orb */
+    /* ── SESSION MODE TOGGLE ── */
+    .session-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .toggle-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      background: transparent;
+      border: none;
+      color: var(--dim);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: var(--muted);
+      color: var(--amber);
+    }
+
+    /* ── GUIDED PROMPT CARD ── */
+    .prompt-card {
+      background: var(--card);
+      border: 1px solid rgba(212,168,85,0.2);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 0 24px rgba(212,168,85,0.04);
+    }
+    .prompt-card.visible { display: flex; }
+    .prompt-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      opacity: 0.7;
+    }
+    .prompt-text {
+      font-size: 15px;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .btn-next-prompt {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: all 0.2s;
+    }
+    .btn-next-prompt:hover { border-color: var(--amber); color: var(--amber); }
+
+    /* ── VINTAGE MIC ── */
     .orb-area {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
-      padding: 24px 0;
-    }
-    .orb-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .orb-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid rgba(212,168,85,0.12);
-      animation: breathe 4s ease-in-out infinite;
-    }
-    .orb-ring:nth-child(1) { width: 140px; height: 140px; }
-    .orb-ring:nth-child(2) { width: 175px; height: 175px; animation-delay: 0.8s; opacity: 0.6; }
-    .orb-ring:nth-child(3) { width: 210px; height: 210px; animation-delay: 1.6s; opacity: 0.3; }
-    @keyframes breathe {
-      0%, 100% { transform: scale(1); opacity: 0.3; }
-      50% { transform: scale(1.03); opacity: 0.7; }
-    }
-    .orb-ring.listening {
-      border-color: rgba(212,168,85,0.5);
-      animation: pulse-listen 0.9s ease-in-out infinite;
-    }
-    @keyframes pulse-listen {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
+      gap: 16px;
+      padding: 16px 0 8px;
     }
 
-    .mic-btn {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      border: 1px solid rgba(212,168,85,0.25);
-      background: radial-gradient(circle at 38% 38%, #221e16, #0e0c0a);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .mic-stage {
       position: relative;
-      z-index: 1;
-      transition: all 0.3s;
-      box-shadow: 0 0 30px rgba(212,168,85,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
     }
-    .mic-btn:hover {
-      border-color: rgba(212,168,85,0.5);
-      box-shadow: 0 0 40px rgba(212,168,85,0.12);
+
+    /* SVG vintage mic */
+    .vintage-mic-svg {
+      width: 90px;
+      height: 130px;
+      transition: filter 0.3s;
     }
-    .mic-btn.listening {
-      border-color: rgba(212,168,85,0.7);
-      box-shadow: 0 0 50px rgba(212,168,85,0.2);
-      background: radial-gradient(circle at 38% 38%, #2e2410, #12100a);
+    .vintage-mic-svg.listening {
+      filter: drop-shadow(0 0 18px rgba(212,168,85,0.5));
     }
-    .mic-btn.processing {
-      opacity: 0.6;
-      cursor: default;
+
+    /* REC indicator */
+    .rec-indicator {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--red);
+      letter-spacing: 0.12em;
+      opacity: 0;
+      transition: opacity 0.3s;
+      margin-top: 4px;
     }
-    .mic-icon { width: 34px; height: 34px; }
-    .mic-icon path, .mic-icon rect { fill: var(--amber); }
+    .rec-indicator.visible { opacity: 1; }
+
+    /* VU Meter */
+    .vu-meter {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+      padding: 0 4px;
+    }
+    .vu-bar {
+      width: 5px;
+      background: var(--amber);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.3;
+      transition: height 0.08s ease;
+      min-height: 3px;
+    }
+    .vu-bar.active { opacity: 0.85; }
 
     .orb-status {
       font-family: 'Inter', sans-serif;
@@ -149,7 +249,10 @@
       min-height: 18px;
       transition: color 0.3s;
     }
-    .orb-status.listening { color: var(--amber); }
+    .orb-status.listening {
+      color: var(--amber);
+      font-family: 'JetBrains Mono', monospace;
+    }
     .orb-status.processing { color: var(--dim); }
 
     /* Live transcript */
@@ -157,8 +260,8 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 18px 20px;
-      min-height: 80px;
+      padding: 16px 20px;
+      min-height: 72px;
       font-size: 15px;
       line-height: 1.7;
       color: var(--text);
@@ -175,7 +278,7 @@
     .voice-log {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .log-entry {
       border-left: 2px solid var(--muted);
@@ -197,17 +300,48 @@
       color: rgba(232,224,208,0.85);
     }
 
-    /* ── RIGHT PANEL — Code Chapters ── */
+    /* ── RIGHT PANEL ── */
     .panel-code {
-      padding: 36px 40px;
+      padding: 28px 36px;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 24px;
       overflow-y: auto;
-      height: calc(100vh - 77px);
+      height: calc(100vh - 67px);
     }
 
-    .chapter {
+    .panel-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-generate {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(212,168,85,0.1);
+      border: 1px solid rgba(212,168,85,0.3);
+      color: var(--amber);
+      padding: 8px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-generate:hover {
+      background: rgba(212,168,85,0.18);
+      border-color: rgba(212,168,85,0.5);
+    }
+    .btn-generate:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* Memoir chapter display */
+    .memoir-chapter {
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
@@ -216,24 +350,35 @@
       background: var(--card);
       padding: 12px 20px;
       border-bottom: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--warm);
     }
-    .chapter-code {
-      background: var(--surface);
-      padding: 20px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12.5px;
-      line-height: 1.75;
+    .chapter-body {
+      padding: 28px 32px;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 15px;
+      line-height: 1.85;
       color: var(--text);
-      white-space: pre;
-      overflow-x: auto;
+      white-space: pre-wrap;
     }
-    .chapter-code .comment  { color: var(--dim); }
-    .chapter-code .docstr   { color: var(--amber); opacity: 0.85; }
-    .chapter-code .keyword  { color: var(--code); }
-    .chapter-code .string   { color: var(--warm); }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(212,168,85,0.2);
+      border-top-color: var(--amber);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .empty-chapters {
       font-family: 'Inter', sans-serif;
@@ -259,27 +404,85 @@
 <body>
 
 <header>
-  <div class="title">memoir</div>
-  <div class="subtitle">speak your story · we write it in code</div>
+  <div class="header-left">
+    <div class="title">memoir</div>
+    <div class="subtitle">your story, in your voice</div>
+  </div>
+  <div class="header-actions">
+    <div>
+      <button class="btn-export" onclick="exportMemoir()">Export Memoir</button>
+      <div class="export-note" style="margin-top:4px;text-align:right;">lulu.com accepts text files for paperback printing.</div>
+    </div>
+  </div>
 </header>
 
 <!-- LEFT: Voice Studio -->
 <div class="panel-voice">
   <div class="panel-label">Voice Studio</div>
 
-  <div class="orb-area">
-    <div class="orb-wrap">
-      <div class="orb-ring" id="ring1"></div>
-      <div class="orb-ring" id="ring2"></div>
-      <div class="orb-ring" id="ring3"></div>
-      <button class="mic-btn" id="mic-btn" onclick="handleMic()">
-        <svg class="mic-icon" viewBox="0 0 24 24">
-          <rect x="9" y="2" width="6" height="11" rx="3"/>
-          <path d="M5 10a7 7 0 0 0 14 0M12 19v3M8 22h8"/>
-          <style>rect,path{stroke:none;}</style>
-        </svg>
-      </button>
+  <!-- Phase 2: Session Mode Toggle -->
+  <div>
+    <div class="session-toggle">
+      <button class="toggle-btn active" id="btn-free" onclick="setMode('free')">Free Record</button>
+      <button class="toggle-btn" id="btn-guided" onclick="setMode('guided')">Guided</button>
     </div>
+  </div>
+
+  <!-- Guided Prompt Card -->
+  <div class="prompt-card" id="prompt-card">
+    <div class="prompt-label">Memoir Prompt</div>
+    <div class="prompt-text" id="prompt-text">Tell me about where you grew up.</div>
+    <button class="btn-next-prompt" onclick="nextPrompt()">Next prompt →</button>
+  </div>
+
+  <!-- Phase 4: Vintage Mic -->
+  <div class="orb-area">
+    <div class="mic-stage" onclick="handleMic()" title="Tap to speak">
+      <svg class="vintage-mic-svg" id="vintage-mic" viewBox="0 0 90 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Stand base -->
+        <rect x="30" y="118" width="30" height="5" rx="2.5" fill="#3a3028"/>
+        <!-- Stand pole -->
+        <rect x="43" y="96" width="4" height="24" rx="2" fill="#3a3028"/>
+        <!-- Stand arm -->
+        <path d="M30 110 Q45 98 60 110" stroke="#3a3028" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Mic body outer shell -->
+        <rect x="22" y="12" width="46" height="80" rx="23" fill="#1e1a14" stroke="#4a4030" stroke-width="1.5"/>
+        <!-- Mic grille lines -->
+        <rect x="26" y="20" width="38" height="64" rx="19" fill="none" stroke="#2e2820" stroke-width="1"/>
+        <!-- Horizontal grille bars -->
+        <line x1="26" y1="32" x2="64" y2="32" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
+        <line x1="24" y1="42" x2="66" y2="42" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
+        <line x1="23" y1="52" x2="67" y2="52" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
+        <line x1="24" y1="62" x2="66" y2="62" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
+        <line x1="26" y1="72" x2="64" y2="72" stroke="#3a3028" stroke-width="0.8" opacity="0.8"/>
+        <!-- Vertical grille bars -->
+        <line x1="35" y1="18" x2="35" y2="86" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
+        <line x1="45" y1="16" x2="45" y2="88" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
+        <line x1="55" y1="18" x2="55" y2="86" stroke="#3a3028" stroke-width="0.8" opacity="0.5"/>
+        <!-- Amber glow capsule center -->
+        <ellipse cx="45" cy="52" rx="12" ry="18" fill="rgba(212,168,85,0.06)" id="mic-glow"/>
+        <!-- Logo dot -->
+        <circle cx="45" cy="52" r="3" fill="#d4a855" opacity="0.4" id="mic-dot"/>
+        <!-- Top cap -->
+        <rect x="30" y="10" width="30" height="6" rx="3" fill="#2a2520"/>
+        <!-- Bottom collar -->
+        <rect x="28" y="88" width="34" height="8" rx="4" fill="#2a2520"/>
+      </svg>
+      <div class="rec-indicator" id="rec-indicator">● REC</div>
+    </div>
+
+    <!-- VU Meter -->
+    <div class="vu-meter" id="vu-meter">
+      <div class="vu-bar" style="height:4px;"></div>
+      <div class="vu-bar" style="height:6px;"></div>
+      <div class="vu-bar" style="height:5px;"></div>
+      <div class="vu-bar" style="height:8px;"></div>
+      <div class="vu-bar" style="height:5px;"></div>
+      <div class="vu-bar" style="height:6px;"></div>
+      <div class="vu-bar" style="height:4px;"></div>
+      <div class="vu-bar" style="height:7px;"></div>
+    </div>
+
     <div class="orb-status" id="orb-status">Tap to speak a memory</div>
   </div>
 
@@ -295,15 +498,17 @@
   </div>
 </div>
 
-<!-- RIGHT: Code Chapters -->
+<!-- RIGHT: The Memoir -->
 <div class="panel-code">
-  <div class="panel-label">The Book — Code Chapters</div>
+  <div class="panel-top">
+    <div class="panel-label">The Memoir</div>
+    <button class="btn-generate" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+  </div>
   <div id="chapters-wrap">
     <div class="empty-chapters">
       No chapters yet.<br><br>
-      Speak a memory on the left.<br>
-      In your next session, <span>Claude will weave it into code</span><br>
-      and it will appear here.
+      Speak some memories on the left,<br>
+      then <span>Generate Chapter</span> to weave them into<br>your memoir.
     </div>
   </div>
 </div>
@@ -312,11 +517,59 @@
   // Known Whisper hallucinations to block
   const HALLUCINATIONS = ['globalonenessproject', 'transcribed by', 'subtitles by', 'www.', 'http'];
 
+  // ── Phase 2: Memoir Prompts ─────────────────────────────────────────────────
+  const PROMPTS = [
+    "Tell me about where you grew up.",
+    "What's a smell that takes you back somewhere?",
+    "Who taught you something you still use today?",
+    "Describe a moment you felt truly free.",
+    "What would you want your grandchildren to know about you?",
+    "Tell me about a time everything went wrong — and what happened next.",
+    "What music defined a decade of your life?",
+    "Tell me about the best meal you ever had.",
+    "Who was your childhood best friend, and what did you do together?",
+    "What's a piece of advice you were given that you almost ignored?",
+    "Tell me about the place you've felt most at home.",
+    "What was the hardest thing you ever had to let go of?",
+    "What do you wish someone had told you when you were twenty?",
+    "Describe a moment of pure luck that changed your direction.",
+    "Tell me about someone who believed in you before you believed in yourself.",
+    "What's something you made with your own hands that you're proud of?",
+    "Tell me about a place that no longer exists — only in your memory.",
+    "What tradition from your childhood do you still carry?",
+    "Tell me about a risk you took that surprised you.",
+    "Who in your family do you most see yourself in?"
+  ];
+  let promptIndex = 0;
+  let sessionMode = 'free';
+
+  function setMode(mode) {
+    sessionMode = mode;
+    document.getElementById('btn-free').classList.toggle('active', mode === 'free');
+    document.getElementById('btn-guided').classList.toggle('active', mode === 'guided');
+    const card = document.getElementById('prompt-card');
+    if (mode === 'guided') {
+      card.classList.add('visible');
+      showPrompt(promptIndex);
+    } else {
+      card.classList.remove('visible');
+    }
+  }
+
+  function showPrompt(i) {
+    document.getElementById('prompt-text').textContent = PROMPTS[i % PROMPTS.length];
+  }
+
+  function nextPrompt() {
+    promptIndex = (promptIndex + 1) % PROMPTS.length;
+    showPrompt(promptIndex);
+  }
+
+  // ── Mic helpers ─────────────────────────────────────────────────────────────
   async function getBuiltInMicId() {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const mics = devices.filter(d => d.kind === 'audioinput');
-      // Prefer MacBook built-in mic; avoid BlackHole/virtual/USB devices
       const builtin = mics.find(d =>
         d.label.toLowerCase().includes('built-in') ||
         d.label.toLowerCase().includes('macbook')
@@ -330,12 +583,79 @@
     return HALLUCINATIONS.some(h => lower.includes(h));
   }
 
+  // ── Phase 1: Silence Gate ───────────────────────────────────────────────────
+  async function isSilent(blob) {
+    try {
+      const arrayBuffer = await blob.arrayBuffer();
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      const channelData = audioBuffer.getChannelData(0);
+      let sum = 0;
+      for (let i = 0; i < channelData.length; i++) {
+        sum += Math.abs(channelData[i]);
+      }
+      const avg = (sum / channelData.length) * 255; // scale to 0-255
+      await audioCtx.close();
+      return avg < 5;
+    } catch {
+      return false; // if we can't decode, let Whisper try
+    }
+  }
+
+  // ── Phase 4: Ambient hum ────────────────────────────────────────────────────
+  let humOscillator = null;
+  let humGain = null;
+  let humCtx = null;
+
+  function startHum() {
+    try {
+      humCtx = new (window.AudioContext || window.webkitAudioContext)();
+      humOscillator = humCtx.createOscillator();
+      humGain = humCtx.createGain();
+      humOscillator.frequency.value = 100;
+      humGain.gain.value = 0.02;
+      humOscillator.connect(humGain);
+      humGain.connect(humCtx.destination);
+      humOscillator.start();
+    } catch {}
+  }
+
+  function stopHum() {
+    try {
+      if (humOscillator) { humOscillator.stop(); humOscillator = null; }
+      if (humCtx) { humCtx.close(); humCtx = null; }
+    } catch {}
+  }
+
+  // ── VU Meter ─────────────────────────────────────────────────────────────────
+  let vuInterval = null;
+
+  function startVU() {
+    const bars = document.querySelectorAll('.vu-bar');
+    bars.forEach(b => b.classList.add('active'));
+    vuInterval = setInterval(() => {
+      bars.forEach(b => {
+        const h = Math.floor(Math.random() * 24) + 3;
+        b.style.height = h + 'px';
+      });
+    }, 100);
+  }
+
+  function stopVU() {
+    if (vuInterval) { clearInterval(vuInterval); vuInterval = null; }
+    const bars = document.querySelectorAll('.vu-bar');
+    bars.forEach(b => {
+      b.classList.remove('active');
+      b.style.height = '3px';
+    });
+  }
+
+  // ── State ────────────────────────────────────────────────────────────────────
   let isListening = false;
   let isProcessing = false;
   let mediaRecorder = null;
   let audioChunks = [];
 
-  // ── Mic ──────────────────────────────────────────────────────────────────
   function handleMic() {
     if (isProcessing) return;
     if (isListening) stopListening();
@@ -344,7 +664,6 @@
 
   async function startListening() {
     try {
-      // Prefer built-in mic; avoids BlackHole/ioStation being grabbed by default
       const constraints = {
         audio: {
           echoCancellation: true,
@@ -361,6 +680,8 @@
       mediaRecorder.start();
       isListening = true;
       setUI('listening');
+      startHum();
+      startVU();
     } catch(e) {
       setStatus('Microphone access needed');
     }
@@ -372,11 +693,24 @@
       mediaRecorder.stream.getTracks().forEach(t => t.stop());
       isListening = false;
       setUI('processing');
+      stopHum();
+      stopVU();
     }
   }
 
   async function processAudio() {
     const blob = new Blob(audioChunks, { type: 'audio/webm' });
+
+    // Phase 1: Silence gate
+    const silent = await isSilent(blob);
+    if (silent) {
+      showTranscript('');
+      document.getElementById('transcript-live').textContent = 'Nothing detected — try again.';
+      document.getElementById('transcript-live').classList.add('empty');
+      setUI('idle');
+      return;
+    }
+
     const form = new FormData();
     form.append('audio', blob, 'memory.webm');
     try {
@@ -394,25 +728,26 @@
     setUI('idle');
   }
 
-  // ── UI ───────────────────────────────────────────────────────────────────
+  // ── UI ────────────────────────────────────────────────────────────────────
   function setUI(state) {
-    const btn   = document.getElementById('mic-btn');
-    const rings = ['ring1','ring2','ring3'].map(id => document.getElementById(id));
+    const mic  = document.getElementById('vintage-mic');
+    const rec  = document.getElementById('rec-indicator');
+    const dot  = document.getElementById('mic-dot');
     isProcessing = false;
 
-    btn.className = 'mic-btn';
-    rings.forEach(r => r.className = 'orb-ring');
-
     if (state === 'listening') {
-      btn.classList.add('listening');
-      rings.forEach(r => r.classList.add('listening'));
+      mic.classList.add('listening');
+      rec.classList.add('visible');
       setStatus('Listening — tap to stop');
       document.getElementById('orb-status').classList.add('listening');
     } else if (state === 'processing') {
-      btn.classList.add('processing');
+      mic.classList.remove('listening');
+      rec.classList.remove('visible');
       isProcessing = true;
       setStatus('Transcribing...');
     } else {
+      mic.classList.remove('listening');
+      rec.classList.remove('visible');
       setStatus('Tap to speak a memory');
     }
   }
@@ -431,6 +766,56 @@
     } else {
       el.textContent = 'Could not catch that. Try again.';
       el.classList.add('empty');
+    }
+  }
+
+  // ── Phase 3: Generate Chapter ─────────────────────────────────────────────
+  async function generateChapter() {
+    const btn = document.getElementById('btn-generate');
+    const wrap = document.getElementById('chapters-wrap');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Weaving...';
+
+    try {
+      const res = await fetch('/api/generate-chapter', { method: 'POST' });
+      const data = await res.json();
+      if (data.error) {
+        alert(data.error);
+        btn.disabled = false;
+        btn.textContent = 'Generate Chapter';
+        return;
+      }
+      // Reload all chapters to show the new one plus any existing
+      await loadChapters();
+    } catch(e) {
+      alert('Generation failed. Check your API key and try again.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Generate Chapter';
+  }
+
+  // ── Phase 5: Export ───────────────────────────────────────────────────────
+  async function exportMemoir() {
+    try {
+      const res = await fetch('/api/export');
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || 'Export failed');
+        return;
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get('Content-Disposition') || '';
+      const match = cd.match(/filename=(.+)/);
+      const filename = match ? match[1] : 'memoir.txt';
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch(e) {
+      alert('Export failed. Try again.');
     }
   }
 
@@ -453,13 +838,13 @@
 
   async function loadChapters() {
     const res = await fetch('/api/chapters');
-    const chapters = await res.json();
-    if (!chapters.length) return;
+    const chapterList = await res.json();
     const wrap = document.getElementById('chapters-wrap');
-    wrap.innerHTML = chapters.map(c => `
-      <div class="chapter">
-        <div class="chapter-header">${c.name}.py</div>
-        <div class="chapter-code">${escHtml(c.content)}</div>
+    if (!chapterList.length) return;
+    wrap.innerHTML = chapterList.map(c => `
+      <div class="memoir-chapter">
+        <div class="chapter-header">${c.name.replace(/_/g, ' ')}</div>
+        <div class="chapter-body">${escHtml(c.content)}</div>
       </div>
     `).join('');
   }
