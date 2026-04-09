@@ -210,41 +210,95 @@
       margin-right: 8px;
     }
 
-    /* Guided prompt — inside nav bar, below tabs */
-    .prompt-strip {
+    /* ── TELEPROMPTER ── */
+    .teleprompter {
       position: fixed;
-      top: 62px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 29;
-      text-align: center;
-      max-width: 480px;
-      padding: 0 24px;
-      display: none;
-      transition: opacity 0.3s;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 15;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 52px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .prompt-strip.visible { display: block; }
-    .prompt-strip-text {
-      font-size: 14px;
+    .teleprompter.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    /* Fade gradient at top of prompter area */
+    .teleprompter::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, rgba(6,5,4,0.0));
+      pointer-events: none;
+    }
+
+    .prompter-text {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(22px, 3.2vw, 44px);
       font-style: italic;
-      color: rgba(232,224,208,0.45);
-      line-height: 1.6;
+      font-weight: 400;
+      color: rgba(232,218,185,0.92);
+      text-align: center;
+      line-height: 1.45;
+      max-width: 780px;
+      padding: 0 48px;
+      letter-spacing: 0.01em;
+      text-shadow:
+        0 0 40px rgba(200,151,58,0.25),
+        0 0 80px rgba(200,151,58,0.10);
     }
-    .prompt-strip-next {
+
+    .prompter-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .prompter-btn {
       font-family: 'Inter', sans-serif;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--dim);
       background: transparent;
       border: none;
       cursor: pointer;
-      margin-top: 6px;
-      padding: 4px 0;
+      padding: 6px 0;
       transition: color 0.2s;
     }
-    .prompt-strip-next:hover { color: var(--amber); }
+    .prompter-btn:hover { color: var(--amber); }
+
+    /* Subtle scan line across the text — old teleprompter feel */
+    @keyframes scan {
+      0%   { top: 0%; opacity: 0.04; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .prompter-scanline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(200,151,58,0.3);
+      pointer-events: none;
+      animation: scan 4s linear infinite;
+    }
+
+    /* Prompt strip (legacy, hidden) */
+    .prompt-strip { display: none; }
 
     /* ── MAIN STAGE ── */
     .stage {
@@ -614,10 +668,21 @@
 <div class="smoke-layer" id="smoke-layer"></div>
 
 <!-- Guided prompt strip -->
-<div class="prompt-strip" id="prompt-strip">
-  <div class="prompt-strip-text" id="prompt-text">Tell me about where you grew up.</div>
-  <button class="prompt-strip-next" onclick="nextPrompt()">next prompt →</button>
+<!-- Teleprompter -->
+<div class="teleprompter" id="teleprompter">
+  <div style="position:relative;width:100%;display:flex;justify-content:center;">
+    <div class="prompter-scanline"></div>
+    <div class="prompter-text" id="prompt-text">Tell me about where you grew up.</div>
+  </div>
+  <div class="prompter-controls">
+    <button class="prompter-btn" onclick="prevPrompt()">← prev</button>
+    <button class="prompter-btn" onclick="speakPrompt()">speak again</button>
+    <button class="prompter-btn" onclick="nextPrompt()">next →</button>
+  </div>
 </div>
+
+<!-- legacy hidden -->
+<div class="prompt-strip" id="prompt-strip"></div>
 
 <!-- Main stage — click anywhere to record -->
 <div class="stage" onclick="handleMic()">
@@ -1067,10 +1132,10 @@
     });
     if (name === 'free') {
       guidedMode = false;
-      document.getElementById('prompt-strip').classList.remove('visible');
+      document.getElementById('teleprompter').classList.remove('visible');
+      window.speechSynthesis.cancel();
     } else if (name === 'guided') {
       guidedMode = true;
-      document.getElementById('prompt-strip').classList.add('visible');
       showPrompt(promptIndex);
     } else if (name === 'transcript') {
       openDrawer('transcript');
@@ -1079,12 +1144,58 @@
     }
   }
 
+  // ── Teleprompter ──────────────────────────────────────────────────────────
+  let promptVoice = null;
+
+  // Pick the warmest available voice
+  function pickVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = ['Samantha', 'Karen', 'Moira', 'Fiona', 'Victoria',
+                       'Google UK English Female', 'Microsoft Zira'];
+    for (const name of preferred) {
+      const v = voices.find(v => v.name === name);
+      if (v) return v;
+    }
+    return voices.find(v => v.lang.startsWith('en')) || voices[0] || null;
+  }
+
+  window.speechSynthesis.onvoiceschanged = () => { promptVoice = pickVoice(); };
+
+  function speakPrompt() {
+    const text = document.getElementById('prompt-text').textContent;
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.voice = promptVoice || pickVoice();
+    utt.rate  = 0.88;   // slow — warm, deliberate
+    utt.pitch = 0.95;
+    utt.volume = 0.9;
+    window.speechSynthesis.speak(utt);
+  }
+
   function showPrompt(i) {
-    document.getElementById('prompt-text').textContent = PROMPTS[i % PROMPTS.length];
+    const text = PROMPTS[i % PROMPTS.length];
+    const el   = document.getElementById('prompt-text');
+
+    // Fade out → swap text → fade in
+    el.style.transition = 'opacity 0.35s';
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.textContent = text;
+      el.style.opacity = '1';
+      speakPrompt();
+    }, 350);
+
+    // Show teleprompter
+    document.getElementById('teleprompter').classList.add('visible');
   }
 
   function nextPrompt() {
     promptIndex = (promptIndex + 1) % PROMPTS.length;
+    showPrompt(promptIndex);
+  }
+
+  function prevPrompt() {
+    promptIndex = (promptIndex - 1 + PROMPTS.length) % PROMPTS.length;
     showPrompt(promptIndex);
   }
 
