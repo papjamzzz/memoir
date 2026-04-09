@@ -257,8 +257,8 @@
       animation: scroll-up 18s linear forwards;
     }
     @keyframes scroll-up {
-      0%   { transform: translateY(100vh); }
-      100% { transform: translateY(-40%); }
+      0%   { transform: translateY(105vh); }
+      100% { transform: translateY(-110%); }
     }
 
     .prompter-text {
@@ -1187,14 +1187,33 @@
 
   window.speechSynthesis.onvoiceschanged = () => { promptVoice = pickVoice(); };
 
-  function speakPrompt() {
+  async function speakPrompt() {
     const text = document.getElementById('prompt-text').textContent;
     window.speechSynthesis.cancel();
+
+    // Try ElevenLabs Rachel first — warm, human
+    try {
+      const res = await fetch('/api/speak-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url  = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.play();
+        audio.onended = () => URL.revokeObjectURL(url);
+        return;
+      }
+    } catch {}
+
+    // Fallback — best available browser voice (Samantha on Mac)
     const utt = new SpeechSynthesisUtterance(text);
-    utt.voice = promptVoice || pickVoice();
-    utt.rate  = 0.88;   // slow — warm, deliberate
-    utt.pitch = 0.95;
-    utt.volume = 0.9;
+    utt.voice  = promptVoice || pickVoice();
+    utt.rate   = 0.86;
+    utt.pitch  = 0.95;
+    utt.volume = 0.92;
     window.speechSynthesis.speak(utt);
   }
 

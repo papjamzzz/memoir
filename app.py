@@ -125,6 +125,38 @@ Write the chapter now:"""
     return jsonify({'chapter': chapter_text, 'name': chapter_name})
 
 
+@app.route('/api/speak-prompt', methods=['POST'])
+def speak_prompt():
+    """ElevenLabs TTS — speak a prompt in Rachel's voice"""
+    import requests as req
+    api_key = os.getenv('ELEVENLABS_API_KEY')
+    if not api_key:
+        return jsonify({'error': 'no_key'}), 400
+
+    data = request.get_json() or {}
+    text = data.get('text', '')
+    if not text:
+        return jsonify({'error': 'no_text'}), 400
+
+    voice_id = '21m00Tcm4TlvDq8ikWAM'  # Rachel — warm, calm, human
+    url = f'https://api.elevenlabs.io/v1/text-to-speech/{voice_id}'
+    headers = {
+        'xi-api-key': api_key,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+    }
+    payload = {
+        'text': text,
+        'model_id': 'eleven_monolingual_v1',
+        'voice_settings': {'stability': 0.55, 'similarity_boost': 0.85}
+    }
+    r = req.post(url, json=payload, headers=headers)
+    if r.status_code != 200:
+        return jsonify({'error': 'elevenlabs_failed'}), 500
+
+    return Response(r.content, mimetype='audio/mpeg')
+
+
 @app.route('/api/reminder', methods=['POST'])
 def reminder():
     """Store reminder preferences for future scheduling."""
