@@ -62,25 +62,45 @@
     /* ── SPOTLIGHT from above — single amber cone ── */
     .spotlight {
       position: fixed;
-      top: -20px;
+      top: -40px;
       left: 50%;
       transform: translateX(-50%);
-      width: 320px;
+      width: 600px;
       height: 100vh;
-      background: radial-gradient(ellipse 160px 70% at 50% 0%,
-        rgba(200,151,58,0.13) 0%,
-        rgba(200,151,58,0.06) 35%,
-        transparent 70%);
+      background:
+        radial-gradient(ellipse 280px 55% at 50% 0%,
+          rgba(220,170,70,0.28) 0%,
+          rgba(210,155,55,0.14) 28%,
+          rgba(200,140,40,0.05) 55%,
+          transparent 75%);
       pointer-events: none;
       z-index: 1;
     }
 
-    /* ── HEAVY VIGNETTE — dark room ── */
+    /* Halo ring around mic — quick diffuse to black */
+    .mic-halo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -52%);
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center,
+        rgba(200,151,58,0.18) 0%,
+        rgba(200,140,40,0.10) 22%,
+        rgba(180,120,30,0.04) 45%,
+        transparent 65%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── VIGNETTE — tight, punchy ── */
     .vignette {
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, rgba(0,0,0,0.82) 100%);
+        radial-gradient(ellipse 55% 55% at 50% 45%, transparent 0%, rgba(0,0,0,0.88) 100%);
       pointer-events: none;
       z-index: 1;
     }
@@ -199,18 +219,33 @@
     }
 
     .vintage-mic {
-      width: 160px;
-      height: 260px;
+      width: auto;
+      height: 54vh;
+      min-height: 320px;
+      max-height: 580px;
       position: relative;
       z-index: 2;
-      transition: filter 0.4s ease;
+      transition: filter 0.5s ease;
     }
     .vintage-mic.listening {
-      filter: drop-shadow(0 0 28px rgba(212,168,85,0.45)) drop-shadow(0 0 60px rgba(212,168,85,0.15));
+      filter:
+        drop-shadow(0 0 40px rgba(200,151,58,0.5))
+        drop-shadow(0 0 80px rgba(200,151,58,0.2))
+        drop-shadow(0 0 120px rgba(200,151,58,0.08));
     }
     .vintage-mic.processing {
-      filter: drop-shadow(0 0 10px rgba(212,168,85,0.15));
-      opacity: 0.7;
+      filter: drop-shadow(0 0 12px rgba(200,151,58,0.15));
+      opacity: 0.75;
+    }
+
+    /* Power LED pulse */
+    @keyframes power-idle {
+      0%, 100% { opacity: 0.45; r: 5px; }
+      50%       { opacity: 0.85; r: 6px; }
+    }
+    @keyframes power-rec {
+      0%, 100% { opacity: 1; r: 6.5px; }
+      50%       { opacity: 0.55; r: 5px; }
     }
 
     /* ── REC + STATUS ── */
@@ -486,15 +521,12 @@
 
 <!-- Spotlight cone -->
 <div class="spotlight"></div>
+<!-- Mic halo glow -->
+<div class="mic-halo"></div>
 <!-- Vignette dark room -->
 <div class="vignette"></div>
 <!-- Smoke particles -->
 <div class="smoke-layer" id="smoke-layer"></div>
-
-<!-- Wordmark -->
-<div class="wordmark">
-  <div class="wordmark-title">Memoir</div>
-</div>
 
 <!-- Guided prompt strip -->
 <div class="prompt-strip" id="prompt-strip">
@@ -507,122 +539,260 @@
   <div class="mic-wrap">
     <div class="mic-glow" id="mic-glow"></div>
 
-    <!-- Detailed vintage condenser mic SVG -->
-    <svg class="vintage-mic" id="vintage-mic" viewBox="0 0 160 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-
+    <!-- PHOTOREALISTIC CONDENSER MIC — large format, life size -->
+    <svg class="vintage-mic" id="vintage-mic" viewBox="0 0 280 520" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Chrome body gradient — light from left, like a single tungsten bulb -->
+        <!-- Main chrome body: blazing studio key light from upper-left -->
         <linearGradient id="chrome-body" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stop-color="#0e0c0a"/>
-          <stop offset="15%"  stop-color="#222018"/>
-          <stop offset="32%"  stop-color="#3c3830"/>
-          <stop offset="48%"  stop-color="#504c44"/>
-          <stop offset="55%"  stop-color="#5a5650"/>
-          <stop offset="68%"  stop-color="#3a3630"/>
-          <stop offset="84%"  stop-color="#1e1c18"/>
-          <stop offset="100%" stop-color="#0c0a08"/>
-        </linearGradient>
-        <linearGradient id="chrome-collar" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%"   stop-color="#0c0a08"/>
-          <stop offset="35%"  stop-color="#2e2c28"/>
-          <stop offset="55%"  stop-color="#2e2c28"/>
-          <stop offset="100%" stop-color="#0c0a08"/>
+          <stop offset="8%"   stop-color="#282420"/>
+          <stop offset="18%"  stop-color="#504c46"/>
+          <stop offset="28%"  stop-color="#807870"/>
+          <stop offset="38%"  stop-color="#a8a098"/>
+          <stop offset="46%"  stop-color="#c0b8b0"/>
+          <stop offset="50%"  stop-color="#ccc4bc"/>
+          <stop offset="54%"  stop-color="#bab2aa"/>
+          <stop offset="62%"  stop-color="#908880"/>
+          <stop offset="72%"  stop-color="#585250"/>
+          <stop offset="83%"  stop-color="#2a2826"/>
+          <stop offset="92%"  stop-color="#141210"/>
+          <stop offset="100%" stop-color="#060504"/>
         </linearGradient>
-        <!-- Amber spotlight hitting the capsule from top -->
-        <radialGradient id="capsule-light" cx="50%" cy="30%" r="60%">
-          <stop offset="0%"   stop-color="rgba(200,151,58,0.18)"/>
-          <stop offset="100%" stop-color="rgba(200,151,58,0)"/>
+        <!-- Collar / cap gradient — bright -->
+        <linearGradient id="chrome-collar" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#080706"/>
+          <stop offset="18%"  stop-color="#343230"/>
+          <stop offset="40%"  stop-color="#706860"/>
+          <stop offset="50%"  stop-color="#787068"/>
+          <stop offset="62%"  stop-color="#585250"/>
+          <stop offset="82%"  stop-color="#282624"/>
+          <stop offset="100%" stop-color="#060504"/>
+        </linearGradient>
+        <!-- Neck connector -->
+        <linearGradient id="chrome-neck" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#0a0806"/>
+          <stop offset="28%"  stop-color="#3a3834"/>
+          <stop offset="50%"  stop-color="#504e4a"/>
+          <stop offset="72%"  stop-color="#2e2c2a"/>
+          <stop offset="100%" stop-color="#080706"/>
+        </linearGradient>
+        <!-- Amber capsule glow -->
+        <radialGradient id="capsule-light" cx="50%" cy="38%" r="55%">
+          <stop offset="0%"   stop-color="rgba(210,160,60,0.22)"/>
+          <stop offset="60%"  stop-color="rgba(200,140,40,0.08)"/>
+          <stop offset="100%" stop-color="rgba(180,120,20,0)"/>
         </radialGradient>
+        <!-- Power LED glow -->
+        <radialGradient id="led-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="rgba(255,180,40,0.9)"/>
+          <stop offset="40%"  stop-color="rgba(230,140,20,0.6)"/>
+          <stop offset="100%" stop-color="rgba(200,100,10,0)"/>
+        </radialGradient>
+        <!-- Mesh pattern — tight perforated grille -->
+        <pattern id="mesh-pattern" patternUnits="userSpaceOnUse" width="4" height="4">
+          <rect width="4" height="4" fill="#060504"/>
+          <circle cx="2" cy="2" r="1.1" fill="#0c0a08"/>
+        </pattern>
+        <!-- Top specular flash -->
+        <radialGradient id="top-specular" cx="40%" cy="20%" r="50%">
+          <stop offset="0%"   stop-color="rgba(255,245,220,0.12)"/>
+          <stop offset="100%" stop-color="rgba(255,245,220,0)"/>
+        </radialGradient>
+        <!-- Drop shadow filter -->
+        <filter id="mic-shadow" x="-30%" y="-10%" width="160%" height="130%">
+          <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(0,0,0,0.8)" flood-opacity="1"/>
+        </filter>
+        <filter id="led-blur">
+          <feGaussianBlur stdDeviation="2.5"/>
+        </filter>
+        <!-- Clip path for mesh window -->
+        <clipPath id="mesh-clip">
+          <rect x="52" y="44" width="96" height="226" rx="48"/>
+        </clipPath>
       </defs>
 
-      <!-- Stand base weighted plate -->
-      <ellipse cx="80" cy="254" rx="34" ry="5" fill="#0e0c0a"/>
-      <rect x="52" y="248" width="56" height="8" rx="4" fill="#181614"/>
-      <rect x="58" y="245" width="44" height="5" rx="2.5" fill="#141210"/>
-      <!-- Stand column -->
-      <rect x="77" y="210" width="6" height="38" rx="3" fill="url(#chrome-collar)"/>
-      <!-- Boom arm — angled like a real mic stand -->
-      <line x1="80" y1="212" x2="106" y2="200" stroke="#1c1a16" stroke-width="4" stroke-linecap="round"/>
-      <line x1="80" y1="212" x2="54"  y2="200" stroke="#1c1a16" stroke-width="4" stroke-linecap="round"/>
-      <line x1="80" y1="212" x2="106" y2="200" stroke="#2e2c28" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="80" y1="212" x2="54"  y2="200" stroke="#2e2c28" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- ═══ BOOM STAND ═══ -->
+      <!-- Base weighted plate — heavy cast iron feel -->
+      <ellipse cx="200" cy="508" rx="68" ry="8" fill="#030202" opacity="0.95"/>
+      <rect x="136" y="494" width="128" height="18" rx="9" fill="#0c0a08"/>
+      <rect x="148" y="489" width="104" height="10" rx="5" fill="#0e0c0a"/>
+      <rect x="158" y="485" width="84"  height="7"  rx="3.5" fill="#0a0806"/>
+      <!-- Base shine -->
+      <rect x="155" y="490" width="40" height="3" rx="1.5" fill="rgba(255,245,200,0.04)"/>
 
-      <!-- Shock mount outer ring -->
-      <circle cx="80" cy="198" r="17" stroke="#1e1c18" stroke-width="2.5" fill="none"/>
-      <circle cx="80" cy="198" r="17" stroke="#302e28" stroke-width="0.8" fill="none"/>
-      <!-- Spider elastic threads -->
-      <line x1="80" y1="181" x2="80" y2="175" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <line x1="90" y1="183" x2="94" y2="178" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <line x1="70" y1="183" x2="66" y2="178" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <line x1="80" y1="215" x2="80" y2="221" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <line x1="90" y1="213" x2="94" y2="218" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <line x1="70" y1="213" x2="66" y2="218" stroke="#242018" stroke-width="1.2" opacity="0.9"/>
-      <!-- Shock mount center ring -->
-      <circle cx="80" cy="198" r="9" stroke="#2a2820" stroke-width="1.5" fill="#0e0c08"/>
+      <!-- Vertical pole — tall chrome rod right side -->
+      <rect x="196" y="300" width="10" height="196" rx="5" fill="url(#chrome-neck)"/>
+      <rect x="197" y="300" width="3"  height="196" rx="1.5" fill="rgba(255,245,220,0.07)"/>
+      <!-- Pole collar clamp at top -->
+      <rect x="192" y="296" width="18" height="14" rx="5" fill="url(#chrome-collar)"/>
+      <line x1="193" y1="302" x2="209" y2="302" stroke="#0a0806" stroke-width="1" opacity="0.6"/>
+      <line x1="193" y1="306" x2="209" y2="306" stroke="#0a0806" stroke-width="1" opacity="0.6"/>
 
-      <!-- Neck / body connector -->
-      <rect x="70" y="174" width="20" height="26" rx="7" fill="#181614" stroke="#242018" stroke-width="1"/>
-      <line x1="72" y1="181" x2="88" y2="181" stroke="#202018" stroke-width="0.7" opacity="0.8"/>
-      <line x1="71" y1="186" x2="89" y2="186" stroke="#202018" stroke-width="0.7" opacity="0.8"/>
-      <line x1="72" y1="191" x2="88" y2="191" stroke="#202018" stroke-width="0.7" opacity="0.8"/>
+      <!-- Boom arm — sweeping from right pole to mic center, angled down -->
+      <!-- Main boom tube -->
+      <path d="M201 298 Q175 290 155 310 Q135 330 120 348"
+            stroke="#0e0c0a" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M201 298 Q175 290 155 310 Q135 330 120 348"
+            stroke="url(#chrome-neck)" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M201 298 Q175 290 155 310 Q135 330 120 348"
+            stroke="rgba(255,245,210,0.07)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Counterweight on far end of boom -->
+      <path d="M201 298 Q210 298 218 302" stroke="#0e0c0a" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <path d="M201 298 Q210 298 218 302" stroke="url(#chrome-neck)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <rect x="216" y="296" width="22" height="12" rx="6" fill="#181614"/>
+      <rect x="217" y="297" width="20" height="10" rx="5" fill="url(#chrome-collar)"/>
+      <line x1="218" y1="300" x2="236" y2="300" stroke="#0a0806" stroke-width="0.8" opacity="0.6"/>
+      <line x1="218" y1="303" x2="236" y2="303" stroke="#0a0806" stroke-width="0.8" opacity="0.6"/>
 
-      <!-- Main cylindrical body — chrome silver -->
-      <rect x="42" y="26" width="76" height="150" rx="38" fill="url(#chrome-body)"/>
-      <rect x="42" y="26" width="76" height="150" rx="38" stroke="#302e28" stroke-width="1"/>
+      <!-- Boom arm yoke — two arms hugging mic neck -->
+      <path d="M120 348 Q106 338 100 348" stroke="#0e0c0a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M120 348 Q106 338 100 348" stroke="#2a2824" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M120 348 Q106 358 100 348" stroke="#0e0c0a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M120 348 Q106 358 100 348" stroke="#2a2824" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 
-      <!-- Inner dark mesh window -->
-      <rect x="49" y="36" width="62" height="130" rx="31" fill="#080706"/>
-      <rect x="49" y="36" width="62" height="130" rx="31" stroke="#1a1816" stroke-width="0.8"/>
+      <!-- ═══ SHOCK MOUNT ═══ -->
+      <!-- Outer ring -->
+      <circle cx="100" cy="348" r="26" stroke="#161412" stroke-width="4" fill="none" filter="url(#mic-shadow)"/>
+      <circle cx="100" cy="348" r="26" stroke="#2e2c28" stroke-width="1.2" fill="none"/>
+      <circle cx="100" cy="348" r="24" stroke="#1a1816" stroke-width="0.6" fill="none" opacity="0.6"/>
+      <!-- Elastic spider threads — 8 points -->
+      <line x1="100" y1="322" x2="100" y2="314" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="118" y1="330" x2="124" y2="324" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="126" y1="348" x2="134" y2="348" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="118" y1="366" x2="124" y2="372" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="100" y1="374" x2="100" y2="382" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="82"  y1="366" x2="76"  y2="372" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="74"  y1="348" x2="66"  y2="348" stroke="#1e1c18" stroke-width="1.5"/>
+      <line x1="82"  y1="330" x2="76"  y2="324" stroke="#1e1c18" stroke-width="1.5"/>
+      <!-- Inner mount ring -->
+      <circle cx="100" cy="348" r="14" stroke="#242220" stroke-width="2" fill="#0a0806"/>
+      <circle cx="100" cy="348" r="12" stroke="#1e1c18" stroke-width="0.8" fill="#080604"/>
 
-      <!-- Amber spotlight wash on capsule -->
-      <rect x="49" y="36" width="62" height="130" rx="31" fill="url(#capsule-light)"/>
+      <!-- ═══ NECK CONNECTOR ═══ -->
+      <rect x="86" y="314" width="28" height="36" rx="10" fill="url(#chrome-neck)" filter="url(#mic-shadow)"/>
+      <rect x="87" y="314" width="28" height="36" rx="10" stroke="#1e1c18" stroke-width="0.8" fill="none"/>
+      <!-- Neck vent rings -->
+      <line x1="89" y1="324" x2="113" y2="324" stroke="#141210" stroke-width="1"   opacity="0.9"/>
+      <line x1="88" y1="330" x2="114" y2="330" stroke="#141210" stroke-width="1"   opacity="0.9"/>
+      <line x1="88" y1="336" x2="114" y2="336" stroke="#141210" stroke-width="1"   opacity="0.9"/>
+      <line x1="89" y1="342" x2="113" y2="342" stroke="#141210" stroke-width="1"   opacity="0.9"/>
+      <!-- Neck side light catch -->
+      <rect x="87" y="318" width="3" height="24" rx="1.5" fill="rgba(255,245,200,0.05)"/>
 
-      <!-- Tight horizontal mesh bars -->
-      <line x1="51" y1="50"  x2="109" y2="50"  stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="50" y1="60"  x2="110" y2="60"  stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="70"  x2="111" y2="70"  stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="80"  x2="111" y2="80"  stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="90"  x2="111" y2="90"  stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="100" x2="111" y2="100" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="110" x2="111" y2="110" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="120" x2="111" y2="120" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="130" x2="111" y2="130" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="49" y1="140" x2="111" y2="140" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="50" y1="150" x2="110" y2="150" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
-      <line x1="51" y1="158" x2="109" y2="158" stroke="#1e1c18" stroke-width="0.7" opacity="0.95"/>
+      <!-- ═══ MAIN BODY — large format condenser ═══ -->
+      <!-- Outer chrome shell -->
+      <rect x="44" y="28" width="112" height="288" rx="56" fill="url(#chrome-body)" filter="url(#mic-shadow)"/>
+      <rect x="44" y="28" width="112" height="288" rx="56" stroke="#282624" stroke-width="1.2"/>
 
-      <!-- Vertical mesh bars -->
-      <line x1="62"  y1="34" x2="62"  y2="165" stroke="#181614" stroke-width="0.6" opacity="0.7"/>
-      <line x1="72"  y1="31" x2="72"  y2="168" stroke="#181614" stroke-width="0.6" opacity="0.7"/>
-      <line x1="80"  y1="30" x2="80"  y2="169" stroke="#181614" stroke-width="0.6" opacity="0.7"/>
-      <line x1="88"  y1="31" x2="88"  y2="168" stroke="#181614" stroke-width="0.6" opacity="0.7"/>
-      <line x1="98"  y1="34" x2="98"  y2="165" stroke="#181614" stroke-width="0.6" opacity="0.7"/>
+      <!-- Subtle top-light specular wash over whole body -->
+      <rect x="44" y="28" width="112" height="288" rx="56" fill="url(#top-specular)"/>
 
-      <!-- Capsule — the heart of the mic, glows amber -->
-      <ellipse cx="80" cy="103" rx="18" ry="28" fill="rgba(200,151,58,0.04)" id="capsule-glow"/>
-      <circle cx="80" cy="103" r="5" fill="#c8973a" opacity="0.18" id="capsule-dot"/>
-      <circle cx="80" cy="103" r="2" fill="#c8973a" opacity="0.55"/>
-      <circle cx="80" cy="103" r="0.8" fill="#e8b84a" opacity="0.9"/>
+      <!-- ═══ GRILLE MESH WINDOW ═══ -->
+      <!-- Dark recess inset -->
+      <rect x="52" y="44" width="96" height="226" rx="48" fill="#040303"/>
+      <rect x="52" y="44" width="96" height="226" rx="48" stroke="#161412" stroke-width="1.2"/>
 
-      <!-- Body label badge -->
-      <rect x="62" y="162" width="36" height="10" rx="5" fill="#101008"/>
-      <text x="80" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="4.5" font-weight="700" letter-spacing="2.5" fill="#2a2820">MEMOIR</text>
+      <!-- Mesh pattern fill — perforated metal -->
+      <rect x="52" y="44" width="96" height="226" rx="48" fill="url(#mesh-pattern)" clip-path="url(#mesh-clip)"/>
 
-      <!-- Top crown — dome shape -->
-      <rect x="50" y="20" width="60" height="10" rx="5" fill="url(#chrome-collar)" stroke="#242018" stroke-width="0.8"/>
-      <rect x="58" y="14" width="44" height="9"  rx="4.5" fill="#181614"/>
-      <rect x="66" y="9"  width="28" height="8"  rx="4"   fill="#141210"/>
-      <rect x="73" y="5"  width="14" height="7"  rx="3.5" fill="#0e0c08"/>
-      <rect x="78" y="1"  width="4"  height="6"  rx="2"   fill="#0a0806"/>
+      <!-- Horizontal grille accent bars — raised metal strips across the mesh -->
+      <line x1="54"  y1="68"  x2="146" y2="68"  stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="53"  y1="80"  x2="147" y2="80"  stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="92"  x2="148" y2="92"  stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="104" x2="148" y2="104" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="116" x2="148" y2="116" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="128" x2="148" y2="128" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="140" x2="148" y2="140" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="152" x2="148" y2="152" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="164" x2="148" y2="164" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="176" x2="148" y2="176" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="188" x2="148" y2="188" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="200" x2="148" y2="200" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="52"  y1="212" x2="148" y2="212" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="53"  y1="224" x2="147" y2="224" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="54"  y1="236" x2="146" y2="236" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="55"  y1="248" x2="145" y2="248" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
+      <line x1="57"  y1="258" x2="143" y2="258" stroke="#1a1816" stroke-width="0.8" opacity="0.8"/>
 
-      <!-- Body collar bottom -->
-      <rect x="48" y="162" width="64" height="14" rx="7" fill="url(#chrome-collar)" stroke="#242018" stroke-width="0.8"/>
-      <line x1="53" y1="167" x2="107" y2="167" stroke="#0e0c08" stroke-width="0.6" opacity="0.7"/>
-      <line x1="55" y1="172" x2="105" y2="172" stroke="#0e0c08" stroke-width="0.6" opacity="0.7"/>
+      <!-- Amber capsule light wash through mesh -->
+      <rect x="52" y="44" width="96" height="226" rx="48" fill="url(#capsule-light)"/>
 
-      <!-- Chrome highlight specular — left edge catch from tungsten light -->
-      <rect x="43" y="40" width="3" height="100" rx="1.5" fill="rgba(255,240,200,0.04)"/>
-      <rect x="44" y="55" width="1.5" height="70" rx="0.75" fill="rgba(255,240,200,0.06)"/>
+      <!-- ═══ CAPSULE — the diaphragm, visible through mesh ═══ -->
+      <!-- Outer capsule ring -->
+      <ellipse cx="100" cy="157" rx="24" ry="34" fill="none" stroke="rgba(200,151,58,0.12)" stroke-width="1.5"/>
+      <!-- Capsule membrane glow -->
+      <ellipse cx="100" cy="157" rx="20" ry="30" fill="rgba(200,151,58,0.06)" id="capsule-glow"/>
+      <!-- Capsule center detail -->
+      <circle cx="100" cy="157" r="8"   fill="rgba(200,151,58,0.10)" id="capsule-dot"/>
+      <circle cx="100" cy="157" r="4"   fill="rgba(210,165,60,0.25)"/>
+      <circle cx="100" cy="157" r="2"   fill="rgba(220,175,70,0.55)"/>
+      <circle cx="100" cy="157" r="0.8" fill="rgba(240,200,90,0.95)"/>
+      <!-- Capsule radial lines suggesting membrane -->
+      <line x1="100" y1="127" x2="100" y2="187" stroke="rgba(200,151,58,0.06)" stroke-width="0.5"/>
+      <line x1="80"  y1="137" x2="120" y2="177" stroke="rgba(200,151,58,0.06)" stroke-width="0.5"/>
+      <line x1="80"  y1="177" x2="120" y2="137" stroke="rgba(200,151,58,0.06)" stroke-width="0.5"/>
+      <line x1="76"  y1="157" x2="124" y2="157" stroke="rgba(200,151,58,0.06)" stroke-width="0.5"/>
+
+      <!-- ═══ TOP CROWN ═══ -->
+      <!-- Base collar of crown -->
+      <rect x="52" y="22" width="96" height="12" rx="6" fill="url(#chrome-collar)" stroke="#222018" stroke-width="0.8"/>
+      <!-- Crown taper steps -->
+      <rect x="62" y="14" width="76" height="11" rx="5.5" fill="#181614" stroke="#1c1a16" stroke-width="0.7"/>
+      <rect x="72" y="7"  width="56" height="10" rx="5"   fill="#141210" stroke="#181614" stroke-width="0.6"/>
+      <rect x="82" y="2"  width="36" height="8"  rx="4"   fill="#101008" stroke="#141210" stroke-width="0.5"/>
+      <rect x="90" y="0"  width="20" height="5"  rx="2.5" fill="#0a0806"/>
+      <!-- Crown top pin -->
+      <rect x="97" y="-3" width="6"  height="5"  rx="3"   fill="#080604"/>
+      <!-- Crown specular -->
+      <rect x="63" y="14" width="4"  height="8"  rx="2"   fill="rgba(255,245,210,0.06)"/>
+
+      <!-- ═══ BOTTOM COLLAR + LOGO BAND ═══ -->
+      <!-- Bottom body collar -->
+      <rect x="50" y="310" width="100" height="18" rx="9" fill="url(#chrome-collar)" stroke="#202018" stroke-width="0.8"/>
+      <line x1="56" y1="317" x2="144" y2="317" stroke="#0a0806" stroke-width="0.8" opacity="0.7"/>
+      <line x1="58" y1="323" x2="142" y2="323" stroke="#0a0806" stroke-width="0.8" opacity="0.7"/>
+
+      <!-- Logo band — engraved M -->
+      <rect x="58" y="292" width="84" height="20" rx="10" fill="#0a0806" stroke="#181614" stroke-width="0.8"/>
+      <!-- Stylized M — engraved into metal -->
+      <path d="M82 307 L82 297 L100 306 L118 297 L118 307"
+            stroke="rgba(200,151,58,0.55)" stroke-width="2.2" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- M engraved shadow -->
+      <path d="M82 308 L82 298 L100 307 L118 298 L118 308"
+            stroke="rgba(0,0,0,0.4)" stroke-width="1.5" fill="none"
+            stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- ═══ POWER / RECORD BUTTON LED ═══ -->
+      <!-- Outer glow halo — soft, radius pulses in CSS -->
+      <circle cx="100" cy="277" r="14" fill="url(#led-glow)" filter="url(#led-blur)" opacity="0.6" id="led-halo"/>
+      <!-- Button bezel -->
+      <circle cx="100" cy="277" r="8"  fill="#0c0a08" stroke="#282420" stroke-width="1.2"/>
+      <!-- LED itself -->
+      <circle cx="100" cy="277" r="5"  fill="#c87820" id="power-led">
+        <animate attributeName="r" values="4.5;5.8;4.5" dur="2.8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+      <!-- LED hot spot -->
+      <circle cx="99" cy="276" r="2"   fill="#ffcc60" opacity="0.85">
+        <animate attributeName="opacity" values="0.5;0.95;0.5" dur="2.8s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- ═══ CHROME SPECULAR HIGHLIGHTS ═══ -->
+      <!-- Primary key light streak — bright tungsten from upper-left -->
+      <rect x="55"  y="50"  width="7"   height="220" rx="3.5" fill="rgba(255,248,220,0.10)"/>
+      <rect x="56"  y="70"  width="3.5" height="170" rx="1.8" fill="rgba(255,248,225,0.16)"/>
+      <rect x="57"  y="100" width="1.5" height="110" rx="0.8" fill="rgba(255,252,235,0.22)"/>
+      <!-- Secondary fill light — right side bounce -->
+      <rect x="148" y="80"  width="4"   height="140" rx="2"   fill="rgba(200,180,140,0.05)"/>
+      <rect x="149" y="110" width="2"   height="90"  rx="1"   fill="rgba(200,180,140,0.08)"/>
+      <!-- Right edge shadow -->
+      <rect x="152" y="60"  width="3"   height="200" rx="1.5" fill="rgba(0,0,0,0.35)"/>
+      <!-- Top body highlight arc — halo from spotlight above -->
+      <ellipse cx="100" cy="46"  rx="40" ry="12" fill="rgba(255,245,210,0.09)"/>
+      <ellipse cx="100" cy="48"  rx="28" ry="7"  fill="rgba(255,248,220,0.07)"/>
+      <!-- Bottom body reflection -->
+      <ellipse cx="100" cy="312" rx="30" ry="6"  fill="rgba(255,240,200,0.04)"/>
     </svg>
 
     <!-- REC indicator -->
