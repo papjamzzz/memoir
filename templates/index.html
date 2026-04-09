@@ -598,6 +598,60 @@
           <stop offset="0%"   stop-color="rgba(255,245,220,0.12)"/>
           <stop offset="100%" stop-color="rgba(255,245,220,0)"/>
         </radialGradient>
+        <!-- Gobo fabric texture — tight weave -->
+        <pattern id="fabric-left" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(-12,0,0)">
+          <rect width="6" height="6" fill="#1a140e"/>
+          <line x1="0" y1="0" x2="6" y2="0" stroke="#221a12" stroke-width="0.7"/>
+          <line x1="0" y1="3" x2="6" y2="3" stroke="#161008" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="0" y2="6" stroke="#1e1610" stroke-width="0.6"/>
+          <line x1="3" y1="0" x2="3" y2="6" stroke="#161008" stroke-width="0.4"/>
+        </pattern>
+        <pattern id="fabric-right" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(12,0,0)">
+          <rect width="6" height="6" fill="#1a140e"/>
+          <line x1="0" y1="0" x2="6" y2="0" stroke="#221a12" stroke-width="0.7"/>
+          <line x1="0" y1="3" x2="6" y2="3" stroke="#161008" stroke-width="0.5"/>
+          <line x1="0" y1="0" x2="0" y2="6" stroke="#1e1610" stroke-width="0.6"/>
+          <line x1="3" y1="0" x2="3" y2="6" stroke="#161008" stroke-width="0.4"/>
+        </pattern>
+        <pattern id="fabric-center" patternUnits="userSpaceOnUse" width="5" height="5">
+          <rect width="5" height="5" fill="#16100c"/>
+          <line x1="0" y1="0" x2="5" y2="0" stroke="#1e1610" stroke-width="0.6"/>
+          <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#120e08" stroke-width="0.4"/>
+          <line x1="0" y1="0" x2="0" y2="5" stroke="#1c1410" stroke-width="0.5"/>
+          <line x1="2.5" y1="0" x2="2.5" y2="5" stroke="#120e08" stroke-width="0.4"/>
+        </pattern>
+        <!-- Gobo wood grain gradient — mahogany -->
+        <linearGradient id="wood-left" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1a0e06"/>
+          <stop offset="30%"  stop-color="#2e1a0a"/>
+          <stop offset="55%"  stop-color="#3a2010"/>
+          <stop offset="80%"  stop-color="#2a160a"/>
+          <stop offset="100%" stop-color="#160c04"/>
+        </linearGradient>
+        <linearGradient id="wood-right" x1="100%" y1="0%" x2="0%" y2="0%">
+          <stop offset="0%"   stop-color="#1a0e06"/>
+          <stop offset="30%"  stop-color="#2e1a0a"/>
+          <stop offset="55%"  stop-color="#3a2010"/>
+          <stop offset="80%"  stop-color="#2a160a"/>
+          <stop offset="100%" stop-color="#160c04"/>
+        </linearGradient>
+        <linearGradient id="wood-top" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1e1008"/>
+          <stop offset="40%"  stop-color="#3c2214"/>
+          <stop offset="60%"  stop-color="#3c2214"/>
+          <stop offset="100%" stop-color="#1a0e06"/>
+        </linearGradient>
+        <!-- Gobo light catch — warm key light on left face of left gobo, right face of right gobo -->
+        <linearGradient id="gobo-light-left" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="rgba(200,140,60,0.18)"/>
+          <stop offset="40%"  stop-color="rgba(200,140,60,0.05)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.3)"/>
+        </linearGradient>
+        <linearGradient id="gobo-light-right" x1="100%" y1="0%" x2="0%" y2="0%">
+          <stop offset="0%"   stop-color="rgba(200,140,60,0.05)"/>
+          <stop offset="60%"  stop-color="rgba(0,0,0,0.1)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0.4)"/>
+        </linearGradient>
         <!-- Drop shadow filter -->
         <filter id="mic-shadow" x="-30%" y="-10%" width="160%" height="130%">
           <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(0,0,0,0.8)" flood-opacity="1"/>
@@ -610,6 +664,86 @@
           <rect x="52" y="44" width="96" height="226" rx="48"/>
         </clipPath>
       </defs>
+
+      <!-- ═══ STUDIO GOBOS — vocal isolation baffles ═══ -->
+      <!-- Arranged in a V behind the mic, like a Billie Holiday session -->
+
+      <!-- CENTER BACK PANEL — directly behind mic, slightly shorter -->
+      <g transform="translate(100,170)">
+        <!-- Shadow cast on floor -->
+        <ellipse cx="0" cy="148" rx="28" ry="4" fill="rgba(0,0,0,0.5)"/>
+        <!-- Fabric face -->
+        <rect x="-34" y="-148" width="68" height="296" rx="2" fill="url(#fabric-center)"/>
+        <!-- Light wash from above -->
+        <rect x="-34" y="-148" width="68" height="296" rx="2" fill="rgba(200,140,50,0.04)"/>
+        <!-- Dark fade top and bottom -->
+        <rect x="-34" y="-148" width="68" height="80"  rx="2" fill="rgba(0,0,0,0.45)"/>
+        <rect x="-34" y="120"  width="68" height="28"  rx="2" fill="rgba(0,0,0,0.5)"/>
+        <!-- Left wood frame stile -->
+        <rect x="-34" y="-148" width="9" height="296" rx="2" fill="url(#wood-left)"/>
+        <!-- Right wood frame stile -->
+        <rect x="25"  y="-148" width="9" height="296" rx="2" fill="url(#wood-right)"/>
+        <!-- Top rail -->
+        <rect x="-34" y="-148" width="68" height="10" rx="2" fill="url(#wood-top)"/>
+        <!-- Bottom rail -->
+        <rect x="-34" y="138"  width="68" height="10" rx="2" fill="url(#wood-top)"/>
+        <!-- Mid rail — divides panel in thirds -->
+        <rect x="-34" y="-52"  width="68" height="8"  rx="1" fill="url(#wood-top)" opacity="0.8"/>
+        <rect x="-34" y="46"   width="68" height="8"  rx="1" fill="url(#wood-top)" opacity="0.8"/>
+        <!-- Frame specular edge catches — warm light on left stile -->
+        <rect x="-34" y="-140" width="2" height="278" rx="1" fill="rgba(200,140,50,0.18)"/>
+        <rect x="-33" y="-100" width="1" height="200" rx="0.5" fill="rgba(220,160,70,0.10)"/>
+      </g>
+
+      <!-- LEFT GOBO — angled out at ~20deg, leaning away from viewer -->
+      <g transform="translate(36,175) rotate(-22,0,0) skewY(-3)">
+        <ellipse cx="0" cy="148" rx="24" ry="3" fill="rgba(0,0,0,0.4)"/>
+        <!-- Fabric -->
+        <rect x="-28" y="-148" width="56" height="296" rx="2" fill="url(#fabric-left)"/>
+        <rect x="-28" y="-148" width="56" height="296" rx="2" fill="url(#gobo-light-left)"/>
+        <!-- Dark fade edges -->
+        <rect x="-28" y="-148" width="56" height="90"  rx="2" fill="rgba(0,0,0,0.55)"/>
+        <rect x="-28" y="120"  width="56" height="28"  rx="2" fill="rgba(0,0,0,0.6)"/>
+        <!-- Wood frame left stile — catches warm light -->
+        <rect x="-28" y="-148" width="8"  height="296" rx="2" fill="url(#wood-left)"/>
+        <rect x="-28" y="-148" width="8"  height="296" rx="2" fill="rgba(200,140,50,0.12)"/>
+        <!-- Right stile — in shadow -->
+        <rect x="20"  y="-148" width="8"  height="296" rx="2" fill="#0e0804"/>
+        <!-- Top rail -->
+        <rect x="-28" y="-148" width="56" height="9" rx="2" fill="url(#wood-top)"/>
+        <!-- Bottom rail -->
+        <rect x="-28" y="139"  width="56" height="9" rx="2" fill="url(#wood-top)"/>
+        <!-- Mid rail -->
+        <rect x="-28" y="-50"  width="56" height="7" rx="1" fill="url(#wood-top)" opacity="0.7"/>
+        <rect x="-28" y="48"   width="56" height="7" rx="1" fill="url(#wood-top)" opacity="0.7"/>
+        <!-- Warm key light specular on exposed left frame edge -->
+        <rect x="-28" y="-140" width="2"  height="278" rx="1" fill="rgba(220,155,55,0.28)"/>
+        <rect x="-27" y="-90"  width="1"  height="180" rx="0.5" fill="rgba(240,175,70,0.15)"/>
+      </g>
+
+      <!-- RIGHT GOBO — mirrored, angled right, falls more into shadow -->
+      <g transform="translate(164,175) rotate(22,0,0) skewY(3)">
+        <ellipse cx="0" cy="148" rx="24" ry="3" fill="rgba(0,0,0,0.4)"/>
+        <!-- Fabric -->
+        <rect x="-28" y="-148" width="56" height="296" rx="2" fill="url(#fabric-right)"/>
+        <rect x="-28" y="-148" width="56" height="296" rx="2" fill="url(#gobo-light-right)"/>
+        <!-- Dark fade edges -->
+        <rect x="-28" y="-148" width="56" height="90"  rx="2" fill="rgba(0,0,0,0.60)"/>
+        <rect x="-28" y="120"  width="56" height="28"  rx="2" fill="rgba(0,0,0,0.65)"/>
+        <!-- Left stile — mostly in shadow -->
+        <rect x="-28" y="-148" width="8"  height="296" rx="2" fill="#0a0604"/>
+        <!-- Right stile — slight bounce -->
+        <rect x="20"  y="-148" width="8"  height="296" rx="2" fill="url(#wood-right)"/>
+        <!-- Top rail -->
+        <rect x="-28" y="-148" width="56" height="9" rx="2" fill="url(#wood-top)" opacity="0.7"/>
+        <!-- Bottom rail -->
+        <rect x="-28" y="139"  width="56" height="9" rx="2" fill="url(#wood-top)" opacity="0.7"/>
+        <!-- Mid rails -->
+        <rect x="-28" y="-50"  width="56" height="7" rx="1" fill="url(#wood-top)" opacity="0.5"/>
+        <rect x="-28" y="48"   width="56" height="7" rx="1" fill="url(#wood-top)" opacity="0.5"/>
+        <!-- Dark right edge catch -->
+        <rect x="26"  y="-140" width="2"  height="278" rx="1" fill="rgba(180,120,40,0.08)"/>
+      </g>
 
       <!-- ═══ BOOM STAND ═══ -->
       <!-- Base weighted plate — heavy cast iron feel -->
