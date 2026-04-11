@@ -1,0 +1,171 @@
+{
+  "chapters": [
+    {
+      "id": "early_life",
+      "title": "Early Life",
+      "subtitle": "Birth to age 12",
+      "description": "The world you were born into. The people who shaped your first years.",
+      "icon": "🌱",
+      "questions": [
+        {"id": "el_01", "type": "facts",   "text": "Where were you born, and what year?"},
+        {"id": "el_02", "type": "facts",   "text": "Who raised you? Who was in your household growing up?"},
+        {"id": "el_03", "type": "facts",   "text": "Where did you grow up — describe the place."},
+        {"id": "el_04", "type": "emotion", "text": "What's the dominant feeling you associate with your childhood?"},
+        {"id": "el_05", "type": "emotion", "text": "Who made you feel safest as a child?"},
+        {"id": "el_06", "type": "sensory", "text": "Close your eyes — you're a kid again. Describe one scene: what do you see, hear, smell?"},
+        {"id": "el_07", "type": "sensory", "text": "A specific room, smell, or sound from home that you still remember."},
+        {"id": "el_08", "type": "meaning", "text": "What did your childhood teach you about the world, even if you didn't know it then?"},
+        {"id": "el_09", "type": "meaning", "text": "Is there anything from those early years you're still carrying today?"}
+      ]
+    },
+    {
+      "id": "adolescence",
+      "title": "Adolescence",
+      "subtitle": "Ages 13 to 18",
+      "description": "The years you started figuring out who you were. The good parts and the hard parts.",
+      "icon": "🔥",
+      "questions": [
+        {"id": "ad_01", "type": "facts",   "text": "Where were you living during your teenage years?"},
+        {"id": "ad_02", "type": "facts",   "text": "Who were your people — friends, a crew, a scene?"},
+        {"id": "ad_03", "type": "facts",   "text": "What were you into? Music, sports, art, trouble?"},
+        {"id": "ad_04", "type": "emotion", "text": "What feeling defined your teenage years most — freedom, pressure, loneliness, love?"},
+        {"id": "ad_05", "type": "emotion", "text": "Was there a moment in your teens that cracked something open in you?"},
+        {"id": "ad_06", "type": "sensory", "text": "A specific place from your teens you can still picture perfectly. Describe it."},
+        {"id": "ad_07", "type": "sensory", "text": "A song, smell, or image that takes you straight back to that time."},
+        {"id": "ad_08", "type": "meaning", "text": "What did you believe about yourself at 17 that turned out to be wrong?"},
+        {"id": "ad_09", "type": "meaning", "text": "What did those years give you that you still use?"}
+      ]
+    },
+    {
+      "id": "leaving_home",
+      "title": "Leaving Home",
+      "subtitle": "Your first moves into the world",
+      "description": "The moment you stepped out on your own — what you were chasing, what you were leaving.",
+      "icon": "🚪",
+      "questions": [
+        {"id": "lh_01", "type": "facts",   "text": "How old were you when you first left home, and where did you go?"},
+        {"id": "lh_02", "type": "facts",   "text": "What were the circumstances — college, work, escape, adventure?"},
+        {"id": "lh_03", "type": "emotion", "text": "What did leaving feel like? Relief, fear, excitement, grief?"},
+        {"id": "lh_04", "type": "emotion", "text": "Was there something you were running toward, or running from?"},
+        {"id": "lh_05", "type": "sensory", "text": "Your first place you lived on your own — describe it."},
+        {"id": "lh_06", "type": "sensory", "text": "A specific moment from that early independent period that's stuck with you."},
+        {"id": "lh_07", "type": "meaning", "text": "What did you learn about yourself the first time you were truly on your own?"},
+        {"id": "lh_08", "type": "meaning", "text": "Did you become who you expected to become?"}
+      ]
+    },
+    {
+      "id": "work_career",
+      "title": "Work & Career",
+      "subtitle": "How you spent your time and built your life",
+      "description": "The jobs, the grinds, the callings, the pivots. What work meant to you.",
+      "icon": "⚙️",
+      "questions": [
+        {"id": "wk_01", "type": "facts",   "text": "What did you do for work over the years? Walk me through the main chapters."},
+        {"id": "wk_02", "type": "facts",   "text": "Was there a job or career that defined a big chunk of your life?"},
+        {"id": "wk_03", "type": "emotion", "text": "What work made you feel most alive — most like yourself?"},
+        {"id": "wk_04", "type": "emotion", "text": "Was there work you did purely to survive, that cost you something?"},
+        {"id": "wk_05", "type": "sensory", "text": "Describe a specific place where you worked — what it looked, sounded, felt like."},
+        {"id": "wk_06", "type": "sensory", "text": "A day of work you remember vividly, good or bad."},
+        {"id": "wk_07", "type": "meaning", "text": "What does work mean to you — a means to an end, an identity, a calling?"},
+        {"id": "wk_08", "type": "meaning", "text": "What are you most proud of that you built or accomplished?"}
+      ]
+    },
+    {
+      "id": "relationships_love",
+      "title": "Love & Relationships",
+      "subtitle": "The people who got close",
+      "description": "Who you loved, who loved you, what love taught you.",
+      "icon": "❤️",
+      "questions": [
+        {"id": "rl_01", "type": "facts",   "text": "Tell me about a significant relationship — how did it start?"},
+        {"id": "rl_02", "type": "facts",   "text": "Have you been married, partnered, or had a long relationship you'd want in this story?"},
+        {"id": "rl_03", "type": "emotion", "text": "What's the deepest you've ever felt for another person?"},
+        {"id": "rl_04", "type": "emotion", "text": "What's the hardest a relationship has hurt you?"},
+        {"id": "rl_05", "type": "sensory", "text": "A specific moment with someone you loved — describe it like a scene."},
+        {"id": "rl_06", "type": "sensory", "text": "What do you associate with that person — a sound, smell, image?"},
+        {"id": "rl_07", "type": "meaning", "text": "What has love taught you?"},
+        {"id": "rl_08", "type": "meaning", "text": "What do you wish you'd known about love when you were younger?"}
+      ]
+    },
+    {
+      "id": "family_built",
+      "title": "Family You Built",
+      "subtitle": "The people you chose and created",
+      "description": "Children, chosen family, deep friendships. The tribe you made.",
+      "icon": "🏠",
+      "questions": [
+        {"id": "fb_01", "type": "facts",   "text": "Do you have children? Tell me about them."},
+        {"id": "fb_02", "type": "facts",   "text": "Who is in your family now — the people you count as yours?"},
+        {"id": "fb_03", "type": "emotion", "text": "What does it feel like to have built something with people?"},
+        {"id": "fb_04", "type": "emotion", "text": "Is there a moment with your family that you return to when you need strength?"},
+        {"id": "fb_05", "type": "sensory", "text": "A family scene — a meal, a trip, a morning — describe it."},
+        {"id": "fb_06", "type": "meaning", "text": "What do you want to pass down to the people who come after you?"},
+        {"id": "fb_07", "type": "meaning", "text": "What kind of parent, partner, or friend have you tried to be?"}
+      ]
+    },
+    {
+      "id": "hard_times",
+      "title": "Hard Times",
+      "subtitle": "When things broke — and how you survived",
+      "description": "The losses, the failures, the dark chapters. What they cost you. What they made you.",
+      "icon": "🌧️",
+      "questions": [
+        {"id": "ht_01", "type": "facts",   "text": "What's the hardest thing you've been through?"},
+        {"id": "ht_02", "type": "facts",   "text": "Was there a period where everything seemed to fall apart at once?"},
+        {"id": "ht_03", "type": "emotion", "text": "What did rock bottom feel like for you?"},
+        {"id": "ht_04", "type": "emotion", "text": "What got you through it — or who?"},
+        {"id": "ht_05", "type": "sensory", "text": "A specific moment from a hard chapter — what do you see when you go back there?"},
+        {"id": "ht_06", "type": "meaning", "text": "What did hard times take from you that you never got back?"},
+        {"id": "ht_07", "type": "meaning", "text": "What did they give you that you couldn't have gotten any other way?"}
+      ]
+    },
+    {
+      "id": "achievements",
+      "title": "What You're Proud Of",
+      "subtitle": "The wins, the breakthroughs, the things you built",
+      "description": "Not just trophies. The moments you knew you'd done something real.",
+      "icon": "✨",
+      "questions": [
+        {"id": "ac_01", "type": "facts",   "text": "What's something you did that you're genuinely proud of?"},
+        {"id": "ac_02", "type": "facts",   "text": "Was there a goal you chased for a long time that you finally reached?"},
+        {"id": "ac_03", "type": "emotion", "text": "What did it feel like in the moment you realized you'd done it?"},
+        {"id": "ac_04", "type": "emotion", "text": "Did anyone see you do it? Did that matter?"},
+        {"id": "ac_05", "type": "sensory", "text": "Describe a proud moment — where were you, what was around you?"},
+        {"id": "ac_06", "type": "meaning", "text": "What does that achievement say about who you are?"},
+        {"id": "ac_07", "type": "meaning", "text": "What do you want people to know you built or stood for?"}
+      ]
+    },
+    {
+      "id": "who_i_am_now",
+      "title": "Who You Are Now",
+      "subtitle": "Present day",
+      "description": "Where you are. What you've figured out. What still surprises you about yourself.",
+      "icon": "🪞",
+      "questions": [
+        {"id": "wn_01", "type": "facts",   "text": "Where are you living now, and what does your day-to-day look like?"},
+        {"id": "wn_02", "type": "facts",   "text": "What are you working on or building right now?"},
+        {"id": "wn_03", "type": "emotion", "text": "How do you feel about where you are in life today?"},
+        {"id": "wn_04", "type": "emotion", "text": "What still excites you? What still scares you?"},
+        {"id": "wn_05", "type": "sensory", "text": "Describe a typical good day in your current life."},
+        {"id": "wn_06", "type": "meaning", "text": "What do you understand now that you didn't at 30? At 20?"},
+        {"id": "wn_07", "type": "meaning", "text": "What do you still want?"}
+      ]
+    },
+    {
+      "id": "legacy",
+      "title": "Your Legacy",
+      "subtitle": "What you want to leave behind",
+      "description": "Not what you owned. What you meant. What you want the people after you to know.",
+      "icon": "🕯️",
+      "questions": [
+        {"id": "lg_01", "type": "facts",   "text": "What do you want people to know about your life when you're gone?"},
+        {"id": "lg_02", "type": "facts",   "text": "Is there a message you've always wanted to pass on?"},
+        {"id": "lg_03", "type": "emotion", "text": "What do you most want to be remembered for?"},
+        {"id": "lg_04", "type": "emotion", "text": "Is there anything you want to make right, say, or leave clear?"},
+        {"id": "lg_05", "type": "sensory", "text": "If someone could see one scene from your life to understand you — what would it be?"},
+        {"id": "lg_06", "type": "meaning", "text": "What was your life about? In a sentence or two."},
+        {"id": "lg_07", "type": "meaning", "text": "What do you want the people who love you to carry forward?"}
+      ]
+    }
+  ]
+}

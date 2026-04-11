@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LifePages — Memoir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #060504;
+      --surface: #0e0b08;
+      --card:    #151109;
+      --border:  #201a10;
+      --text:    #e8dfc8;
+      --dim:     #6a5a40;
+      --amber:   #c8973a;
+      --warm:    #b87d48;
+      --muted:   #281f12;
+      --red:     #b03020;
+      --green:   #4a7c3f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── FILM GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      opacity: 0.45;
+      pointer-events: none;
+      z-index: 0;
+      animation: grain 0.15s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%,100% { transform: translate(0,0); }
+      20%  { transform: translate(3%,1%); }
+      40%  { transform: translate(4%,-1%); }
+      60%  { transform: translate(2%,-4%); }
+      80%  { transform: translate(1%,-2%); }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .back-link {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--amber); }
+    .sep { color: var(--border); font-size: 16px; }
+    .header-title {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+    }
+    .progress-pill {
+      font-size: 11px;
+      color: var(--dim);
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      letter-spacing: 0.06em;
+    }
+    .progress-pill span { color: var(--amber); }
+
+    /* ── LAYOUT ── */
+    .layout {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .sidebar-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 12px 16px 6px;
+    }
+
+    .chapter-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.12s;
+      border-left: 3px solid transparent;
+    }
+    .chapter-btn:hover { background: var(--muted); }
+    .chapter-btn.active {
+      background: var(--muted);
+      border-left-color: var(--amber);
+    }
+    .chapter-icon { font-size: 16px; flex-shrink: 0; }
+    .chapter-meta { flex: 1; min-width: 0; }
+    .chapter-name {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chapter-sub {
+      font-size: 10px;
+      color: var(--dim);
+      margin-top: 1px;
+    }
+    .chapter-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .badge-done    { background: rgba(74,124,63,0.2); color: #6ab85e; border: 1px solid rgba(74,124,63,0.3); }
+    .badge-active  { background: rgba(200,151,58,0.15); color: var(--amber); border: 1px solid rgba(200,151,58,0.25); }
+    .badge-empty   { background: var(--muted); color: var(--dim); border: 1px solid var(--border); }
+
+    /* ── MAIN PANEL ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── CHAPTER INTRO ── */
+    .chapter-intro {
+      padding: 28px 36px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .chapter-intro-icon { font-size: 32px; margin-bottom: 10px; }
+    .chapter-intro-title {
+      font-family: 'Lora', serif;
+      font-size: 26px;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .chapter-intro-subtitle {
+      font-size: 13px;
+      color: var(--amber);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+    .chapter-intro-desc {
+      font-size: 14px;
+      color: var(--dim);
+      margin-top: 10px;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      line-height: 1.6;
+    }
+    .chapter-progress-bar {
+      margin-top: 16px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .chapter-progress-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .chapter-progress-label {
+      font-size: 11px;
+      color: var(--dim);
+      margin-top: 6px;
+    }
+    .chapter-progress-label span { color: var(--text); }
+
+    /* ── QUESTION AREA ── */
+    .question-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 36px;
+    }
+    .question-area::-webkit-scrollbar { width: 4px; }
+    .question-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── QUESTION CARD ── */
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .question-card.answered {
+      border-color: rgba(200,151,58,0.25);
+    }
+    .question-card.skipped {
+      opacity: 0.5;
+      border-color: var(--border);
+    }
+    .question-card.focused {
+      border-color: var(--amber);
+    }
+
+    .question-type-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .tag-facts   { background: rgba(70,100,160,0.2); color: #7a9de8; border: 1px solid rgba(70,100,160,0.3); }
+    .tag-emotion { background: rgba(180,80,80,0.2); color: #e89090; border: 1px solid rgba(180,80,80,0.3); }
+    .tag-sensory { background: rgba(80,150,100,0.2); color: #80d0a0; border: 1px solid rgba(80,150,100,0.3); }
+    .tag-meaning { background: rgba(200,151,58,0.15); color: var(--amber); border: 1px solid rgba(200,151,58,0.25); }
+
+    .question-text {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .answer-textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      line-height: 1.7;
+      padding: 12px 14px;
+      resize: none;
+      min-height: 80px;
+      transition: border-color 0.15s, min-height 0.2s;
+      outline: none;
+    }
+    .answer-textarea:focus {
+      border-color: var(--amber);
+      min-height: 120px;
+    }
+    .answer-textarea::placeholder { color: var(--dim); font-style: italic; }
+
+    .question-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .btn-skip {
+      font-size: 12px;
+      color: var(--dim);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-skip:hover { color: var(--text); background: var(--muted); }
+
+    .btn-save {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--amber);
+      border: none;
+      cursor: pointer;
+      padding: 6px 16px;
+      border-radius: 5px;
+      transition: opacity 0.15s;
+      letter-spacing: 0.04em;
+    }
+    .btn-save:hover { opacity: 0.85; }
+
+    .skip-label {
+      font-size: 12px;
+      color: var(--dim);
+      font-style: italic;
+    }
+
+    /* ── GENERATE ZONE ── */
+    .generate-zone {
+      border-top: 1px solid var(--border);
+      padding: 20px 36px;
+      background: var(--surface);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .generate-zone.locked { opacity: 0.5; pointer-events: none; }
+
+    .generate-info { font-size: 13px; color: var(--dim); }
+    .generate-info strong { color: var(--text); }
+
+    .btn-generate {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--bg);
+      background: var(--amber);
+      border: none;
+      cursor: pointer;
+      padding: 10px 22px;
+      border-radius: 6px;
+      transition: opacity 0.15s;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    .btn-generate:hover { opacity: 0.85; }
+    .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── GENERATED CHAPTER VIEW ── */
+    .chapter-output {
+      background: var(--card);
+      border: 1px solid rgba(200,151,58,0.2);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 0 36px 24px;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+    .chapter-output-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin: 0 36px 10px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--dim);
+      padding: 40px;
+      text-align: center;
+    }
+    .empty-icon { font-size: 48px; opacity: 0.4; }
+    .empty-title { font-family: 'Lora', serif; font-size: 18px; color: var(--text); opacity: 0.6; }
+    .empty-sub   { font-size: 13px; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      font-family: 'Lora', serif;
+      font-style: italic;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(6,5,4,0.3);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+    .spinner.active { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <a href="/" class="back-link">← Voice Studio</a>
+    <span class="sep">|</span>
+    <span class="header-title">LifePages</span>
+  </div>
+  <div class="progress-pill" id="globalProgress">Loading…</div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar: chapter list -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Your Chapters</div>
+    <div id="chapterList"></div>
+  </nav>
+
+  <!-- Main panel -->
+  <div class="main" id="mainPanel">
+    <div class="empty-state">
+      <div class="empty-icon">📖</div>
+      <div class="empty-title">Choose a chapter to begin</div>
+      <div class="empty-sub">We'll guide you through it, one question at a time.</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let curriculum = null;
+  let currentChapterId = null;
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  async function init() {
+    const res  = await fetch('/api/lifepages/curriculum');
+    curriculum = await res.json();
+    renderSidebar();
+    updateGlobalProgress();
+  }
+
+  function updateGlobalProgress() {
+    const total    = curriculum.chapters.length;
+    const complete = curriculum.chapters.filter(c => c.status === 'complete').length;
+    const el = document.getElementById('globalProgress');
+    el.innerHTML = `<span>${complete}</span> / ${total} chapters`;
+  }
+
+  // ── Sidebar ────────────────────────────────────────────────────────────────
+  function renderSidebar() {
+    const list = document.getElementById('chapterList');
+    list.innerHTML = '';
+    for (const ch of curriculum.chapters) {
+      const btn = document.createElement('button');
+      btn.className = 'chapter-btn' + (ch.id === currentChapterId ? ' active' : '');
+      btn.dataset.id = ch.id;
+
+      let badge = '';
+      if (ch.status === 'complete') {
+        badge = '<span class="chapter-badge badge-done">done</span>';
+      } else if (ch.status === 'in_progress') {
+        badge = '<span class="chapter-badge badge-active">started</span>';
+      } else {
+        badge = '<span class="chapter-badge badge-empty">—</span>';
+      }
+
+      btn.innerHTML = `
+        <span class="chapter-icon">${ch.icon}</span>
+        <div class="chapter-meta">
+          <div class="chapter-name">${ch.title}</div>
+          <div class="chapter-sub">${ch.subtitle}</div>
+        </div>
+        ${badge}
+      `;
+      btn.addEventListener('click', () => loadChapter(ch.id));
+      list.appendChild(btn);
+    }
+  }
+
+  // ── Load Chapter ───────────────────────────────────────────────────────────
+  async function loadChapter(chapterId) {
+    currentChapterId = chapterId;
+
+    // Update sidebar active state
+    document.querySelectorAll('.chapter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.id === chapterId);
+    });
+
+    const res     = await fetch(`/api/lifepages/chapter/${chapterId}`);
+    const chapter = await res.json();
+    renderChapter(chapter);
+  }
+
+  function renderChapter(chapter) {
+    const main    = document.getElementById('mainPanel');
+    const answered = chapter.questions.filter(q => q.answered).length;
+    const total    = chapter.questions.length;
+    const pct      = Math.round((answered / total) * 100);
+
+    let questionsHTML = '';
+    for (const q of chapter.questions) {
+      questionsHTML += renderQuestion(q, chapter.id);
+    }
+
+    let outputHTML = '';
+    if (chapter.generated_chapter) {
+      outputHTML = `
+        <div class="chapter-output-label">Generated Chapter</div>
+        <div class="chapter-output">${escHtml(chapter.generated_chapter)}</div>
+      `;
+    }
+
+    const readyClass  = chapter.ready ? '' : ' locked';
+    const readyMsg    = chapter.ready
+      ? 'You\'ve shared enough to write this chapter.'
+      : `Answer a few more questions (need at least one from each category).`;
+
+    main.innerHTML = `
+      <div class="chapter-intro">
+        <div class="chapter-intro-icon">${chapter.icon}</div>
+        <div class="chapter-intro-title">${chapter.title}</div>
+        <div class="chapter-intro-subtitle">${chapter.subtitle}</div>
+        <div class="chapter-intro-desc">${chapter.description}</div>
+        <div class="chapter-progress-bar">
+          <div class="chapter-progress-fill" style="width: ${pct}%"></div>
+        </div>
+        <div class="chapter-progress-label">
+          <span>${answered}</span> of ${total} questions answered
+        </div>
+      </div>
+
+      <div class="question-area" id="questionArea">
+        ${questionsHTML}
+        ${outputHTML}
+      </div>
+
+      <div class="generate-zone${readyClass}" id="generateZone">
+        <div class="generate-info">
+          ${chapter.generated_chapter
+            ? '<strong>Chapter written.</strong> Regenerate with updated answers.'
+            : `<strong>${readyMsg}</strong>`}
+        </div>
+        <button class="btn-generate" id="btnGenerate" onclick="generateChapter('${chapter.id}')">
+          <div class="spinner" id="genSpinner"></div>
+          ${chapter.generated_chapter ? 'Regenerate' : 'Write This Chapter'}
+        </button>
+      </div>
+    `;
+  }
+
+  function renderQuestion(q, chapterId) {
+    const typeLabel = { facts: 'Fact', emotion: 'Feeling', sensory: 'Memory', meaning: 'Meaning' }[q.type] || q.type;
+    const tagClass  = `tag-${q.type}`;
+
+    if (q.sensitive_skip) {
+      return `
+        <div class="question-card skipped" data-qid="${q.id}">
+          <div class="question-text">${escHtml(q.text)}</div>
+          <div class="skip-label">✦ Kept private — your story, your rules.</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="question-card ${q.answered ? 'answered' : ''}" data-qid="${q.id}"
+           onclick="focusCard(this)">
+        <div class="question-type-tag ${tagClass}">${typeLabel}</div>
+        <div class="question-text">${escHtml(q.text)}</div>
+        <textarea
+          class="answer-textarea"
+          placeholder="Take your time…"
+          data-chapter="${chapterId}"
+          data-qid="${q.id}"
+          onfocus="this.closest('.question-card').classList.add('focused')"
+          onblur="this.closest('.question-card').classList.remove('focused')"
+        >${escHtml(q.answer || '')}</textarea>
+        <div class="question-actions">
+          <button class="btn-skip" onclick="sensitiveSkip(event, '${chapterId}', '${q.id}')">
+            Skip — too personal
+          </button>
+          <button class="btn-save" onclick="saveAnswer(event, '${chapterId}', '${q.id}')">
+            Save
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function focusCard(card) {
+    const ta = card.querySelector('.answer-textarea');
+    if (ta) ta.focus();
+  }
+
+  // ── Save Answer ───────────────────────────────────────────────────────────
+  async function saveAnswer(e, chapterId, questionId) {
+    e.stopPropagation();
+    const card = document.querySelector(`[data-qid="${questionId}"]`);
+    const ta   = card.querySelector('.answer-textarea');
+    const text = ta.value.trim();
+
+    await fetch('/api/lifepages/answer', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chapter_id: chapterId, question_id: questionId, answer: text})
+    });
+
+    card.classList.toggle('answered', !!text);
+    toast('Saved.');
+    await refreshChapterState(chapterId);
+  }
+
+  // ── Sensitive Skip ────────────────────────────────────────────────────────
+  async function sensitiveSkip(e, chapterId, questionId) {
+    e.stopPropagation();
+    const res  = await fetch('/api/lifepages/skip', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({chapter_id: chapterId, question_id: questionId})
+    });
+    const data = await res.json();
+    toast(data.message || 'Understood — kept private.');
+
+    // Replace the card with skipped state
+    const card = document.querySelector(`[data-qid="${questionId}"]`);
+    const q    = {id: questionId, sensitive_skip: true, text: card.querySelector('.question-text').textContent};
+    card.outerHTML = renderQuestion(q, chapterId);
+    await refreshChapterState(chapterId);
+  }
+
+  // ── Refresh state without full reload ─────────────────────────────────────
+  async function refreshChapterState(chapterId) {
+    const res     = await fetch(`/api/lifepages/chapter/${chapterId}`);
+    const chapter = await res.json();
+
+    // Update progress bar
+    const answered = chapter.questions.filter(q => q.answered).length;
+    const total    = chapter.questions.length;
+    const pct      = Math.round((answered / total) * 100);
+    const fillEl   = document.querySelector('.chapter-progress-fill');
+    const labelEl  = document.querySelector('.chapter-progress-label');
+    if (fillEl) fillEl.style.width = pct + '%';
+    if (labelEl) labelEl.innerHTML = `<span>${answered}</span> of ${total} questions answered`;
+
+    // Update generate zone
+    const zone = document.getElementById('generateZone');
+    if (zone) {
+      zone.classList.toggle('locked', !chapter.ready);
+      const info = zone.querySelector('.generate-info');
+      if (info) {
+        info.innerHTML = chapter.ready
+          ? '<strong>You\'ve shared enough to write this chapter.</strong>'
+          : `<strong>Answer a few more questions (need at least one from each category).</strong>`;
+      }
+    }
+
+    // Update curriculum + sidebar
+    const curRes   = await fetch('/api/lifepages/curriculum');
+    curriculum     = await curRes.json();
+    renderSidebar();
+    updateGlobalProgress();
+  }
+
+  // ── Generate Chapter ──────────────────────────────────────────────────────
+  async function generateChapter(chapterId) {
+    const btn     = document.getElementById('btnGenerate');
+    const spinner = document.getElementById('genSpinner');
+    btn.disabled  = true;
+    spinner.classList.add('active');
+
+    const res  = await fetch(`/api/lifepages/generate/${chapterId}`, {method: 'POST'});
+    const data = await res.json();
+
+    btn.disabled = false;
+    spinner.classList.remove('active');
+
+    if (data.error) {
+      toast(data.message || 'Something went wrong.');
+      return;
+    }
+
+    toast('Chapter written.');
+    await loadChapter(chapterId);
+  }
+
+  // ── Utilities ─────────────────────────────────────────────────────────────
+  function escHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  // ── Start ─────────────────────────────────────────────────────────────────
+  init();
+</script>
+</body>
+</html>

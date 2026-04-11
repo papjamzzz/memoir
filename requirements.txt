@@ -2,3 +2,5 @@ flask
 python-dotenv
 openai>=1.0.0
 anthropic>=0.25.0
+requests
+gunicorn

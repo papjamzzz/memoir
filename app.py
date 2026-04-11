@@ -18,6 +18,10 @@ CHAPTERS_DIR    = 'chapters'
 CURRICULUM_PATH = 'data/curriculum.json'
 SESSION_PATH    = 'sessions/lifepages_session.json'
 
+# Ensure required dirs exist at startup (gunicorn doesn't run __main__)
+for _d in [VOICE_DIR, CHAPTERS_DIR, 'sessions', 'output', 'data']:
+    os.makedirs(_d, exist_ok=True)
+
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
