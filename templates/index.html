@@ -127,18 +127,18 @@
       100% { transform: translateY(-60vh) translateX(var(--drift)) scale(2.5); opacity: 0; }
     }
 
-    /* ── DISAPPEARING HEADER ── */
+    /* ── DISAPPEARING BOTTOM NAV ── */
     .nav-bar {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
       right: 0;
       z-index: 30;
-      transform: translateY(-100%);
+      transform: translateY(100%);
       transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s;
       opacity: 0;
-      background: linear-gradient(to bottom, rgba(6,5,4,0.97) 0%, rgba(6,5,4,0.88) 70%, transparent 100%);
-      padding: 18px 36px 28px;
+      background: linear-gradient(to top, rgba(6,5,4,0.97) 0%, rgba(6,5,4,0.88) 70%, transparent 100%);
+      padding: 28px 36px 24px;
       display: flex;
       align-items: center;
       gap: 0;
@@ -147,16 +147,15 @@
       transform: translateY(0);
       opacity: 1;
     }
-    /* Thin always-visible trigger line at top */
     .nav-trigger {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
       right: 0;
       height: 4px;
       z-index: 31;
       cursor: pointer;
-      background: linear-gradient(to bottom, rgba(200,151,58,0.18), transparent);
+      background: linear-gradient(to top, rgba(200,151,58,0.18), transparent);
     }
 
     .nav-wordmark {
@@ -293,15 +292,15 @@
 
     .prompter-btn {
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
+      font-size: 18px;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--dim);
       background: transparent;
       border: none;
       cursor: pointer;
-      padding: 6px 0;
+      padding: 10px 4px;
       transition: color 0.2s;
     }
     .prompter-btn:hover { color: var(--amber); }
@@ -343,6 +342,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-top: 60px;
     }
 
     /* Ambient glow behind the mic when recording */
@@ -364,9 +364,9 @@
 
     .vintage-mic {
       width: auto;
-      height: 88vh;
-      min-height: 500px;
-      max-height: 980px;
+      height: 76vh;
+      min-height: 420px;
+      max-height: 860px;
       position: relative;
       z-index: 2;
       transition: filter 0.5s ease;
@@ -396,18 +396,18 @@
     .rec-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-      min-height: 20px;
+      gap: 18px;
+      margin-top: 24px;
+      min-height: 40px;
     }
     .rec-dot {
-      width: 8px;
-      height: 8px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       background: var(--red);
       opacity: 0;
       transition: opacity 0.2s;
-      box-shadow: 0 0 8px rgba(192,57,43,0.6);
+      box-shadow: 0 0 16px rgba(192,57,43,0.7);
     }
     .rec-dot.visible {
       opacity: 1;
@@ -416,11 +416,11 @@
     @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
     .mic-status {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 20px;
+      letter-spacing: 0.04em;
       color: var(--dim);
-      text-transform: uppercase;
       transition: color 0.3s;
     }
     .mic-status.listening { color: var(--amber); }
@@ -429,19 +429,84 @@
     .vu-meter {
       display: flex;
       align-items: flex-end;
-      gap: 4px;
-      height: 32px;
-      margin-top: 16px;
+      gap: 6px;
+      height: 64px;
+      margin-top: 20px;
     }
     .vu-bar {
-      width: 6px;
+      width: 12px;
       background: var(--amber);
-      border-radius: 2px 2px 0 0;
+      border-radius: 3px 3px 0 0;
       opacity: 0.15;
-      min-height: 3px;
+      min-height: 6px;
       transition: height 0.07s ease, opacity 0.3s;
     }
     .vu-bar.active { opacity: 0.8; }
+
+    /* ── ALT INPUT ICONS ── */
+    .alt-inputs {
+      display: flex;
+      gap: 20px;
+      margin-top: 22px;
+      justify-content: center;
+    }
+    .alt-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--dim);
+      padding: 6px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+    }
+    .alt-btn:hover { color: var(--amber); background: rgba(200,151,58,0.08); }
+    .alt-btn.active { color: var(--amber); }
+
+    /* ── TYPE INPUT ── */
+    .type-input-wrap {
+      margin-top: 18px;
+      max-width: 380px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .type-input-wrap.open { display: flex; }
+    .type-input-wrap.visible { opacity: 1; }
+    .type-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 15px;
+      padding: 14px 16px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.6;
+    }
+    .type-input:focus { border-color: rgba(200,151,58,0.4); }
+    .type-input::placeholder { color: var(--dim); }
+    .type-submit {
+      align-self: flex-end;
+      background: none;
+      border: 1px solid rgba(200,151,58,0.3);
+      border-radius: 6px;
+      color: var(--amber);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .type-submit:hover { background: rgba(200,151,58,0.1); }
 
     /* ── BOTTOM CONTROLS ── */
     .controls {
@@ -656,6 +721,122 @@
     }
     .overlay.visible { opacity: 1; pointer-events: all; }
 
+    /* ── INTERVIEW MODE ──────────────────────────────────── */
+    .interview-question-card {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 25;
+      padding: 32px 80px 28px;
+      background: linear-gradient(to bottom, rgba(6,5,4,0.97) 0%, rgba(6,5,4,0.85) 75%, transparent 100%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      pointer-events: none;
+    }
+    .interview-question-card.active {
+      display: flex;
+      pointer-events: auto;
+    }
+    .interview-question-card.visible { opacity: 1; }
+    .interview-q-text {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(18px, 2.4vw, 30px);
+      color: rgba(232, 218, 185, 0.93);
+      text-align: center;
+      line-height: 1.55;
+      text-shadow: 0 0 50px rgba(200,151,58,0.35), 0 0 100px rgba(200,151,58,0.12);
+      max-width: 680px;
+    }
+    .interview-q-progress {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      color: rgba(200,151,58,0.4);
+      text-transform: uppercase;
+    }
+    .interview-actions {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .interview-actions.visible { display: flex; }
+    .btn-write-chapter {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--amber);
+      background: rgba(200,151,58,0.09);
+      border: 1px solid rgba(200,151,58,0.35);
+      padding: 9px 20px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+      display: none;
+    }
+    .btn-write-chapter:hover { background: rgba(200,151,58,0.18); }
+    .btn-write-chapter:disabled { opacity: 0.4; cursor: default; }
+
+    /* Chapter reveal — fullscreen reading view */
+    .chapter-reveal {
+      position: fixed; inset: 0; z-index: 60;
+      background: var(--bg);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      padding: 80px 40px 120px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .chapter-reveal.open { display: flex; }
+    .chapter-reveal.visible { opacity: 1; }
+    .chapter-reveal-inner {
+      max-width: 700px;
+      width: 100%;
+    }
+    .chapter-reveal-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 6px;
+    }
+    .chapter-reveal-wc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--dim);
+      letter-spacing: 0.1em; margin-bottom: 48px;
+    }
+    .chapter-reveal-body {
+      font-family: 'Lora', serif;
+      font-size: 18px; line-height: 1.95;
+      color: var(--text); white-space: pre-wrap;
+    }
+    .chapter-reveal-close {
+      position: fixed; top: 24px; right: 32px;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--dim); background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 14px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+      z-index: 61;
+    }
+    .chapter-reveal-close:hover { color: var(--amber); border-color: rgba(200,151,58,0.4); }
+    .chapter-reveal-save {
+      position: fixed; top: 24px; right: 120px;
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--amber); background: rgba(200,151,58,0.08);
+      border: 1px solid rgba(200,151,58,0.3);
+      padding: 8px 14px; border-radius: 6px;
+      cursor: pointer; transition: all 0.2s;
+      z-index: 61;
+    }
+    .chapter-reveal-save:hover { background: rgba(200,151,58,0.16); }
+
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
@@ -679,6 +860,7 @@
     <span class="nav-entry-count" id="entry-count"></span>
     <button class="nav-tab" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
     <button class="nav-tab" onclick="exportMemoir()">Export</button>
+    <a class="nav-tab" href="/lifepages" style="text-decoration:none;">LifePages →</a>
   </div>
 </div>
 
@@ -708,6 +890,23 @@
 </div>
 
 <div class="prompt-strip" id="prompt-strip"></div>
+
+<!-- Interview question card -->
+<div class="interview-question-card" id="interviewCard">
+  <div class="interview-q-text" id="interviewQText"></div>
+  <div class="interview-q-progress" id="interviewProgress"></div>
+</div>
+
+<!-- Chapter reveal — fullscreen reading mode -->
+<div class="chapter-reveal" id="chapterReveal">
+  <button class="chapter-reveal-close" onclick="closeChapterReveal()">← Back</button>
+  <button class="chapter-reveal-save" onclick="openDrawer('memoir')">View All Chapters</button>
+  <div class="chapter-reveal-inner">
+    <div class="chapter-reveal-label">Chapter</div>
+    <div class="chapter-reveal-wc" id="chapterRevealWC"></div>
+    <div class="chapter-reveal-body" id="chapterRevealBody"></div>
+  </div>
+</div>
 
 <!-- Main stage — click anywhere to record -->
 <div class="stage" onclick="handleMic()">
@@ -842,19 +1041,19 @@
 
       <!-- ═══ ROUND-BASE BOOM STAND ═══ -->
       <!-- Shadow under base -->
-      <ellipse cx="210" cy="516" rx="56" ry="6" fill="#020101" opacity="0.85"/>
+      <ellipse cx="210" cy="458" rx="56" ry="6" fill="#020101" opacity="0.85"/>
       <!-- Round cast-iron base — low heavy disc -->
-      <ellipse cx="210" cy="510" rx="52" ry="9"  fill="#0a0806"/>
-      <ellipse cx="210" cy="508" rx="50" ry="7"  fill="#0e0c0a"/>
-      <ellipse cx="210" cy="506" rx="46" ry="5"  fill="url(#chrome-collar)"/>
-      <ellipse cx="210" cy="504" rx="32" ry="3"  fill="#0c0a08"/>
-      <ellipse cx="210" cy="503" rx="16" ry="2"  fill="#080604"/>
-      <path d="M165 505 Q210 500 255 505" stroke="rgba(255,245,210,0.09)" stroke-width="1.5" fill="none"/>
+      <ellipse cx="210" cy="452" rx="52" ry="9"  fill="#0a0806"/>
+      <ellipse cx="210" cy="450" rx="50" ry="7"  fill="#0e0c0a"/>
+      <ellipse cx="210" cy="448" rx="46" ry="5"  fill="url(#chrome-collar)"/>
+      <ellipse cx="210" cy="446" rx="32" ry="3"  fill="#0c0a08"/>
+      <ellipse cx="210" cy="445" rx="16" ry="2"  fill="#080604"/>
+      <path d="M165 447 Q210 442 255 447" stroke="rgba(255,245,210,0.09)" stroke-width="1.5" fill="none"/>
 
       <!-- Outer pole — fixed section -->
-      <rect x="205" y="380" width="12" height="128" rx="6" fill="#080604"/>
-      <rect x="205" y="380" width="12" height="128" rx="6" fill="url(#chrome-neck)"/>
-      <rect x="206" y="380" width="3"  height="128" rx="1.5" fill="rgba(255,245,220,0.07)"/>
+      <rect x="205" y="380" width="12" height="70" rx="6" fill="#080604"/>
+      <rect x="205" y="380" width="12" height="70" rx="6" fill="url(#chrome-neck)"/>
+      <rect x="206" y="380" width="3"  height="70" rx="1.5" fill="rgba(255,245,220,0.07)"/>
 
       <!-- Inner pole — telescoping section -->
       <rect x="206" y="310" width="10" height="72" rx="5" fill="#0a0806"/>
@@ -1065,7 +1264,36 @@
       <div class="vu-bar" style="height:4px"></div>
       <div class="vu-bar" style="height:7px"></div>
     </div>
+
+    <!-- Alt input icons -->
+    <div class="alt-inputs" id="alt-inputs">
+      <button class="alt-btn" id="btn-type" title="Type instead" onclick="toggleTypeMode(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 10h8M8 14h4"/></svg>
+      </button>
+      <button class="alt-btn" id="btn-upload" title="Upload audio file" onclick="triggerUpload(event)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </button>
+      <input type="file" id="file-upload" accept="audio/*,video/*" style="display:none" onchange="handleFileUpload(event)"/>
+    </div>
+
+    <!-- Type-to-talk input -->
+    <div class="type-input-wrap" id="type-input-wrap">
+      <textarea class="type-input" id="type-input" placeholder="Write what you want to say…" rows="3" onkeydown="handleTypeSubmit(event)"></textarea>
+      <button class="type-submit" onclick="submitTyped()">Submit →</button>
+    </div>
+
   </div>
+</div>
+
+<!-- Bottom controls bar -->
+<div class="controls">
+    <div class="ctrl-group">
+      <button class="ctrl-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
+      <div class="interview-actions" id="interviewActions">
+        <button class="btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
+        <button class="ctrl-btn" onclick="interviewEnd()">End Session</button>
+      </div>
+    </div>
 </div>
 
 
@@ -1247,6 +1475,77 @@
     showPrompt(promptIndex);
   }
 
+  // ── Type-to-talk ─────────────────────────────────────────────────────────
+  function toggleTypeMode(e) {
+    e.stopPropagation();
+    const wrap = document.getElementById('type-input-wrap');
+    const btn  = document.getElementById('btn-type');
+    const isOpen = wrap.classList.contains('open');
+    if (isOpen) {
+      wrap.classList.remove('visible');
+      setTimeout(() => wrap.classList.remove('open'), 300);
+      btn.classList.remove('active');
+    } else {
+      wrap.classList.add('open');
+      requestAnimationFrame(() => wrap.classList.add('visible'));
+      btn.classList.add('active');
+      setTimeout(() => document.getElementById('type-input').focus(), 320);
+    }
+  }
+
+  function handleTypeSubmit(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitTyped(); }
+  }
+
+  async function submitTyped() {
+    const input = document.getElementById('type-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    toggleTypeMode({ stopPropagation: () => {} });
+    setStatus('saving…');
+    try {
+      await fetch('/api/voice-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, mode: 'typed' })
+      });
+      document.getElementById('transcript-live').textContent = text;
+      setStatus('tap to speak');
+      loadVoiceLog();
+    } catch { setStatus('error — try again'); }
+  }
+
+  // ── File upload ──────────────────────────────────────────────────────────
+  function triggerUpload(e) {
+    e.stopPropagation();
+    document.getElementById('file-upload').click();
+  }
+
+  async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    event.target.value = '';
+    setStatus('transcribing file…');
+    const form = new FormData();
+    form.append('audio', file);
+    try {
+      const res = await fetch('/api/transcribe', { method: 'POST', body: form });
+      const data = await res.json();
+      const text = data.text || '';
+      if (text) {
+        document.getElementById('transcript-live').textContent = text;
+        await fetch('/api/voice-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, mode: 'upload' })
+        });
+        loadVoiceLog();
+      }
+      setStatus('tap to speak');
+    } catch { setStatus('error — try again'); }
+  }
+
   // ── Drawers ───────────────────────────────────────────────────────────────
   let activeDrawer = null;
 
@@ -1420,8 +1719,12 @@
       if (text && text.trim() && !isHallucination(text)) {
         document.getElementById('transcript-live').textContent = text;
         document.getElementById('transcript-live').classList.remove('empty');
-        await loadVoiceLog();
-        await updateEntryCount();
+        if (IV.active && IV.waitingForAnswer) {
+          await ivRespond(text);
+        } else {
+          await loadVoiceLog();
+          await updateEntryCount();
+        }
       }
     } catch { setStatus('error — try again'); }
     setUI('idle');
@@ -1454,6 +1757,186 @@
     const el = document.getElementById('mic-status');
     el.textContent = msg;
     el.className = 'mic-status' + (msg === 'recording' ? ' listening' : '');
+  }
+
+  // ── INTERVIEW MODE ────────────────────────────────────────────────────────
+  const IV = {
+    active: false,
+    sessionId: null,
+    exchangeCount: 0,
+    waitingForAnswer: false,
+  };
+
+  async function interviewToggle() {
+    if (IV.active) { interviewEnd(); return; }
+    await interviewStart();
+  }
+
+  async function interviewStart() {
+    const seed = window.prompt('What memory do you want to explore?\n(press Enter to let me pick the first question)') ?? '';
+    if (seed === null) return; // user cancelled
+
+    setStatus('thinking...');
+    document.getElementById('btnInterview').textContent = 'Starting...';
+    document.getElementById('btnInterview').disabled = true;
+
+    try {
+      const res = await fetch('/api/interview/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seed })
+      });
+      const data = await res.json();
+      if (data.error) { alert(data.error); return; }
+
+      IV.active = true;
+      IV.sessionId = data.session_id;
+      IV.exchangeCount = 0;
+      IV.waitingForAnswer = false;
+
+      document.getElementById('btnInterview').textContent = 'End Session';
+      document.getElementById('btnInterview').disabled = false;
+      document.getElementById('interviewActions').classList.add('visible');
+
+      await ivShowQuestion(data.question);
+      await ivSpeak(data.question);
+      IV.waitingForAnswer = true;
+      setStatus('tap to answer');
+
+    } catch(e) {
+      console.error(e);
+      alert('Could not start interview. Check your Anthropic API key.');
+      document.getElementById('btnInterview').textContent = 'Begin Interview';
+      document.getElementById('btnInterview').disabled = false;
+      setStatus('tap to speak');
+    }
+  }
+
+  async function ivRespond(answerText) {
+    if (!IV.active || !IV.waitingForAnswer) return;
+    IV.waitingForAnswer = false;
+    IV.exchangeCount++;
+    ivUpdateProgress();
+
+    setStatus('thinking...');
+    try {
+      const res = await fetch('/api/interview/respond', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: IV.sessionId, answer: answerText })
+      });
+      const data = await res.json();
+
+      if (data.done || IV.exchangeCount >= 10) {
+        await ivShowQuestion("That's enough for a full chapter. Hit \"Write My Chapter\" whenever you're ready.");
+        document.getElementById('btnWriteChapter').style.display = 'inline-block';
+        setStatus('ready to write');
+        return;
+      }
+
+      if (data.exchange_count >= 6) {
+        document.getElementById('btnWriteChapter').style.display = 'inline-block';
+      }
+
+      await ivShowQuestion(data.question);
+      await ivSpeak(data.question);
+      IV.waitingForAnswer = true;
+      setStatus('tap to answer');
+
+    } catch(e) {
+      console.error(e);
+      setStatus('error — tap to try again');
+      IV.waitingForAnswer = true;
+    }
+  }
+
+  function interviewEnd() {
+    IV.active = false;
+    IV.sessionId = null;
+    IV.exchangeCount = 0;
+    IV.waitingForAnswer = false;
+
+    const card = document.getElementById('interviewCard');
+    card.classList.remove('visible');
+    setTimeout(() => card.classList.remove('active'), 700);
+
+    document.getElementById('interviewActions').classList.remove('visible');
+    document.getElementById('btnWriteChapter').style.display = 'none';
+    document.getElementById('btnInterview').textContent = 'Begin Interview';
+    setStatus('tap to speak');
+  }
+
+  async function ivShowQuestion(text) {
+    const card = document.getElementById('interviewCard');
+    const qtxt = document.getElementById('interviewQText');
+    qtxt.textContent = text;
+    card.classList.add('active');
+    await new Promise(r => setTimeout(r, 30));
+    card.classList.add('visible');
+  }
+
+  function ivUpdateProgress() {
+    const el = document.getElementById('interviewProgress');
+    if (el) el.textContent = `exchange ${IV.exchangeCount} · ${10 - IV.exchangeCount} to go`;
+  }
+
+  async function ivSpeak(text) {
+    try {
+      const res = await fetch('/api/speak-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      if (!res.ok) return;
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      await new Promise(resolve => {
+        audio.onended = resolve;
+        audio.onerror = resolve;
+        audio.play().catch(resolve);
+      });
+      URL.revokeObjectURL(url);
+    } catch { /* TTS unavailable — continue silently */ }
+  }
+
+  async function interviewGenerate() {
+    if (!IV.sessionId) return;
+    const btn = document.getElementById('btnWriteChapter');
+    btn.disabled = true;
+    btn.textContent = 'Writing...';
+    setStatus('writing your chapter...');
+
+    try {
+      const res = await fetch('/api/interview/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: IV.sessionId })
+      });
+      const data = await res.json();
+      if (data.error) { alert(data.error); }
+      else {
+        interviewEnd();
+        showChapterReveal(data.chapter, data.word_count);
+      }
+    } catch { alert('Chapter generation failed. Try again.'); }
+
+    btn.disabled = false;
+    btn.textContent = 'Write My Chapter';
+  }
+
+  function showChapterReveal(chapter, wordCount) {
+    document.getElementById('chapterRevealBody').textContent = chapter;
+    document.getElementById('chapterRevealWC').textContent = `${wordCount.toLocaleString()} words`;
+    const reveal = document.getElementById('chapterReveal');
+    reveal.classList.add('open');
+    setTimeout(() => reveal.classList.add('visible'), 30);
+  }
+
+  function closeChapterReveal() {
+    const reveal = document.getElementById('chapterReveal');
+    reveal.classList.remove('visible');
+    setTimeout(() => reveal.classList.remove('open'), 500);
   }
 
   // ── Chapter generator ─────────────────────────────────────────────────────
