@@ -794,13 +794,13 @@
     /* ── WELCOME TAGLINE — top left, once per 24h ── */
     .welcome-tag {
       position: fixed;
-      top: 36px;
-      left: 44px;
+      top: 48px;
+      left: 52px;
       z-index: 40;
       pointer-events: none;
       opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity 0.9s ease, transform 0.9s ease;
+      transform: translateY(10px);
+      transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
     }
     .welcome-tag.visible {
       opacity: 1;
@@ -808,28 +808,37 @@
     }
     .welcome-tag.fading {
       opacity: 0;
-      transform: translateY(-8px);
-      transition: opacity 1.8s ease, transform 1.8s ease;
+      transform: translateY(-12px);
+      transition: opacity 2.2s cubic-bezier(0.4,0,1,1), transform 2.2s cubic-bezier(0.4,0,1,1);
     }
     .welcome-name {
       font-family: 'Lora', Georgia, serif;
       font-style: italic;
-      font-size: 28px;
+      font-size: 64px;
       font-weight: 400;
       color: var(--amber);
-      letter-spacing: 0.02em;
+      letter-spacing: -0.01em;
       line-height: 1;
-      text-shadow: 0 0 40px rgba(224,168,48,0.4);
       display: block;
+      text-shadow:
+        0 0 60px rgba(224,168,48,0.55),
+        0 0 120px rgba(224,168,48,0.20),
+        0 2px 40px rgba(0,0,0,0.6);
+    }
+    .welcome-rule {
+      display: block;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, rgba(224,168,48,0.55), rgba(224,168,48,0.08), transparent);
+      margin: 14px 0 12px;
     }
     .welcome-sub {
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 500;
-      letter-spacing: 0.28em;
+      letter-spacing: 0.36em;
       text-transform: uppercase;
-      color: rgba(200,151,58,0.42);
-      margin-top: 7px;
+      color: rgba(224,168,48,0.50);
       display: block;
     }
   </style>
@@ -878,6 +887,7 @@
 <!-- Welcome tagline — top left, once per 24h -->
 <div class="welcome-tag" id="welcome-tag">
   <span class="welcome-name">Memoir</span>
+  <span class="welcome-rule"></span>
   <span class="welcome-sub">write the book of your life</span>
 </div>
 
@@ -2084,11 +2094,11 @@
     const el = document.getElementById('welcome-tag');
     // Fade in after a short breath
     setTimeout(() => el.classList.add('visible'), 600);
-    // Hold for 4 seconds, then fade out
+    // Hold for 5.5 seconds, then fade out slowly
     setTimeout(() => {
       el.classList.remove('visible');
       el.classList.add('fading');
-    }, 4800);
+    }, 6200);
   })();
 
   // ── Init ──────────────────────────────────────────────────────────────────
