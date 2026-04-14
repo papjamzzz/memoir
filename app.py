@@ -37,7 +37,10 @@ def transcribe():
         return jsonify({'error': 'No audio'}), 400
 
     audio_file = request.files['audio']
-    with tempfile.NamedTemporaryFile(suffix='.webm', delete=False) as tmp:
+    # Preserve real extension so Whisper handles MP3/MP4/WAV/M4A correctly
+    original_name = audio_file.filename or 'audio.webm'
+    ext = os.path.splitext(original_name)[1].lower() or '.webm'
+    with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as tmp:
         audio_file.save(tmp.name)
         tmp_path = tmp.name
 
