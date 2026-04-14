@@ -8,7 +8,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from datetime import datetime
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
 app = Flask(__name__)
 
 openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
