@@ -7,16 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:      #060504;
-      --surface: #0e0b08;
-      --card:    #151109;
-      --border:  #201a10;
-      --text:    #e8dfc8;
-      --dim:     #6a5a40;
-      --amber:   #c8973a;
-      --warm:    #b87d48;
-      --muted:   #281f12;
-      --red:     #b03020;
+      --bg:      #040302;
+      --surface: #0d0a07;
+      --card:    #131008;
+      --border:  #1e1810;
+      --text:    #f0e8d4;
+      --dim:     #7a6a4a;
+      --amber:   #e0a830;
+      --warm:    #cc8c44;
+      --muted:   #261c0e;
+      --red:     #c03828;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,42 +65,42 @@
       top: -40px;
       left: 50%;
       transform: translateX(-50%);
-      width: 600px;
+      width: 700px;
       height: 100vh;
       background:
-        radial-gradient(ellipse 280px 55% at 50% 0%,
-          rgba(220,170,70,0.28) 0%,
-          rgba(210,155,55,0.14) 28%,
-          rgba(200,140,40,0.05) 55%,
+        radial-gradient(ellipse 320px 60% at 50% 0%,
+          rgba(230,180,70,0.42) 0%,
+          rgba(220,160,55,0.22) 28%,
+          rgba(200,140,40,0.08) 55%,
           transparent 75%);
       pointer-events: none;
       z-index: 1;
     }
 
-    /* Halo ring around mic — quick diffuse to black */
+    /* Halo ring around mic */
     .mic-halo {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -52%);
-      width: 520px;
-      height: 520px;
+      width: 580px;
+      height: 580px;
       border-radius: 50%;
       background: radial-gradient(ellipse at center,
-        rgba(200,151,58,0.18) 0%,
-        rgba(200,140,40,0.10) 22%,
-        rgba(180,120,30,0.04) 45%,
+        rgba(220,165,60,0.28) 0%,
+        rgba(210,150,45,0.16) 22%,
+        rgba(190,130,35,0.06) 45%,
         transparent 65%);
       pointer-events: none;
       z-index: 1;
     }
 
-    /* ── VIGNETTE — tight, punchy ── */
+    /* ── VIGNETTE — opens up the center more ── */
     .vignette {
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 55% 55% at 50% 45%, transparent 0%, rgba(0,0,0,0.88) 100%);
+        radial-gradient(ellipse 60% 60% at 50% 45%, transparent 0%, rgba(0,0,0,0.78) 100%);
       pointer-events: none;
       z-index: 1;
     }
@@ -127,87 +127,103 @@
       100% { transform: translateY(-60vh) translateX(var(--drift)) scale(2.5); opacity: 0; }
     }
 
-    /* ── DISAPPEARING BOTTOM NAV ── */
-    .nav-bar {
+    /* ── STAGE BAR — big typographic control strip, auto-fades ── */
+    .stage-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       z-index: 30;
-      transform: translateY(100%);
-      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.32s;
       opacity: 0;
-      background: linear-gradient(to top, rgba(6,5,4,0.97) 0%, rgba(6,5,4,0.88) 70%, transparent 100%);
-      padding: 28px 36px 24px;
+      transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.45s ease;
+      pointer-events: none;
+      background: linear-gradient(to top,
+        rgba(3,2,1,0.99) 0%,
+        rgba(4,3,2,0.94) 42%,
+        rgba(5,4,3,0.60) 72%,
+        transparent 100%);
+      padding: 56px 60px 42px;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .stage-bar.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: baseline;
       gap: 0;
     }
-    .nav-bar.visible {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .nav-trigger {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      z-index: 31;
-      cursor: pointer;
-      background: linear-gradient(to top, rgba(200,151,58,0.18), transparent);
+
+    .bar-wordmark {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+      margin-right: 56px;
+      flex-shrink: 0;
+      line-height: 1;
+      text-shadow: 0 0 50px rgba(220,168,48,0.45);
     }
 
-    .nav-wordmark {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: rgba(200,151,58,0.6);
-      margin-right: 36px;
-      white-space: nowrap;
-    }
-
-    .nav-tabs {
+    .bar-nav {
       display: flex;
-      align-items: center;
-      gap: 4px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0;
       flex: 1;
     }
 
-    .nav-tab {
+    .bar-btn {
       font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.30em;
       text-transform: uppercase;
-      color: var(--dim);
-      background: transparent;
-      border: 1px solid transparent;
-      padding: 7px 16px;
-      border-radius: 6px;
+      color: rgba(200,151,58,0.22);
+      background: none;
+      border: none;
       cursor: pointer;
-      transition: all 0.2s;
+      padding: 5px 14px;
+      transition: color 0.3s ease;
       white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
     }
-    .nav-tab:hover { color: var(--text); border-color: var(--border); }
-    .nav-tab.active { color: var(--amber); border-color: rgba(200,151,58,0.3); background: rgba(200,151,58,0.06); }
+    .bar-btn:hover  { color: rgba(224,175,60,0.80); }
+    .bar-btn.active { color: var(--amber); }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .bar-sep {
+      color: rgba(200,151,58,0.10);
+      font-size: 20px;
+      font-weight: 200;
+      padding: 0 2px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .bar-right {
       margin-left: auto;
+      display: flex;
+      align-items: baseline;
+      gap: 0;
     }
 
-    .nav-entry-count {
+    .bar-count {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--dim);
-      letter-spacing: 0.1em;
-      margin-right: 8px;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      color: rgba(200,151,58,0.22);
+      padding-right: 6px;
     }
+
+    .bar-primary { color: rgba(224,168,48,0.55) !important; }
+    .bar-primary:hover { color: var(--amber) !important; }
 
     /* ── TELEPROMPTER ── */
     /* ── TELEPROMPTER — left column, large scrolling script ── */
@@ -508,66 +524,8 @@
     }
     .type-submit:hover { background: rgba(200,151,58,0.1); }
 
-    /* ── BOTTOM CONTROLS ── */
-    .controls {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 10;
-      padding: 20px 40px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to top, rgba(10,9,6,0.95) 0%, rgba(10,9,6,0) 100%);
-    }
-
-    .ctrl-group {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .ctrl-btn {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--dim);
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .ctrl-btn:hover { border-color: var(--amber); color: var(--amber); }
-    .ctrl-btn.active { border-color: rgba(212,168,85,0.4); color: var(--amber); background: rgba(212,168,85,0.06); }
-
-    .ctrl-btn-primary {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--amber);
-      background: rgba(212,168,85,0.08);
-      border: 1px solid rgba(212,168,85,0.25);
-      padding: 8px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .ctrl-btn-primary:hover { background: rgba(212,168,85,0.15); border-color: rgba(212,168,85,0.5); }
-    .ctrl-btn-primary:disabled { opacity: 0.35; cursor: default; }
-
-    .entry-count {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--dim);
-      letter-spacing: 0.1em;
-    }
+    /* ── legacy ctrl stubs (kept for JS refs) ── */
+    .controls { display: none; }
 
     /* ── DRAWERS ── */
     .drawer {
@@ -760,23 +718,14 @@
     }
     .interview-actions {
       display: none;
-      align-items: center;
-      gap: 10px;
+      align-items: baseline;
+      gap: 0;
     }
     .interview-actions.visible { display: flex; }
     .btn-write-chapter {
-      font-family: 'Inter', sans-serif;
-      font-size: 10px; font-weight: 700;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      color: var(--amber);
-      background: rgba(200,151,58,0.09);
-      border: 1px solid rgba(200,151,58,0.35);
-      padding: 9px 20px; border-radius: 6px;
-      cursor: pointer; transition: all 0.2s;
       display: none;
     }
-    .btn-write-chapter:hover { background: rgba(200,151,58,0.18); }
-    .btn-write-chapter:disabled { opacity: 0.4; cursor: default; }
+    .btn-write-chapter:disabled { opacity: 0.35; cursor: default; }
 
     /* Chapter reveal — fullscreen reading view */
     .chapter-reveal {
@@ -844,23 +793,42 @@
 </head>
 <body>
 
-<!-- Always-visible trigger line -->
-<div class="nav-trigger" id="nav-trigger"></div>
-
-<!-- Disappearing nav bar -->
-<div class="nav-bar" id="nav-bar">
-  <div class="nav-wordmark">Memoir</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" id="tab-free"    onclick="setTab('free')">Free</button>
-    <button class="nav-tab"        id="tab-guided"  onclick="setTab('guided')">Guided</button>
-    <button class="nav-tab"        id="tab-transcript" onclick="setTab('transcript')">Transcript</button>
-    <button class="nav-tab"        id="tab-memoir"  onclick="setTab('memoir')">The Memoir</button>
+<!-- Stage bar — big typographic control strip, fades in/out -->
+<div class="stage-bar" id="stage-bar">
+  <!-- top row: wordmark + mode tabs + entry count -->
+  <div class="bar-row">
+    <span class="bar-wordmark">Memoir</span>
+    <div class="bar-nav">
+      <button class="bar-btn active" id="tab-free"        onclick="setTab('free')">Free</button>
+      <span class="bar-sep">·</span>
+      <button class="bar-btn"        id="tab-guided"       onclick="setTab('guided')">Guided</button>
+      <span class="bar-sep">·</span>
+      <button class="bar-btn"        id="tab-transcript"   onclick="setTab('transcript')">Transcript</button>
+      <span class="bar-sep">·</span>
+      <button class="bar-btn"        id="tab-memoir"       onclick="setTab('memoir')">The Memoir</button>
+    </div>
+    <div class="bar-right">
+      <span class="bar-count" id="entry-count"></span>
+    </div>
   </div>
-  <div class="nav-right">
-    <span class="nav-entry-count" id="entry-count"></span>
-    <button class="nav-tab" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
-    <button class="nav-tab" onclick="exportMemoir()">Export</button>
-    <a class="nav-tab" href="/lifepages" style="text-decoration:none;">LifePages →</a>
+  <!-- bottom row: interview controls + generate/export -->
+  <div class="bar-row">
+    <div class="bar-nav">
+      <button class="bar-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
+      <div class="interview-actions" id="interviewActions">
+        <span class="bar-sep">·</span>
+        <button class="bar-btn btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
+        <span class="bar-sep">·</span>
+        <button class="bar-btn" onclick="interviewEnd()">End Session</button>
+      </div>
+    </div>
+    <div class="bar-right">
+      <button class="bar-btn bar-primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+      <span class="bar-sep">·</span>
+      <button class="bar-btn" onclick="exportMemoir()">Export</button>
+      <span class="bar-sep">·</span>
+      <a class="bar-btn" href="/lifepages">LifePages</a>
+    </div>
   </div>
 </div>
 
@@ -1285,16 +1253,6 @@
   </div>
 </div>
 
-<!-- Bottom controls bar -->
-<div class="controls">
-    <div class="ctrl-group">
-      <button class="ctrl-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
-      <div class="interview-actions" id="interviewActions">
-        <button class="btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
-        <button class="ctrl-btn" onclick="interviewEnd()">End Session</button>
-      </div>
-    </div>
-</div>
 
 
 <!-- Overlay -->
@@ -1359,23 +1317,22 @@
   let promptIndex = 0;
   let guidedMode = false;
 
-  // ── Nav auto-hide ─────────────────────────────────────────────────────────
+  // ── Bar auto-hide ─────────────────────────────────────────────────────────
   let hideTimer = null;
 
   function showNav() {
-    document.getElementById('nav-bar').classList.add('visible');
+    document.getElementById('stage-bar').classList.add('visible');
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(hideNav, 3200);
+    hideTimer = setTimeout(hideNav, 3400);
   }
 
   function hideNav() {
-    if (!activeDrawer) document.getElementById('nav-bar').classList.remove('visible');
+    if (!activeDrawer) document.getElementById('stage-bar').classList.remove('visible');
   }
 
   document.addEventListener('mousemove', showNav);
-  document.getElementById('nav-trigger').addEventListener('mouseenter', showNav);
-  // Show briefly on load
-  setTimeout(showNav, 400);
+  // Show on load, then fade
+  setTimeout(showNav, 500);
 
   // ── Tab switching ─────────────────────────────────────────────────────────
   function setTab(name) {
@@ -1557,7 +1514,7 @@
     document.getElementById('overlay').classList.add('visible');
     activeDrawer = name;
     showNav();
-    clearTimeout(hideTimer); // keep nav visible while drawer is open
+    clearTimeout(hideTimer); // keep bar visible while drawer is open
   }
 
   function closeAllDrawers() {
