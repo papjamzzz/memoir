@@ -1714,12 +1714,31 @@
       rec.classList.add('visible');
       setStatus('recording');
       document.getElementById('mic-status').classList.add('listening');
+      ledLock(true);
     } else if (state === 'processing') {
       mic.classList.add('processing');
       isProcessing = true;
       setStatus('transcribing...');
+      ledLock(false);
     } else {
       setStatus('tap mic to speak');
+      ledLock(false);
+    }
+  }
+
+  // ── LED lock — freeze at full bright when recording, release to breathe ──
+  function ledLock(on) {
+    const led    = document.getElementById('power-led');
+    const halo   = document.getElementById('led-halo');
+    if (!led) return;
+    if (on) {
+      led.style.fill    = '#f0a020';
+      led.style.opacity = '1';
+      if (halo) { halo.style.opacity = '0.85'; }
+    } else {
+      led.style.fill    = '';
+      led.style.opacity = '';
+      if (halo) { halo.style.opacity = ''; }
     }
   }
 
