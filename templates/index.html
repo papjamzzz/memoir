@@ -790,6 +790,48 @@
     ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+
+    /* ── WELCOME TAGLINE — top left, once per 24h ── */
+    .welcome-tag {
+      position: fixed;
+      top: 36px;
+      left: 44px;
+      z-index: 40;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .welcome-tag.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .welcome-tag.fading {
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 1.8s ease, transform 1.8s ease;
+    }
+    .welcome-name {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--amber);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(224,168,48,0.4);
+      display: block;
+    }
+    .welcome-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(200,151,58,0.42);
+      margin-top: 7px;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -831,6 +873,12 @@
       <a class="bar-btn" href="/lifepages">LifePages</a>
     </div>
   </div>
+</div>
+
+<!-- Welcome tagline — top left, once per 24h -->
+<div class="welcome-tag" id="welcome-tag">
+  <span class="welcome-name">Memoir</span>
+  <span class="welcome-sub">write the book of your life</span>
 </div>
 
 <!-- Spotlight cone -->
@@ -2023,6 +2071,25 @@
   }
   // Start a few smoke particles staggered
   for (let i = 0; i < 6; i++) spawnSmoke();
+
+  // ── Welcome tagline — once per 24 hours ──────────────────────────────────
+  (function showWelcomeOnce() {
+    const KEY      = 'memoir_welcome_shown';
+    const last     = parseInt(localStorage.getItem(KEY) || '0', 10);
+    const now      = Date.now();
+    const hours24  = 24 * 60 * 60 * 1000;
+    if (now - last < hours24) return;          // shown within last 24h — skip
+    localStorage.setItem(KEY, String(now));
+
+    const el = document.getElementById('welcome-tag');
+    // Fade in after a short breath
+    setTimeout(() => el.classList.add('visible'), 600);
+    // Hold for 4 seconds, then fade out
+    setTimeout(() => {
+      el.classList.remove('visible');
+      el.classList.add('fading');
+    }, 4800);
+  })();
 
   // ── Init ──────────────────────────────────────────────────────────────────
   loadVoiceLog();
