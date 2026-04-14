@@ -5,13 +5,16 @@ Speak your story. We turn it into a memoir.
 import os, json, tempfile, glob
 from flask import Flask, render_template, jsonify, request, Response
 from openai import OpenAI
+from anthropic import Anthropic
 from dotenv import load_dotenv
 from datetime import datetime
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+load_dotenv(dotenv_path=_env_path, override=True)
 app = Flask(__name__)
 
-openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+openai_client    = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+anthropic_client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
 
 VOICE_DIR       = 'voice'
 CHAPTERS_DIR    = 'chapters'
@@ -88,7 +91,6 @@ def chapters():
 @app.route('/api/generate-chapter', methods=['POST'])
 def generate_chapter():
     """Take all voice entries and generate a memoir chapter using Claude."""
-    from anthropic import Anthropic
 
     entries = _load_voice_entries()
     if not entries:
@@ -113,7 +115,7 @@ Raw voice entries:
 
 Write the chapter now:"""
 
-    anthropic_client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
+
 
     message = anthropic_client.messages.create(
         model='claude-sonnet-4-6',
@@ -138,7 +140,6 @@ Write the chapter now:"""
 
 @app.route('/api/interview/start', methods=['POST'])
 def interview_start():
-    from anthropic import Anthropic
     data = request.get_json() or {}
     seed = data.get('seed', '').strip()
 
@@ -154,8 +155,8 @@ Ask the opening question. Rules:
 - Under 25 words
 Just the question."""
 
-    client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
-    msg = client.messages.create(
+
+    msg = anthropic_client.messages.create(
         model='claude-sonnet-4-6', max_tokens=80,
         messages=[{'role': 'user', 'content': prompt}]
     )
@@ -177,7 +178,6 @@ Just the question."""
 
 @app.route('/api/interview/respond', methods=['POST'])
 def interview_respond():
-    from anthropic import Anthropic
     data = request.get_json() or {}
     session_id = data.get('session_id')
     answer = (data.get('answer') or '').strip()
@@ -228,8 +228,8 @@ Conversation:
 
 Next question:"""
 
-    client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
-    msg = client.messages.create(
+
+    msg = anthropic_client.messages.create(
         model='claude-sonnet-4-6', max_tokens=60,
         messages=[{'role': 'user', 'content': prompt}]
     )
@@ -244,7 +244,6 @@ Next question:"""
 
 @app.route('/api/interview/generate', methods=['POST'])
 def interview_generate():
-    from anthropic import Anthropic
     data = request.get_json() or {}
     session_id = data.get('session_id')
     if not session_id:
@@ -282,8 +281,8 @@ Interview transcript:
 
 Write the chapter:"""
 
-    client = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
-    msg = client.messages.create(
+
+    msg = anthropic_client.messages.create(
         model='claude-sonnet-4-6', max_tokens=4000,
         messages=[{'role': 'user', 'content': prompt}]
     )
@@ -429,7 +428,6 @@ def lifepages_skip():
 @app.route('/api/lifepages/generate/<chapter_id>', methods=['POST'])
 def lifepages_generate(chapter_id):
     """Generate a memoir chapter from collected answers."""
-    from anthropic import Anthropic
     curriculum = _load_curriculum()
     chapter    = next((c for c in curriculum['chapters'] if c['id'] == chapter_id), None)
     if not chapter:
@@ -467,8 +465,8 @@ Their answers:
 
 Write the chapter now:"""
 
-    client  = Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY'))
-    message = client.messages.create(
+
+    message = anthropic_client.messages.create(
         model='claude-sonnet-4-6',
         max_tokens=1200,
         messages=[{'role': 'user', 'content': prompt}]
