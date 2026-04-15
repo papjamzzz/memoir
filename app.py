@@ -3,7 +3,7 @@ Memoir — Voice Memory Engine
 Speak your story. We turn it into a memoir.
 """
 import os, json, tempfile, glob
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, jsonify, request, Response, send_from_directory
 from openai import OpenAI
 from anthropic import Anthropic
 from dotenv import load_dotenv
@@ -597,10 +597,7 @@ def _load_voice_entries():
 
 @app.route('/googleb1d119555682829c.html')
 def google_verify():
-    return app.response_class(
-        'google-site-verification: googleb1d119555682829c.html',
-        mimetype='text/html'
-    )
+    return send_from_directory('static', 'googleb1d119555682829c.html')
 
 
 if __name__ == '__main__':
