@@ -595,6 +595,14 @@ def _load_voice_entries():
     return entries
 
 
+@app.route('/googleb1d119555682829c.html')
+def google_verify():
+    return app.response_class(
+        'google-site-verification: googleb1d119555682829c.html',
+        mimetype='text/html'
+    )
+
+
 if __name__ == '__main__':
     os.makedirs(VOICE_DIR, exist_ok=True)
     os.makedirs(CHAPTERS_DIR, exist_ok=True)
