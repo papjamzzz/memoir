@@ -246,10 +246,10 @@
     }
 
     .bar-btn {
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.30em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: rgba(200,151,58,0.22);
       background: none;
@@ -373,10 +373,10 @@
     .prompter-controls.show { opacity: 1; pointer-events: all; }
 
     .prompter-btn {
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--dim);
       background: transparent;
@@ -501,8 +501,8 @@
     .mic-status {
       font-family: 'Lora', Georgia, serif;
       font-style: italic;
-      font-size: 22px;
-      letter-spacing: 0.04em;
+      font-size: 28px;
+      letter-spacing: 0.03em;
       color: var(--dim);
       transition: color 0.3s;
     }
@@ -766,7 +766,7 @@
     .interview-q-text {
       font-family: 'Lora', Georgia, serif;
       font-style: italic;
-      font-size: clamp(18px, 2.4vw, 30px);
+      font-size: clamp(22px, 3.2vw, 42px);
       color: rgba(232, 218, 185, 0.93);
       text-align: center;
       line-height: 1.55;
@@ -820,8 +820,9 @@
     }
     .guided-start-headline {
       font-family: 'Lora', Georgia, serif;
-      font-size: clamp(20px, 3vw, 36px);
+      font-size: clamp(28px, 4.5vw, 58px);
       font-weight: 400;
+      font-style: italic;
       color: #f0e8d4;
       text-align: center;
       line-height: 1.5;
@@ -969,7 +970,7 @@
       justify-content: center;
       gap: 0;
       pointer-events: all;
-      transition: opacity 1.4s ease;
+      transition: opacity 2.2s ease;
     }
     #memoir-intro.fade-out {
       opacity: 0;
@@ -991,40 +992,51 @@
 
     .intro-line {
       font-family: 'Lora', Georgia, serif;
-      font-size: clamp(22px, 4vw, 42px);
       font-weight: 400;
+      font-style: italic;
       color: #f0e8d4;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       text-align: center;
       opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 1.2s ease, transform 1.2s ease;
+      transform: scale(0.94) translateY(12px);
+      transition: opacity 1.6s ease, transform 1.6s cubic-bezier(0.16,1,0.3,1);
       position: absolute;
-      padding: 0 32px;
-      line-height: 1.5;
+      padding: 0 40px;
+      line-height: 1.4;
     }
     .intro-line.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: scale(1) translateY(0);
     }
     .intro-line.dim {
-      opacity: 0.18;
-      transform: translateY(-6px);
+      opacity: 0.12;
+      transform: scale(0.97) translateY(-8px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
     }
-    .intro-line-final {
+
+    /* Each line larger than the last */
+    #iline1 { font-size: clamp(18px, 2.4vw, 28px); color: rgba(240,232,212,0.7); }
+    #iline2 { font-size: clamp(28px, 4.5vw, 54px); }
+    #iline3 {
       font-family: 'Lora', Georgia, serif;
-      font-size: clamp(14px, 2vw, 20px);
-      font-weight: 400;
+      font-size: clamp(42px, 7vw, 88px);
+      font-weight: 600;
+      font-style: normal;
       color: #e0a830;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      letter-spacing: -0.01em;
       text-align: center;
       opacity: 0;
-      transition: opacity 1.2s ease;
+      transform: scale(0.9) translateY(16px);
+      transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.16,1,0.3,1);
       position: absolute;
       padding: 0 32px;
+      line-height: 1.2;
+      text-shadow: 0 0 80px rgba(224,168,48,0.5), 0 0 160px rgba(224,168,48,0.2);
     }
-    .intro-line-final.visible { opacity: 1; }
+    #iline3.visible {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
 
     .intro-skip {
       position: absolute;
@@ -2375,14 +2387,14 @@
     const l2 = document.getElementById('iline2');
     const l3 = document.getElementById('iline3');
 
-    // Beat 1 — line 1 in
+    // Beat 1 — line 1 in (whisper)
     setTimeout(() => l1.classList.add('visible'), 800);
-    // Beat 2 — line 1 dims, line 2 in
-    setTimeout(() => { l1.classList.add('dim'); l2.classList.add('visible'); }, 3200);
-    // Beat 3 — line 2 dims, final line in
-    setTimeout(() => { l2.classList.add('dim'); l3.classList.add('visible'); }, 5800);
-    // Beat 4 — fade out, reveal app
-    setTimeout(() => dismissIntro(), 8400);
+    // Beat 2 — line 1 dims, line 2 grows in
+    setTimeout(() => { l1.classList.add('dim'); l2.classList.add('visible'); }, 5500);
+    // Beat 3 — line 2 dims, big reveal
+    setTimeout(() => { l2.classList.add('dim'); l3.classList.add('visible'); }, 11000);
+    // Beat 4 — hold on the big line, then dissolve
+    setTimeout(() => dismissIntro(), 17500);
   })();
 
   function dismissIntro() {
@@ -2393,8 +2405,8 @@
     intro.classList.add('fade-out');
     setTimeout(() => {
       intro.classList.add('hidden');
-      if (firstTime) setTimeout(() => showGuidedStart(), 600);
-    }, 1500);
+      if (firstTime) setTimeout(() => showGuidedStart(), 800);
+    }, 2300);
   }
 
   // ── Welcome tagline — once per 24 hours ──────────────────────────────────
