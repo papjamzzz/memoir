@@ -1898,23 +1898,9 @@
     } catch { return false; }
   }
 
-  // ── Ambient hum ──────────────────────────────────────────────────────────
-  let humOsc = null, humCtx = null;
-  function startHum() {
-    try {
-      humCtx = new (window.AudioContext || window.webkitAudioContext)();
-      humOsc = humCtx.createOscillator();
-      const g = humCtx.createGain();
-      humOsc.frequency.value = 100;
-      g.gain.value = 0.018;
-      humOsc.connect(g);
-      g.connect(humCtx.destination);
-      humOsc.start();
-    } catch {}
-  }
-  function stopHum() {
-    try { if (humOsc) { humOsc.stop(); humOsc = null; } if (humCtx) { humCtx.close(); humCtx = null; } } catch {}
-  }
+  // ── Ambient hum — disabled ───────────────────────────────────────────────
+  function startHum() {}
+  function stopHum() {}
 
   // ── VU Meter ─────────────────────────────────────────────────────────────
   let vuInterval = null;
