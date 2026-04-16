@@ -1873,28 +1873,9 @@
     hideTimer = setTimeout(hideNav, 2000);
   }
 
-  // ── Built-in mic ─────────────────────────────────────────────────────────
+  // ── Mic — use OS default, no forcing ────────────────────────────────────
   async function getBuiltInMicId() {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const mics = devices.filter(d => d.kind === 'audioinput');
-
-      // Exclude wireless/phone devices
-      const EXCLUDE = ['iphone', 'ipad', 'airpod', 'bluetooth', 'continuity', 'wireless'];
-      const wired = mics.filter(d => !EXCLUDE.some(x => d.label.toLowerCase().includes(x)));
-
-      // Prefer explicit built-in label
-      const builtin = wired.find(d =>
-        d.label.toLowerCase().includes('built-in') ||
-        d.label.toLowerCase().includes('macbook') ||
-        d.label.toLowerCase().includes('internal') ||
-        d.label.toLowerCase().includes('microphone array')
-      );
-
-      // Fall back to first non-excluded mic
-      const chosen = builtin || wired[0];
-      return chosen ? { exact: chosen.deviceId } : undefined;
-    } catch { return undefined; }
+    return undefined; // let the OS/browser use whatever the user has selected
   }
 
   function isHallucination(text) {
