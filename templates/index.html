@@ -854,6 +854,91 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
 
+    /* ── CINEMATIC INTRO — first visit only ── */
+    #memoir-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #080604;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      pointer-events: all;
+      transition: opacity 1.4s ease;
+    }
+    #memoir-intro.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #memoir-intro.hidden { display: none; }
+
+    /* film grain on intro */
+    #memoir-intro::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      width: 200%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+      opacity: 0.6;
+      pointer-events: none;
+      animation: grain 0.15s steps(1) infinite;
+    }
+
+    .intro-line {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(22px, 4vw, 42px);
+      font-weight: 400;
+      color: #f0e8d4;
+      letter-spacing: 0.02em;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      position: absolute;
+      padding: 0 32px;
+      line-height: 1.5;
+    }
+    .intro-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .intro-line.dim {
+      opacity: 0.18;
+      transform: translateY(-6px);
+    }
+    .intro-line-final {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(14px, 2vw, 20px);
+      font-weight: 400;
+      color: #e0a830;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      position: absolute;
+      padding: 0 32px;
+    }
+    .intro-line-final.visible { opacity: 1; }
+
+    .intro-skip {
+      position: absolute;
+      bottom: 32px;
+      right: 36px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240,232,212,0.2);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: color 0.2s;
+    }
+    .intro-skip:hover { color: rgba(240,232,212,0.55); }
+
     /* ── WELCOME TAGLINE — top left, once per 24h ── */
     .welcome-tag {
       position: fixed;
@@ -907,6 +992,14 @@
   </style>
 </head>
 <body>
+
+<!-- ═══ CINEMATIC INTRO — first visit only ═══ -->
+<div id="memoir-intro">
+  <span class="intro-line" id="iline1">Everyone has a story.</span>
+  <span class="intro-line" id="iline2">Most people never tell it.</span>
+  <span class="intro-line-final" id="iline3">Let's start with one memory.</span>
+  <button class="intro-skip" onclick="dismissIntro()">skip</button>
+</div>
 
 <!-- Stage bar — big typographic control strip, fades in/out -->
 <div class="stage-bar" id="stage-bar">
@@ -2144,6 +2237,34 @@
   }
   // Start a few smoke particles staggered
   for (let i = 0; i < 6; i++) spawnSmoke();
+
+  // ── Cinematic intro — first visit only ──────────────────────────────────
+  (function runIntro() {
+    const KEY = 'memoir_intro_v1';
+    const intro = document.getElementById('memoir-intro');
+    if (localStorage.getItem(KEY)) { intro.classList.add('hidden'); return; }
+
+    const l1 = document.getElementById('iline1');
+    const l2 = document.getElementById('iline2');
+    const l3 = document.getElementById('iline3');
+
+    // Beat 1 — line 1 in
+    setTimeout(() => l1.classList.add('visible'), 800);
+    // Beat 2 — line 1 dims, line 2 in
+    setTimeout(() => { l1.classList.add('dim'); l2.classList.add('visible'); }, 3200);
+    // Beat 3 — line 2 dims, final line in
+    setTimeout(() => { l2.classList.add('dim'); l3.classList.add('visible'); }, 5800);
+    // Beat 4 — fade out, reveal app
+    setTimeout(() => dismissIntro(), 8400);
+  })();
+
+  function dismissIntro() {
+    const intro = document.getElementById('memoir-intro');
+    if (!intro || intro.classList.contains('hidden')) return;
+    localStorage.setItem('memoir_intro_v1', '1');
+    intro.classList.add('fade-out');
+    setTimeout(() => intro.classList.add('hidden'), 1500);
+  }
 
   // ── Welcome tagline — once per 24 hours ──────────────────────────────────
   (function showWelcomeOnce() {
