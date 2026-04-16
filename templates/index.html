@@ -196,18 +196,18 @@
     /* ── STAGE BAR — big typographic control strip, auto-fades ── */
     .stage-bar {
       position: fixed;
-      bottom: 0; left: 0; right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 30;
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(-10px);
       transition: opacity 0.5s ease, transform 0.45s ease;
       pointer-events: none;
-      background: linear-gradient(to top,
-        rgba(3,2,1,0.99) 0%,
-        rgba(4,3,2,0.94) 42%,
-        rgba(5,4,3,0.60) 72%,
+      background: linear-gradient(to bottom,
+        rgba(3,2,1,0.98) 0%,
+        rgba(4,3,2,0.90) 45%,
+        rgba(5,4,3,0.50) 75%,
         transparent 100%);
-      padding: 56px 60px 42px;
+      padding: 28px 60px 56px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -413,10 +413,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
       cursor: pointer;
       user-select: none;
-      padding-bottom: 80px;
+      padding-bottom: 40px;
     }
 
     /* ── VINTAGE MIC SVG ── */
@@ -425,7 +425,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 60px;
+      margin-top: 0;
     }
 
     /* Ambient glow behind the mic when recording */
@@ -790,6 +790,167 @@
       display: none;
     }
     .btn-write-chapter:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── WORD DRAPE COLUMNS ── */
+    .word-column {
+      position: fixed;
+      top: 100px;
+      bottom: 200px;
+      width: clamp(180px, 22vw, 280px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 18px;
+      padding: 0 0 24px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 5;
+      /* fade out at top */
+      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 25%, rgba(0,0,0,1) 55%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 25%, rgba(0,0,0,1) 55%);
+    }
+    #words-left  { left: clamp(12px, 4vw, 60px); text-align: right; }
+    #words-right { right: clamp(12px, 4vw, 60px); text-align: left; }
+
+    .word-entry {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 1.4s ease, transform 1.4s cubic-bezier(0.16,1,0.3,1);
+      line-height: 1.55;
+    }
+    .word-entry.visible { opacity: 1; transform: translateY(0); }
+    .word-entry.question {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(13px, 1.4vw, 18px);
+      color: rgba(224,168,48,0.75);
+    }
+    .word-entry.answer {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(240,232,212,0.55);
+    }
+
+    /* ── MODE SELECTION ── */
+    #mode-select {
+      position: fixed;
+      inset: 0;
+      z-index: 8500;
+      background: rgba(6,5,4,0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.9s ease;
+    }
+    #mode-select.visible { opacity: 1; pointer-events: all; }
+    #mode-select.hidden  { display: none; }
+
+    .mode-select-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(224,168,48,0.45);
+    }
+    .mode-select-headline {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(24px, 4vw, 52px);
+      color: #f0e8d4;
+      text-align: center;
+      padding: 0 32px;
+      line-height: 1.35;
+      margin-top: -24px;
+    }
+    .mode-options {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 24px;
+    }
+    .mode-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 36px 40px;
+      border: 1px solid rgba(224,168,48,0.18);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+      background: transparent;
+      max-width: 280px;
+      text-align: center;
+    }
+    .mode-option:hover {
+      border-color: rgba(224,168,48,0.55);
+      background: rgba(224,168,48,0.05);
+      transform: translateY(-3px);
+    }
+    .mode-option-icon { font-size: 36px; }
+    .mode-option-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 600;
+      color: #f0e8d4;
+    }
+    .mode-option-desc {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 14px;
+      color: rgba(240,232,212,0.45);
+      line-height: 1.5;
+    }
+    .mode-select-skip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(240,232,212,0.18);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      margin-top: -24px;
+    }
+    .mode-select-skip:hover { color: rgba(240,232,212,0.45); }
+
+    /* ── MODE PILL — always visible near mic ── */
+    #mode-pill {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(224,168,48,0.2);
+      border-radius: 100px;
+      overflow: hidden;
+      pointer-events: all;
+    }
+    .mode-pill-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(224,168,48,0.35);
+      background: transparent;
+      border: none;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: color 0.25s, background 0.25s;
+    }
+    .mode-pill-btn.active {
+      color: #e0a830;
+      background: rgba(224,168,48,0.1);
+    }
+    .mode-pill-btn:hover:not(.active) { color: rgba(224,168,48,0.65); }
 
     /* ── GUIDED START OVERLAY ── */
     #guided-start {
@@ -1616,6 +1777,35 @@
   <button class="guided-start-skip" onclick="hideGuidedStart()">do this later</button>
 </div>
 
+<!-- Word drape columns -->
+<div class="word-column" id="words-left"></div>
+<div class="word-column" id="words-right"></div>
+
+<!-- Mode selection screen -->
+<div id="mode-select" class="hidden">
+  <span class="mode-select-label">How would you like to begin?</span>
+  <h2 class="mode-select-headline">This is your story.<br>You choose how to tell it.</h2>
+  <div class="mode-options">
+    <div class="mode-option" onclick="selectMode('free')">
+      <div class="mode-option-icon">🎙</div>
+      <div class="mode-option-title">Freestyle</div>
+      <div class="mode-option-desc">Speak freely. No prompts, no structure. Just you and the mic.</div>
+    </div>
+    <div class="mode-option" onclick="selectMode('guided')">
+      <div class="mode-option-icon">✦</div>
+      <div class="mode-option-title">Guided</div>
+      <div class="mode-option-desc">I'll ask the questions. You just answer. One memory at a time.</div>
+    </div>
+  </div>
+  <button class="mode-select-skip" onclick="hideModeSelect()">decide later</button>
+</div>
+
+<!-- Mode pill — always visible -->
+<div id="mode-pill">
+  <button class="mode-pill-btn active" id="pill-free"    onclick="selectMode('free')">Freestyle</button>
+  <button class="mode-pill-btn"        id="pill-guided"  onclick="selectMode('guided')">Guided</button>
+</div>
+
 <!-- Overlay -->
 <div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
 
@@ -1678,7 +1868,7 @@
   let promptIndex = 0;
   let guidedMode = false;
 
-  // ── Bar auto-hide ─────────────────────────────────────────────────────────
+  // ── Bar auto-hide — top hover only ───────────────────────────────────────
   let hideTimer = null;
 
   function showNav() {
@@ -1691,9 +1881,11 @@
     if (!activeDrawer) document.getElementById('stage-bar').classList.remove('visible');
   }
 
-  document.addEventListener('mousemove', showNav);
-  // Show on load, then fade
-  setTimeout(showNav, 500);
+  document.addEventListener('mousemove', e => {
+    if (e.clientY < 110) showNav();
+  });
+  // Show briefly on load, then fade
+  setTimeout(showNav, 600);
 
   // ── Tab switching ─────────────────────────────────────────────────────────
   function setTab(name) {
@@ -2016,6 +2208,7 @@
         document.getElementById('transcript-live').textContent = text;
         document.getElementById('transcript-live').classList.remove('empty');
         if (IV.active && IV.waitingForAnswer) {
+          addWordRight(text);
           await ivRespond(text);
         } else {
           await loadVoiceLog();
@@ -2132,6 +2325,7 @@
       document.getElementById('interviewActions').classList.add('visible');
 
       await ivShowQuestion(data.question);
+      addWordLeft(data.question);
       await ivSpeak(data.question);
       IV.waitingForAnswer = true;
       setStatus('tap to answer');
@@ -2172,6 +2366,7 @@
       }
 
       await ivShowQuestion(data.question);
+      addWordLeft(data.question);
       await ivSpeak(data.question);
       IV.waitingForAnswer = true;
       setStatus('tap to answer');
@@ -2377,6 +2572,66 @@
   // Start a few smoke particles staggered
   for (let i = 0; i < 6; i++) spawnSmoke();
 
+  // ── Mode selection ───────────────────────────────────────────────────────
+  let currentMode = localStorage.getItem('memoir_mode') || 'free';
+
+  function showModeSelect() {
+    const el = document.getElementById('mode-select');
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('visible'), 30);
+  }
+
+  function hideModeSelect() {
+    const el = document.getElementById('mode-select');
+    el.classList.remove('visible');
+    setTimeout(() => el.classList.add('hidden'), 900);
+  }
+
+  function selectMode(mode) {
+    currentMode = mode;
+    localStorage.setItem('memoir_mode', mode);
+    // Update pill
+    document.getElementById('pill-free').classList.toggle('active', mode === 'free');
+    document.getElementById('pill-guided').classList.toggle('active', mode === 'guided');
+    // Update nav tabs
+    document.getElementById('tab-free').classList.toggle('active', mode === 'free');
+    document.getElementById('tab-guided').classList.toggle('active', mode === 'guided');
+    hideModeSelect();
+    if (mode === 'guided') {
+      setTimeout(() => showGuidedStart(), 600);
+    }
+  }
+
+  // Init pill from saved mode
+  (function initModePill() {
+    document.getElementById('pill-free').classList.toggle('active', currentMode === 'free');
+    document.getElementById('pill-guided').classList.toggle('active', currentMode === 'guided');
+  })();
+
+  // ── Word drape ────────────────────────────────────────────────────────────
+  function addWordLeft(text) {
+    const col = document.getElementById('words-left');
+    const el = document.createElement('div');
+    el.className = 'word-entry question';
+    el.textContent = text;
+    col.appendChild(el);
+    setTimeout(() => el.classList.add('visible'), 50);
+    // Keep max 6 entries
+    const entries = col.querySelectorAll('.word-entry');
+    if (entries.length > 6) entries[0].remove();
+  }
+
+  function addWordRight(text) {
+    const col = document.getElementById('words-right');
+    const el = document.createElement('div');
+    el.className = 'word-entry answer';
+    el.textContent = text;
+    col.appendChild(el);
+    setTimeout(() => el.classList.add('visible'), 50);
+    const entries = col.querySelectorAll('.word-entry');
+    if (entries.length > 6) entries[0].remove();
+  }
+
   // ── Cinematic intro — first visit only ──────────────────────────────────
   (function runIntro() {
     const KEY = 'memoir_intro_v1';
@@ -2405,7 +2660,7 @@
     intro.classList.add('fade-out');
     setTimeout(() => {
       intro.classList.add('hidden');
-      if (firstTime) setTimeout(() => showGuidedStart(), 800);
+      if (firstTime) setTimeout(() => showModeSelect(), 800);
     }, 2300);
   }
 
