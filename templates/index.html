@@ -791,6 +791,109 @@
     }
     .btn-write-chapter:disabled { opacity: 0.35; cursor: default; }
 
+    /* ── GUIDED START OVERLAY ── */
+    #guided-start {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(6,5,4,0.92);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+    #guided-start.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+    #guided-start.hidden { display: none; }
+    .guided-start-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(224,168,48,0.6);
+    }
+    .guided-start-headline {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(20px, 3vw, 36px);
+      font-weight: 400;
+      color: #f0e8d4;
+      text-align: center;
+      line-height: 1.5;
+      max-width: 560px;
+      padding: 0 24px;
+    }
+    .guided-start-sub {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 15px;
+      color: rgba(240,232,212,0.4);
+      text-align: center;
+      max-width: 420px;
+      padding: 0 24px;
+    }
+    .guided-start-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(224,168,48,0.25);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      color: #f0e8d4;
+      width: min(480px, 88vw);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .guided-start-input::placeholder { color: rgba(240,232,212,0.2); }
+    .guided-start-input:focus { border-color: rgba(224,168,48,0.6); }
+    .guided-start-btn {
+      background: transparent;
+      border: 1px solid rgba(224,168,48,0.45);
+      border-radius: 6px;
+      padding: 12px 36px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #e0a830;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .guided-start-btn:hover { background: rgba(224,168,48,0.08); border-color: rgba(224,168,48,0.7); }
+    .guided-start-skip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240,232,212,0.2);
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      margin-top: -8px;
+      transition: color 0.2s;
+    }
+    .guided-start-skip:hover { color: rgba(240,232,212,0.5); }
+
+    /* progress dots */
+    .iv-progress-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .iv-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(224,168,48,0.2);
+      transition: background 0.4s ease, transform 0.4s ease;
+    }
+    .iv-dot.done { background: #e0a830; }
+    .iv-dot.active { background: rgba(224,168,48,0.7); transform: scale(1.4); }
+
     /* Chapter reveal — fullscreen reading view */
     .chapter-reveal {
       position: fixed; inset: 0; z-index: 60;
@@ -1077,6 +1180,13 @@
 <!-- Interview question card -->
 <div class="interview-question-card" id="interviewCard">
   <div class="interview-q-text" id="interviewQText"></div>
+  <div class="iv-progress-dots" id="ivDots">
+    <div class="iv-dot" id="ivd1"></div>
+    <div class="iv-dot" id="ivd2"></div>
+    <div class="iv-dot" id="ivd3"></div>
+    <div class="iv-dot" id="ivd4"></div>
+    <div class="iv-dot" id="ivd5"></div>
+  </div>
   <div class="interview-q-progress" id="interviewProgress"></div>
 </div>
 
@@ -1481,6 +1591,18 @@
 </div>
 
 
+
+<!-- Guided Start Overlay -->
+<div id="guided-start" class="hidden">
+  <span class="guided-start-label">Chapter One</span>
+  <h2 class="guided-start-headline">What memory do you want to start with?</h2>
+  <p class="guided-start-sub">A place, a person, a moment — or leave it blank and let me ask the first question.</p>
+  <input class="guided-start-input" id="guided-seed-input" type="text"
+         placeholder="e.g. the house I grew up in, my grandmother, 1994…"
+         onkeydown="if(event.key==='Enter') guidedBegin()">
+  <button class="guided-start-btn" onclick="guidedBegin()">Begin Chapter One →</button>
+  <button class="guided-start-skip" onclick="hideGuidedStart()">do this later</button>
+</div>
 
 <!-- Overlay -->
 <div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
@@ -1972,12 +2094,29 @@
 
   async function interviewToggle() {
     if (IV.active) { interviewEnd(); return; }
-    await interviewStart();
+    showGuidedStart();
   }
 
-  async function interviewStart() {
-    const seed = window.prompt('What memory do you want to explore?\n(press Enter to let me pick the first question)') ?? '';
-    if (seed === null) return; // user cancelled
+  function showGuidedStart() {
+    const el = document.getElementById('guided-start');
+    el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('visible'), 30);
+    setTimeout(() => document.getElementById('guided-seed-input').focus(), 400);
+  }
+
+  function hideGuidedStart() {
+    const el = document.getElementById('guided-start');
+    el.classList.remove('visible');
+    setTimeout(() => el.classList.add('hidden'), 800);
+  }
+
+  async function guidedBegin() {
+    const seed = document.getElementById('guided-seed-input').value.trim();
+    hideGuidedStart();
+    await interviewStart(seed);
+  }
+
+  async function interviewStart(seed = '') {
 
     setStatus('thinking...');
     document.getElementById('btnInterview').textContent = 'Starting...';
@@ -1996,6 +2135,7 @@
       IV.sessionId = data.session_id;
       IV.exchangeCount = 0;
       IV.waitingForAnswer = false;
+      ivUpdateProgress();
 
       document.getElementById('btnInterview').textContent = 'End Session';
       document.getElementById('btnInterview').disabled = false;
@@ -2080,7 +2220,16 @@
 
   function ivUpdateProgress() {
     const el = document.getElementById('interviewProgress');
-    if (el) el.textContent = `exchange ${IV.exchangeCount} · ${10 - IV.exchangeCount} to go`;
+    const total = 5;
+    const done  = Math.min(IV.exchangeCount, total);
+    if (el) el.textContent = done >= total ? 'chapter ready' : `memory ${done + 1} of ${total}`;
+    for (let i = 1; i <= total; i++) {
+      const dot = document.getElementById('ivd' + i);
+      if (!dot) continue;
+      dot.classList.remove('done', 'active');
+      if (i <= done) dot.classList.add('done');
+      else if (i === done + 1) dot.classList.add('active');
+    }
   }
 
   async function ivSpeak(text) {
@@ -2261,9 +2410,13 @@
   function dismissIntro() {
     const intro = document.getElementById('memoir-intro');
     if (!intro || intro.classList.contains('hidden')) return;
+    const firstTime = !localStorage.getItem('memoir_intro_v1');
     localStorage.setItem('memoir_intro_v1', '1');
     intro.classList.add('fade-out');
-    setTimeout(() => intro.classList.add('hidden'), 1500);
+    setTimeout(() => {
+      intro.classList.add('hidden');
+      if (firstTime) setTimeout(() => showGuidedStart(), 600);
+    }, 1500);
   }
 
   // ── Welcome tagline — once per 24 hours ──────────────────────────────────
