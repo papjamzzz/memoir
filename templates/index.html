@@ -1680,31 +1680,15 @@
             stroke="rgba(255,220,100,0.30)" stroke-width="1" fill="none"
             stroke-linecap="round" stroke-linejoin="round"/>
 
-      <!-- ═══ POWER / RECORD BUTTON LED — hypnotic anchor ═══ -->
-      <!-- 6-second breathing cycle = 0.167 Hz = cardiac coherence frequency -->
-      <!-- Outer ripple halo — expands on peak -->
-      <circle cx="100" cy="277" r="28" fill="url(#led-glow)" filter="url(#led-blur)" opacity="0" id="led-halo">
-        <animate attributeName="r"       values="18;32;18"   dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.0;0.7;0.0" dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-      </circle>
-      <!-- Secondary outer bloom -->
-      <circle cx="100" cy="277" r="20" fill="url(#led-glow)" filter="url(#led-blur)" opacity="0">
-        <animate attributeName="r"       values="14;24;14"   dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.0;0.9;0.0" dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-      </circle>
-      <!-- Button bezel — slightly larger -->
+      <!-- ═══ POWER / RECORD LED — dark at rest, red pulse when recording ═══ -->
+      <!-- Outer halo — only active when recording -->
+      <circle cx="100" cy="277" r="28" fill="url(#led-glow)" filter="url(#led-blur)" opacity="0" id="led-halo"/>
+      <!-- Button bezel -->
       <circle cx="100" cy="277" r="11" fill="#0c0a08" stroke="#302a20" stroke-width="1.4"/>
-      <!-- LED itself — full contrast breathing -->
-      <circle cx="100" cy="277" r="7"  fill="#d48818" id="power-led">
-        <animate attributeName="r"       values="5;8.5;5"     dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.08;1;0.08"  dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-        <animate attributeName="fill"    values="#7a4008;#f0a020;#7a4008" dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-      </circle>
-      <!-- LED hot spot — core brightness peak -->
-      <circle cx="99" cy="276" r="3.5" fill="#ffe080" opacity="0">
-        <animate attributeName="opacity" values="0;0.95;0"    dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-        <animate attributeName="r"       values="2;4;2"        dur="6s" calcMode="spline" keySplines="0.45 0.05 0.55 0.95;0.45 0.05 0.55 0.95" repeatCount="indefinite"/>
-      </circle>
+      <!-- LED — off by default, JS controls recording state -->
+      <circle cx="100" cy="277" r="6" fill="#2a0808" opacity="0.35" id="power-led"/>
+      <!-- LED hot spot — hidden until recording -->
+      <circle cx="99" cy="276" r="3" fill="#ff4040" opacity="0" id="led-hotspot"/>
 
       <!-- ═══ CHROME SPECULAR HIGHLIGHTS ═══ -->
       <!-- Primary key light streak — bright tungsten from upper-left -->
@@ -2245,19 +2229,45 @@
     }
   }
 
-  // ── LED lock — freeze at full bright when recording, release to breathe ──
+  // ── LED — dark at rest, red pulse only when recording ────────────────────
+  let ledPulseTimer = null;
+  let ledPulseState = false;
+
   function ledLock(on) {
-    const led    = document.getElementById('power-led');
-    const halo   = document.getElementById('led-halo');
+    const led  = document.getElementById('power-led');
+    const hot  = document.getElementById('led-hotspot');
+    const halo = document.getElementById('led-halo');
     if (!led) return;
+
     if (on) {
-      led.style.fill    = '#f0a020';
-      led.style.opacity = '1';
-      if (halo) { halo.style.opacity = '0.85'; }
+      // Start red pulsing
+      ledPulseState = true;
+      function pulse() {
+        if (!ledPulseState) return;
+        led.style.fill    = '#cc2020';
+        led.style.opacity = '1';
+        led.style.r       = '7';
+        if (hot)  { hot.style.opacity  = '0.9'; }
+        if (halo) { halo.style.opacity = '0.6'; }
+        ledPulseTimer = setTimeout(() => {
+          if (!ledPulseState) return;
+          led.style.opacity = '0.35';
+          led.style.r       = '5';
+          if (hot)  { hot.style.opacity  = '0'; }
+          if (halo) { halo.style.opacity = '0'; }
+          ledPulseTimer = setTimeout(pulse, 500);
+        }, 500);
+      }
+      pulse();
     } else {
-      led.style.fill    = '';
-      led.style.opacity = '';
-      if (halo) { halo.style.opacity = ''; }
+      // Stop — go dark
+      ledPulseState = false;
+      clearTimeout(ledPulseTimer);
+      led.style.fill    = '#2a0808';
+      led.style.opacity = '0.35';
+      led.style.r       = '6';
+      if (hot)  { hot.style.opacity  = '0'; }
+      if (halo) { halo.style.opacity = '0'; }
     }
   }
 
