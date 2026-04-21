@@ -193,103 +193,97 @@
       100% { transform: translateY(-60vh) translateX(var(--drift)) scale(2.5); opacity: 0; }
     }
 
-    /* ── STAGE BAR — big typographic control strip, auto-fades ── */
-    .stage-bar {
+    /* ── RIGHT NAV — vertical, slides in from right edge ── */
+    .right-nav {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      right: 0;
+      height: 100vh;
       z-index: 30;
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.5s ease, transform 0.45s ease;
       pointer-events: none;
-      background: linear-gradient(to bottom,
+      display: flex;
+      align-items: stretch;
+    }
+    .right-nav.visible { pointer-events: all; }
+
+    .right-nav-panel {
+      width: 220px;
+      padding: 52px 36px 52px 24px;
+      background: linear-gradient(to left,
         rgba(3,2,1,0.98) 0%,
-        rgba(4,3,2,0.90) 45%,
-        rgba(5,4,3,0.50) 75%,
+        rgba(4,3,2,0.93) 55%,
+        rgba(5,4,3,0.55) 82%,
         transparent 100%);
-      padding: 28px 60px 56px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-    .stage-bar.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    .bar-row {
-      display: flex;
-      align-items: baseline;
       gap: 0;
+      opacity: 0;
+      transform: translateX(14px);
+      transition: opacity 0.5s ease, transform 0.45s ease;
+      margin-left: auto;
+    }
+    .right-nav.visible .right-nav-panel {
+      opacity: 1;
+      transform: translateX(0);
     }
 
-    .bar-wordmark {
+    .nav-wordmark {
       font-family: 'Lora', Georgia, serif;
       font-style: italic;
-      font-size: 36px;
+      font-size: 30px;
       font-weight: 400;
       color: var(--amber);
       letter-spacing: 0.02em;
-      margin-right: 56px;
-      flex-shrink: 0;
+      text-align: right;
       line-height: 1;
       text-shadow: 0 0 50px rgba(220,168,48,0.45);
+      margin-bottom: 40px;
+      display: block;
     }
 
-    .bar-nav {
-      display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 0;
-      flex: 1;
+    .nav-rule {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to left, rgba(224,168,48,0.18), transparent);
+      margin: 18px 0;
     }
 
-    .bar-btn {
+    .nav-btn {
+      display: block;
+      width: 100%;
+      text-align: right;
       font-family: 'JetBrains Mono', monospace;
       font-size: 10px;
       font-weight: 500;
-      letter-spacing: 0.28em;
+      letter-spacing: 0.26em;
       text-transform: uppercase;
-      color: rgba(200,151,58,0.22);
+      color: rgba(200,151,58,0.28);
       background: none;
       border: none;
       cursor: pointer;
-      padding: 5px 14px;
-      transition: color 0.3s ease;
-      white-space: nowrap;
+      padding: 7px 0;
+      transition: color 0.25s ease;
       text-decoration: none;
-      display: inline-block;
+      white-space: nowrap;
     }
-    .bar-btn:hover  { color: rgba(224,175,60,0.80); }
-    .bar-btn.active { color: var(--amber); }
+    .nav-btn:hover  { color: rgba(224,175,60,0.85); }
+    .nav-btn.active { color: var(--amber); }
+    .nav-btn.primary { color: rgba(224,168,48,0.65); }
+    .nav-btn.primary:hover { color: var(--amber); }
+    .nav-btn.hidden { display: none; }
 
-    .bar-sep {
-      color: rgba(200,151,58,0.10);
-      font-size: 20px;
-      font-weight: 200;
-      padding: 0 2px;
-      user-select: none;
-      line-height: 1;
-    }
-
-    .bar-right {
-      margin-left: auto;
-      display: flex;
-      align-items: baseline;
-      gap: 0;
-    }
-
-    .bar-count {
+    .nav-count {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9px;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       color: rgba(200,151,58,0.22);
-      padding-right: 6px;
+      text-align: right;
+      padding: 4px 0 0;
+      display: block;
     }
 
-    .bar-primary { color: rgba(224,168,48,0.55) !important; }
-    .bar-primary:hover { color: var(--amber) !important; }
+    .nav-interview-actions { display: none; }
+    .nav-interview-actions.visible { display: block; }
 
     /* ── TELEPROMPTER ── */
     /* ── TELEPROMPTER — left column, large scrolling script ── */
@@ -806,27 +800,6 @@
                    0 2px 40px rgba(0,0,0,0.8);
     }
 
-    #q-settled {
-      position: fixed;
-      bottom: 18%;
-      left: 3.5%;
-      width: clamp(180px, 22vw, 300px);
-      z-index: 50;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-    #q-settled.visible { opacity: 1; }
-    #q-settled .qs-settled-text {
-      font-family: 'Lora', Georgia, serif;
-      font-style: italic;
-      font-size: clamp(13px, 1.5vw, 19px);
-      color: rgba(200, 151, 58, 0.82);
-      line-height: 1.6;
-      text-shadow: 0 0 30px rgba(200,151,58,0.18);
-      border-left: 2px solid rgba(200,151,58,0.3);
-      padding-left: 10px;
-    }
 
     /* suppress old top-bar card — replaced by flash */
     .interview-question-card { display: none !important; }
@@ -837,9 +810,6 @@
       gap: 0;
     }
     .interview-actions.visible { display: flex; }
-    .btn-write-chapter {
-      display: none;
-    }
     .btn-write-chapter:disabled { opacity: 0.35; cursor: default; }
 
     /* ── WORD DRAPE COLUMNS ── */
@@ -971,37 +941,6 @@
     }
     .mode-select-skip:hover { color: rgba(240,232,212,0.45); }
 
-    /* ── MODE PILL — always visible near mic ── */
-    #mode-pill {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      display: flex;
-      gap: 0;
-      border: 1px solid rgba(224,168,48,0.2);
-      border-radius: 100px;
-      overflow: hidden;
-      pointer-events: all;
-    }
-    .mode-pill-btn {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(224,168,48,0.35);
-      background: transparent;
-      border: none;
-      padding: 8px 20px;
-      cursor: pointer;
-      transition: color 0.25s, background 0.25s;
-    }
-    .mode-pill-btn.active {
-      color: #e0a830;
-      background: rgba(224,168,48,0.1);
-    }
-    .mode-pill-btn:hover:not(.active) { color: rgba(224,168,48,0.65); }
 
     /* ── GUIDED START OVERLAY ── */
     #guided-start {
@@ -1336,44 +1275,35 @@
   <button class="intro-skip" onclick="dismissIntro()">skip</button>
 </div>
 
-<!-- Stage bar — big typographic control strip, fades in/out -->
-<div class="stage-bar" id="stage-bar">
-  <!-- top row: wordmark + mode tabs + entry count -->
-  <div class="bar-row">
-    <img src="/static/logo.png" alt="Memoir" style="height:28px;object-fit:contain;opacity:0.9;margin-right:4px;" onerror="this.style.display='none'"><span class="bar-wordmark">Memoir</span>
-    <div class="bar-nav">
-      <button class="bar-btn active" id="tab-free"        onclick="setTab('free')">Free</button>
-      <span class="bar-sep">·</span>
-      <button class="bar-btn"        id="tab-guided"       onclick="setTab('guided')">Guided</button>
-      <span class="bar-sep">·</span>
-      <button class="bar-btn"        id="tab-transcript"   onclick="setTab('transcript')">Transcript</button>
-      <span class="bar-sep">·</span>
-      <button class="bar-btn"        id="tab-memoir"       onclick="setTab('memoir')">The Memoir</button>
+<!-- Right nav — vertical, slides in from right edge -->
+<nav class="right-nav" id="right-nav">
+  <div class="right-nav-panel">
+    <span class="nav-wordmark">Memoir</span>
+
+    <button class="nav-btn active" id="tab-free"       onclick="setTab('free')">Freestyle</button>
+    <button class="nav-btn"        id="tab-guided"     onclick="setTab('guided')">Guided</button>
+    <span class="nav-count" id="entry-count"></span>
+
+    <div class="nav-rule"></div>
+
+    <button class="nav-btn" id="tab-transcript" onclick="setTab('transcript')">Transcript</button>
+    <button class="nav-btn" id="tab-memoir"     onclick="setTab('memoir')">The Memoir</button>
+
+    <div class="nav-rule"></div>
+
+    <button class="nav-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
+    <div class="nav-interview-actions" id="interviewActions">
+      <button class="nav-btn hidden btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
+      <button class="nav-btn" onclick="interviewEnd()">End Session</button>
     </div>
-    <div class="bar-right">
-      <span class="bar-count" id="entry-count"></span>
-    </div>
+
+    <div class="nav-rule"></div>
+
+    <button class="nav-btn primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
+    <button class="nav-btn" onclick="exportMemoir()">Export</button>
+    <a class="nav-btn" href="/lifepages">LifePages</a>
   </div>
-  <!-- bottom row: interview controls + generate/export -->
-  <div class="bar-row">
-    <div class="bar-nav">
-      <button class="bar-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
-      <div class="interview-actions" id="interviewActions">
-        <span class="bar-sep">·</span>
-        <button class="bar-btn btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
-        <span class="bar-sep">·</span>
-        <button class="bar-btn" onclick="interviewEnd()">End Session</button>
-      </div>
-    </div>
-    <div class="bar-right">
-      <button class="bar-btn bar-primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
-      <span class="bar-sep">·</span>
-      <button class="bar-btn" onclick="exportMemoir()">Export</button>
-      <span class="bar-sep">·</span>
-      <a class="bar-btn" href="/lifepages">LifePages</a>
-    </div>
-  </div>
-</div>
+</nav>
 
 <!-- Welcome tagline — top left, once per 24h -->
 <div class="welcome-tag" id="welcome-tag">
@@ -1425,8 +1355,6 @@
 <!-- Question flash — big centered burst -->
 <div id="question-stage"><span class="qs-text" id="qs-text"></span></div>
 
-<!-- Question settled — persists left of mic while answering -->
-<div id="q-settled"><span class="qs-settled-text" id="qs-settled-text"></span></div>
 
 <!-- Chapter reveal — fullscreen reading mode -->
 <div class="chapter-reveal" id="chapterReveal">
@@ -1849,11 +1777,6 @@
   <button class="mode-select-skip" onclick="hideModeSelect()">decide later</button>
 </div>
 
-<!-- Mode pill — always visible -->
-<div id="mode-pill">
-  <button class="mode-pill-btn active" id="pill-free"    onclick="selectMode('free')">Freestyle</button>
-  <button class="mode-pill-btn"        id="pill-guided"  onclick="selectMode('guided')">Guided</button>
-</div>
 
 <!-- Overlay -->
 <div class="overlay" id="overlay" onclick="closeAllDrawers()"></div>
@@ -1917,21 +1840,21 @@
   let promptIndex = 0;
   let guidedMode = false;
 
-  // ── Bar auto-hide — top hover only ───────────────────────────────────────
+  // ── Right nav auto-hide — right-edge hover ───────────────────────────────
   let hideTimer = null;
 
   function showNav() {
-    document.getElementById('stage-bar').classList.add('visible');
+    document.getElementById('right-nav').classList.add('visible');
     clearTimeout(hideTimer);
     hideTimer = setTimeout(hideNav, 3400);
   }
 
   function hideNav() {
-    if (!activeDrawer) document.getElementById('stage-bar').classList.remove('visible');
+    if (!activeDrawer) document.getElementById('right-nav').classList.remove('visible');
   }
 
   document.addEventListener('mousemove', e => {
-    if (e.clientY < 110) showNav();
+    if (e.clientX > window.innerWidth - 80) showNav();
   });
   // Show briefly on load, then fade
   setTimeout(showNav, 600);
@@ -2020,8 +1943,6 @@
 
     // Show controls
     document.getElementById('prompter-controls').classList.add('show');
-
-    speakPrompt();
   }
 
   function nextPrompt() {
@@ -2401,8 +2322,7 @@
 
       const qFlash = ivShowQuestion(data.question); // starts 10s flash (non-blocking)
       addWordLeft(data.question);
-      await ivSpeak(data.question);   // TTS plays during the flash
-      await qFlash;                   // wait for fly → settled animation
+      await qFlash;                   // wait for flash to complete
       IV.waitingForAnswer = true;
       setStatus('tap to answer');
 
@@ -2432,19 +2352,18 @@
 
       if (data.done || IV.exchangeCount >= 10) {
         await ivShowQuestion("That's enough for a full chapter. Hit \"Write My Chapter\" whenever you're ready.", true);
-        document.getElementById('btnWriteChapter').style.display = 'inline-block';
+        document.getElementById('btnWriteChapter').classList.remove('hidden');
         setStatus('ready to write');
         return;
       }
 
       if (data.exchange_count >= 6) {
-        document.getElementById('btnWriteChapter').style.display = 'inline-block';
+        document.getElementById('btnWriteChapter').classList.remove('hidden');
       }
 
       const qFlash = ivShowQuestion(data.question); // starts 10s flash
       addWordLeft(data.question);
-      await ivSpeak(data.question);   // TTS during flash
-      await qFlash;                   // wait for settled
+      await qFlash;                   // wait for flash to complete
       IV.waitingForAnswer = true;
       setStatus('tap to answer');
 
@@ -2464,7 +2383,7 @@
     ivClearQuestion();
 
     document.getElementById('interviewActions').classList.remove('visible');
-    document.getElementById('btnWriteChapter').style.display = 'none';
+    document.getElementById('btnWriteChapter').classList.add('hidden');
     document.getElementById('btnInterview').textContent = 'Begin Interview';
     setStatus('tap mic to speak');
   }
@@ -2474,42 +2393,27 @@
   // Returns a Promise — await it to block until question is settled.
   // instant=true skips flash and shows settled immediately (for final "ready" message).
   function ivShowQuestion(text, instant = false) {
-    const stage    = document.getElementById('question-stage');
-    const stageT   = document.getElementById('qs-text');
-    const settled  = document.getElementById('q-settled');
-    const settledT = document.getElementById('qs-settled-text');
-
-    // Clear any previous settled state
-    settled.classList.remove('visible');
+    const stage  = document.getElementById('question-stage');
+    const stageT = document.getElementById('qs-text');
 
     if (instant) {
-      settledT.textContent = text;
-      return new Promise(r => {
-        setTimeout(() => { settled.classList.add('visible'); r(); }, 50);
-      });
+      return Promise.resolve();
     }
 
-    // Phase 1 — big flash
+    // Big flash centered over mic, then fade
     stageT.textContent = text;
     stage.classList.add('flash');
 
     return new Promise(resolve => {
       setTimeout(() => {
-        // Fade out big version
         stage.classList.remove('flash');
-        setTimeout(() => {
-          // Phase 2 — settle left of mic
-          settledT.textContent = text;
-          settled.classList.add('visible');
-          resolve();
-        }, 900); // matches #question-stage opacity transition
+        setTimeout(resolve, 900);
       }, 10000);
     });
   }
 
   function ivClearQuestion() {
     document.getElementById('question-stage').classList.remove('flash');
-    document.getElementById('q-settled').classList.remove('visible');
   }
 
   function ivUpdateProgress() {
@@ -2699,9 +2603,6 @@
   function selectMode(mode) {
     currentMode = mode;
     localStorage.setItem('memoir_mode', mode);
-    // Update pill
-    document.getElementById('pill-free').classList.toggle('active', mode === 'free');
-    document.getElementById('pill-guided').classList.toggle('active', mode === 'guided');
     // Update nav tabs
     document.getElementById('tab-free').classList.toggle('active', mode === 'free');
     document.getElementById('tab-guided').classList.toggle('active', mode === 'guided');
@@ -2710,12 +2611,6 @@
       setTimeout(() => showGuidedStart(), 600);
     }
   }
-
-  // Init pill from saved mode
-  (function initModePill() {
-    document.getElementById('pill-free').classList.toggle('active', currentMode === 'free');
-    document.getElementById('pill-guided').classList.toggle('active', currentMode === 'guided');
-  })();
 
   // ── Word drape ────────────────────────────────────────────────────────────
   function addWordLeft(text) {
