@@ -207,13 +207,14 @@
     .right-nav.visible { pointer-events: all; }
 
     .right-nav-panel {
-      width: 220px;
-      padding: 52px 36px 52px 24px;
+      width: 260px;
+      padding: 52px 36px 52px 28px;
       background: linear-gradient(to left,
-        rgba(3,2,1,0.98) 0%,
-        rgba(4,3,2,0.93) 55%,
-        rgba(5,4,3,0.55) 82%,
+        rgba(3,2,1,0.99) 0%,
+        rgba(4,3,2,0.96) 50%,
+        rgba(5,4,3,0.65) 80%,
         transparent 100%);
+      border-top: 1px solid rgba(201,169,110,0.12);
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -221,6 +222,7 @@
       transform: translateX(14px);
       transition: opacity 0.5s ease, transform 0.45s ease;
       margin-left: auto;
+      overflow-y: auto;
     }
     .right-nav.visible .right-nav-panel {
       opacity: 1;
@@ -236,8 +238,44 @@
       letter-spacing: 0.02em;
       text-align: right;
       line-height: 1;
-      text-shadow: 0 0 50px rgba(220,168,48,0.45);
-      margin-bottom: 40px;
+      text-shadow: 0 0 50px rgba(220,168,48,0.55);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .nav-motto {
+      font-family: 'Lora', Georgia, serif;
+      font-style: italic;
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(201,169,110,0.42);
+      text-align: right;
+      line-height: 1.5;
+      letter-spacing: 0.04em;
+      margin-bottom: 28px;
+      display: block;
+    }
+    .nav-stat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: rgba(201,169,110,0.32);
+      text-align: right;
+      padding: 3px 0;
+      display: block;
+      text-transform: uppercase;
+    }
+    .nav-stat strong {
+      color: rgba(201,169,110,0.72);
+      font-weight: 600;
+    }
+    .nav-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(201,169,110,0.28);
+      text-align: right;
+      padding: 4px 0 2px;
       display: block;
     }
 
@@ -253,30 +291,37 @@
       width: 100%;
       text-align: right;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 20px;
       font-weight: 500;
-      letter-spacing: 0.26em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(200,151,58,0.28);
+      color: rgba(200,151,58,0.55);
       background: none;
       border: none;
       cursor: pointer;
-      padding: 7px 0;
+      padding: 10px 0;
       transition: color 0.25s ease;
       text-decoration: none;
       white-space: nowrap;
     }
-    .nav-btn:hover  { color: rgba(224,175,60,0.85); }
+    .nav-btn:hover  { color: rgba(224,175,60,0.92); }
     .nav-btn.active { color: var(--amber); }
-    .nav-btn.primary { color: rgba(224,168,48,0.65); }
+    .nav-btn.primary { color: rgba(224,168,48,0.75); }
     .nav-btn.primary:hover { color: var(--amber); }
     .nav-btn.hidden { display: none; }
+    .nav-btn.nav-social {
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      color: rgba(200,151,58,0.42);
+      padding: 6px 0;
+    }
+    .nav-btn.nav-social:hover { color: rgba(224,175,60,0.85); }
 
     .nav-count {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
+      font-size: 13px;
       letter-spacing: 0.14em;
-      color: rgba(200,151,58,0.22);
+      color: rgba(200,151,58,0.38);
       text-align: right;
       padding: 4px 0 0;
       display: block;
@@ -419,7 +464,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 0;
+      margin-top: 140px;
     }
 
     /* Ambient glow behind the mic when recording */
@@ -1279,29 +1324,43 @@
 <nav class="right-nav" id="right-nav">
   <div class="right-nav-panel">
     <span class="nav-wordmark">Memoir</span>
+    <span class="nav-motto">write the book of your life</span>
 
-    <button class="nav-btn active" id="tab-free"       onclick="setTab('free')">Freestyle</button>
-    <button class="nav-btn"        id="tab-guided"     onclick="setTab('guided')">Guided</button>
-    <span class="nav-count" id="entry-count"></span>
+    <span class="nav-stat" id="nav-stat-entries">— memories recorded</span>
+    <span class="nav-stat" id="nav-stat-chapters">— chapters written</span>
 
     <div class="nav-rule"></div>
 
+    <span class="nav-section-label">Record</span>
+    <button class="nav-btn active" id="tab-free"   onclick="setTab('free')">Freestyle</button>
+    <button class="nav-btn"        id="tab-guided" onclick="setTab('guided')">Guided</button>
+
+    <div class="nav-rule"></div>
+
+    <span class="nav-section-label">Your Book</span>
     <button class="nav-btn" id="tab-transcript" onclick="setTab('transcript')">Transcript</button>
     <button class="nav-btn" id="tab-memoir"     onclick="setTab('memoir')">The Memoir</button>
 
     <div class="nav-rule"></div>
 
+    <span class="nav-section-label">Session</span>
     <button class="nav-btn" id="btnInterview" onclick="interviewToggle()">Begin Interview</button>
     <div class="nav-interview-actions" id="interviewActions">
       <button class="nav-btn hidden btn-write-chapter" id="btnWriteChapter" onclick="interviewGenerate()">Write My Chapter</button>
       <button class="nav-btn" onclick="interviewEnd()">End Session</button>
     </div>
-
-    <div class="nav-rule"></div>
-
     <button class="nav-btn primary" id="btn-generate" onclick="generateChapter()">Generate Chapter</button>
     <button class="nav-btn" onclick="exportMemoir()">Export</button>
     <a class="nav-btn" href="/lifepages">LifePages</a>
+
+    <div class="nav-rule"></div>
+
+    <span class="nav-section-label">Connect</span>
+    <a class="nav-btn nav-social" href="https://creativekonsoles.com" target="_blank">Creative Konsoles</a>
+    <a class="nav-btn nav-social" href="https://x.com/creativekonsoles" target="_blank">X / Twitter</a>
+    <a class="nav-btn nav-social" href="https://facebook.com/creativekonsoles" target="_blank">Facebook</a>
+    <a class="nav-btn nav-social" href="https://linkedin.com/company/creativekonsoles" target="_blank">LinkedIn</a>
+    <a class="nav-btn nav-social" href="mailto:support@creativekonsoles.com">Support</a>
   </div>
 </nav>
 
@@ -1840,24 +1899,48 @@
   let promptIndex = 0;
   let guidedMode = false;
 
-  // ── Right nav auto-hide — right-edge hover ───────────────────────────────
+  // ── Right nav auto-hide ───────────────────────────────────────────────────
   let hideTimer = null;
 
   function showNav() {
     document.getElementById('right-nav').classList.add('visible');
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(hideNav, 3400);
+    hideTimer = setTimeout(hideNav, 6800);
   }
 
   function hideNav() {
     if (!activeDrawer) document.getElementById('right-nav').classList.remove('visible');
   }
 
+  // Trigger on right-edge mouse approach
   document.addEventListener('mousemove', e => {
-    if (e.clientX > window.innerWidth - 80) showNav();
+    if (e.clientX > window.innerWidth - 100) showNav();
   });
-  // Show briefly on load, then fade
+
+  // Keep open while cursor is inside the panel
+  const rightNavEl = document.getElementById('right-nav');
+  rightNavEl.addEventListener('mouseenter', () => {
+    clearTimeout(hideTimer);
+  });
+  rightNavEl.addEventListener('mouseleave', () => {
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(hideNav, 1800);
+  });
+
+  // Show briefly on load
   setTimeout(showNav, 600);
+
+  // Update live stats in sidebar
+  function updateNavStats() {
+    const entries  = document.querySelectorAll('.entry-item, .voice-entry').length;
+    const chapters = document.querySelectorAll('.chapter-block, .memoir-chapter').length;
+    const eEl = document.getElementById('nav-stat-entries');
+    const cEl = document.getElementById('nav-stat-chapters');
+    if (eEl) eEl.innerHTML = `<strong>${entries || '—'}</strong> memories recorded`;
+    if (cEl) cEl.innerHTML = `<strong>${chapters || '—'}</strong> chapters written`;
+  }
+  setInterval(updateNavStats, 4000);
+  setTimeout(updateNavStats, 1200);
 
   // ── Tab switching ─────────────────────────────────────────────────────────
   function setTab(name) {
@@ -2215,9 +2298,31 @@
     }
   }
 
-  // ── LED — dark at rest, red pulse only when recording ────────────────────
-  let ledPulseTimer = null;
-  let ledPulseState = false;
+  // ── LED — amber breath at idle, solid amber when recording ──────────────
+  let ledRecording = false;
+  let ledRafId     = null;
+  const LED_PERIOD = 4800; // ms — one full breath cycle
+
+  function ledBreathLoop(ts) {
+    if (ledRecording) return; // recording took over
+    const led  = document.getElementById('power-led');
+    const hot  = document.getElementById('led-hotspot');
+    const halo = document.getElementById('led-halo');
+    if (!led) return;
+
+    // Sine breath: 0→1→0 over LED_PERIOD ms
+    const phase = (ts % LED_PERIOD) / LED_PERIOD;          // 0..1
+    const t     = Math.sin(phase * Math.PI);               // 0→1→0
+    const glow  = 0.18 + t * 0.72;                        // 0.18 dim → 0.90 bright
+
+    led.style.fill    = '#c88a2a';
+    led.style.opacity = (0.28 + t * 0.72).toFixed(3);
+    led.setAttribute('r', (5 + t * 2.5).toFixed(2));
+    if (hot)  { hot.style.fill = '#e8a030'; hot.style.opacity = (t * 0.65).toFixed(3); }
+    if (halo) { halo.style.opacity = (t * 0.45).toFixed(3); }
+
+    ledRafId = requestAnimationFrame(ledBreathLoop);
+  }
 
   function ledLock(on) {
     const led  = document.getElementById('power-led');
@@ -2225,37 +2330,24 @@
     const halo = document.getElementById('led-halo');
     if (!led) return;
 
+    ledRecording = on;
+    if (ledRafId) { cancelAnimationFrame(ledRafId); ledRafId = null; }
+
     if (on) {
-      // Start red pulsing
-      ledPulseState = true;
-      function pulse() {
-        if (!ledPulseState) return;
-        led.style.fill    = '#cc2020';
-        led.style.opacity = '1';
-        led.style.r       = '7';
-        if (hot)  { hot.style.opacity  = '0.9'; }
-        if (halo) { halo.style.opacity = '0.6'; }
-        ledPulseTimer = setTimeout(() => {
-          if (!ledPulseState) return;
-          led.style.opacity = '0.35';
-          led.style.r       = '5';
-          if (hot)  { hot.style.opacity  = '0'; }
-          if (halo) { halo.style.opacity = '0'; }
-          ledPulseTimer = setTimeout(pulse, 500);
-        }, 500);
-      }
-      pulse();
+      // Solid constant amber — no animation needed
+      led.style.fill    = '#c88a2a';
+      led.style.opacity = '1';
+      led.setAttribute('r', '7.5');
+      if (hot)  { hot.style.fill = '#e8a030'; hot.style.opacity = '0.85'; }
+      if (halo) { halo.style.opacity = '0.55'; }
     } else {
-      // Stop — go dark
-      ledPulseState = false;
-      clearTimeout(ledPulseTimer);
-      led.style.fill    = '#2a0808';
-      led.style.opacity = '0.35';
-      led.style.r       = '6';
-      if (hot)  { hot.style.opacity  = '0'; }
-      if (halo) { halo.style.opacity = '0'; }
+      // Start slow amber breath
+      ledRafId = requestAnimationFrame(ledBreathLoop);
     }
   }
+
+  // Start idle breath immediately on load
+  ledRafId = requestAnimationFrame(ledBreathLoop);
 
   function setStatus(msg) {
     const el = document.getElementById('mic-status');
