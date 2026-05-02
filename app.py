@@ -102,13 +102,37 @@ def generate_chapter():
         for e in entries[-20:]  # last 20 entries
     ])
 
-    prompt = f"""You are a memoir writer helping someone capture their life story.
-Below are raw voice recordings — spoken memories, unfiltered and real.
+    prompt = f"""You are a memoir writer with a unique method: you write in Python code that reads like literature.
 
-Your job: weave these into a warm, intimate memoir chapter.
-Write in first person, as if the person is speaking directly to the reader.
-Keep their voice. Don't over-polish. This should feel like a letter, not a book report.
-Make it around 300-500 words. Give it a chapter title.
+Every construct carries meaning:
+  class         = a phase of life, an identity
+  def           = a moment, an event, a memory
+  if/else       = a crossroads, a decision
+  try/except    = when things broke — and survival
+  while         = patterns, cycles, repetition
+  break         = the moment of escape
+  return        = what was carried forward
+  import        = who shaped you
+  # comment     = the inner voice, the thing beneath the thing
+  \"\"\"docstring\"\"\" = the prose, the full narrative told in plain language
+  None          = absence. loss.
+  assert        = what was believed to be true
+  del           = what was let go
+  yield         = what was given to others
+  pass          = when there was nothing left to say
+  raise         = when they stood up
+
+Below are raw voice recordings — spoken memories, unfiltered and real.
+Weave them into one Python file that is also a memoir chapter.
+
+Rules:
+- The code must actually be valid Python (it can run)
+- The docstrings carry the real prose — intimate, first person, sensory
+- Comments carry the inner voice — raw, unguarded
+- The structure of the code IS the structure of the memory
+- Give the file/class a chapter title as its name
+- 400-700 words of prose across the docstrings
+- Keep their voice. Don't over-polish.
 
 Raw voice entries:
 {voice_text}
@@ -262,18 +286,38 @@ def interview_generate():
 
     transcript = '\n\n'.join(f"Q: {ex['question']}\nA: {ex['answer']}" for ex in pairs)
 
-    prompt = f"""You are a skilled memoir writer. Below are raw interview exchanges — questions asked, answers spoken aloud by the person.
+    prompt = f"""You are a memoir writer with a unique method: you write in Python code that reads like literature.
 
-Write a full memoir chapter from this material.
+Every construct carries meaning:
+  class         = a phase of life, an identity
+  def           = a moment, an event, a memory
+  if/else       = a crossroads, a decision
+  try/except    = when things broke — and survival
+  while         = patterns, cycles, repetition
+  break         = the moment of escape
+  return        = what was carried forward
+  import        = who shaped you
+  # comment     = the inner voice, the thing beneath the thing
+  \"\"\"docstring\"\"\" = the prose, the full narrative told in plain language
+  None          = absence. loss.
+  assert        = what was believed to be true
+  del           = what was let go
+  yield         = what was given to others
+  pass          = when there was nothing left to say
+  raise         = when they stood up
+
+Below are raw interview exchanges — questions asked, answers spoken aloud.
+Write a full memoir chapter as a Python file from this material.
 
 Rules:
-- First person, in their voice
-- Use their exact words and phrases wherever possible — preserve their rhythm
-- 1,500 to 2,500 words — a full chapter, not a sketch
-- Give it a title on the first line
-- Intimate and specific — feels like a letter to the future, not a book report
-- Sensory detail throughout — light, smell, texture, sound
+- The code must be valid Python (it can run)
+- The docstrings carry the full prose — intimate, first person, sensory, 1,500-2,500 words total
+- Comments carry the inner voice — raw, unguarded, the thing they didn't quite say
+- The structure of the code IS the structure of the memory
+- Use their exact words and phrases in the docstrings — preserve their rhythm
+- Give the class/file a chapter title as its name
 - No therapy-speak, no "this taught me that..." conclusions
+- Sensory detail throughout — light, smell, texture, sound
 - Let the memory breathe
 
 Interview transcript:
