@@ -9,15 +9,15 @@ The code IS the memoir — it runs and tells the story.
 "Re-entry: memoir"
 
 ## Port
-5565
+5572  (moved off 5565 to avoid collision with DAW Doctor)
 
 ## Stack
-- Flask, port 5565
+- Flask, port 5572
 - OpenAI Whisper-1 (STT)
 - Dark warm writing-desk UI (Lora + JetBrains Mono)
 
 ## How It Works
-1. User opens http://127.0.0.1:5565
+1. User opens http://127.0.0.1:5572
 2. Taps mic, speaks a memory
 3. Whisper transcribes → saved to voice/TIMESTAMP.json
 4. In Claude Code sessions: read voice/ entries → weave into chapters/*.py
