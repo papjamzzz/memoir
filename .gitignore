@@ -1,2 +1,8 @@
 .env
 .DS_Store
+
+# User content. This repo is PUBLIC. Chapters and voice captures are whatever
+# the person using it dictated, so they never belong in the repo.
+chapters/
+voice/
+*.log
